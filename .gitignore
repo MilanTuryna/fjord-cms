@@ -2,3 +2,5 @@ config/local.neon
 temp/
 log/
 bin/
+.idea
+/vendor
