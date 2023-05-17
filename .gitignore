@@ -3,4 +3,5 @@ temp/
 log/
 bin/
 .idea
+/.idea
 /vendor
