@@ -6,6 +6,8 @@ namespace App\Forms;
 
 interface FormOption
 {
+    const OPTION_NOTE = "option_note";
+
     const BOTTOM_LINE = "___bottom_line___";
     const UPPER_LINE = "___upper_line___";
 
