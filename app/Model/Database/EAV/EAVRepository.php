@@ -4,6 +4,7 @@
 namespace App\Model\Database\EAV;
 
 
+use App\Model\Cryptography;
 use App\Model\Database\EAV\Exceptions\EntityNotFoundException;
 use App\Model\Database\EAV\Exceptions\InvalidAttributeException;
 use App\Model\Database\Repository\Dynamic\AttributeRepository;
@@ -109,7 +110,7 @@ class EAVRepository
         $attributes = $this->getEntityAttributesAssoc();
         $result = [];
         $newDynamicID = $this->idRepository->insert([
-            DynamicId::row_unique => DynamicId::createRowUnique(),
+            DynamicId::row_unique => Cryptography::createUnique(),
             DynamicId::entity_id => $this->entity->id,
             DynamicId::created => new \DateTime(),
         ]);
