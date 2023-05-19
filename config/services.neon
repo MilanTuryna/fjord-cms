@@ -1,10 +1,14 @@
 search:
-	-
+	factories:
 		in: %appDir%
 		classes:
 			- *Factory
 			- *Facade
+	repositories:
+	    in: %appDir%/Model/Database/Repository
+	    files:
+	        - *Repository.php
 
 
 services:
-	- App\Router\RouterFactory::createRouter
+    router: App\Router\RouterFactory::createRouter
