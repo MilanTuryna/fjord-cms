@@ -15,10 +15,12 @@ class DynamicId extends Entity
     const name = "name";
     const created = "created";
     const description = "description";
+    const row_unique = "row_unique";
     const id = "id";
 
     public string $name;
     public string $created;
     public string $description;
     public int $id;
+    public string $row_unique;
 }
