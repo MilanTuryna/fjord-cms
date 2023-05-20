@@ -19,8 +19,10 @@ class DynamicAttribute extends Entity
     public string $name;
     public int $allowed_translation;
     public string $data_type;
-    public int $placeholder_expression_id;
+    public string $placeholder; // json (Translated Value)
+    public string $generate_value; // ENUM
+    public string $preset_value;
+    public bool $required;
     public int $entity_id;
-    public string $preset_val;
     public int $id;
 }
