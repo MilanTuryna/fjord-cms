@@ -35,12 +35,9 @@ class CreateEntityForm extends EntityForm
     /**
      * @throws AbortException
      */
-    #[NoReturn] public function success(Form $form, EntityFormData $entityFormData): void {
-        $entity = new DynamicEntity();
-        $entity->name = $entityFormData->entity_name;
-        $entity->description = $entityFormData->entity_description;
-        $entity->created = new \DateTime();
-        $entityId = $this->dynamicEntityFactory->createEntity($entity, $entityFormData->attributes);
+    #[NoReturn] public function success(Form $form, EntityFormData &$data): void {
+        $entity = $this->buildEntity($data);
+        $entityId = $this->dynamicEntityFactory->createEntity($entity, $data->attributes);
         $this->presenter->flashMessage("Entita byla úpěšně vytvořena", FlashMessages::SUCCESS);
         $this->redirect->presenter($this->presenter, $entityId);
     }

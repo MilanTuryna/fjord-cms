@@ -5,7 +5,10 @@ namespace App\Forms\Dynamic;
 
 
 use App\Forms\Dynamic\Data\AttributeData;
+use App\Forms\Dynamic\Data\EntityFormData;
 use App\Forms\Form;;
+
+use App\Model\Database\Repository\Dynamic\Entity\DynamicEntity;
 use Nette\Forms\Container;
 
 /**
@@ -39,5 +42,19 @@ class EntityForm extends Form
         $attrMultiplier->createButton("Přidat krok")->addClass('btn btn-dark w-100');
         $form->addSubmit("submit", "Vytvořit novou entitu");
         return $form;
+    }
+
+    /**
+     * @param EntityFormData $data
+     * @return DynamicEntity
+     */
+    protected function buildEntity(EntityFormData $data): DynamicEntity
+    {
+        $entity = new DynamicEntity();
+        $entity->name = $data->entity_name;
+        $entity->description = $data->entity_description;
+        $entity->created = new \DateTime();
+        $entity->last_edit = new \DateTime();
+        return $entity;
     }
 }
