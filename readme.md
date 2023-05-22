@@ -41,10 +41,11 @@ Důležitým prvkem administrace je uživatelsky přívětivé zpracování vytv
 -   Atributy (dynamický prvek/přidavatelný)
     -   Název atributu /text-input
     -   Datový typ atributu /select-input
-    -   Číslo (integer)
-    -   Číslo s desetinnými místy (float)
-    -   Textový řetězec (string)
-    -   ANO/NE - pravda (bool)
+        -   Číslo (integer)
+        -   Číslo s desetinnými místy (float)
+        -   Textový řetězec (string)
+        -   Textový řetězec s překladem (longtext{TranslatedValue|JSON})    
+        -   ANO/NE - pravda (bool)
     -   Popis atributu /text-input (bude zobrazen při následném obsahovém použití)
     -   Nastavení placeholderu /text-input
     -   Přednastavení hodnoty: výběr z dvou možností, omezit druhou v případě jedné
