@@ -9,6 +9,8 @@ search:
 	    files:
 	        - *Repository.php
 
+extensions:
+	form-multipier: Contributte\FormMultiplier\DI\MultiplierExtension
 
 services:
     router: App\Router\RouterFactory::createRouter
