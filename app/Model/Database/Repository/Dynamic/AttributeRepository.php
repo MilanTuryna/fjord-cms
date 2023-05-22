@@ -4,11 +4,11 @@
 namespace App\Model\Database\Repository\Dynamic;
 
 
-use App\Model\Database\AbstractRepository;
+use App\Model\Database\Repository;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicAttribute;
 use Nette\Database\Explorer;
 
-class AttributeRepository extends AbstractRepository
+class AttributeRepository extends Repository
 {
     public function __construct(Explorer $explorer)
     {

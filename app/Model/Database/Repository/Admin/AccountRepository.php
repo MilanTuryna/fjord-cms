@@ -4,14 +4,14 @@
 namespace App\Model\Database\Repository\Admin;
 
 
-use App\Model\Database\AbstractRepository;
+use App\Model\Database\Repository;
 use Nette\Database\Explorer;
 
 /**
  * Class AccountRepository
  * @package App\Model\Database\Repository\Admin
  */
-class AccountRepository extends AbstractRepository
+class AccountRepository extends Repository
 {
     /**
      * AccountRepository constructor.

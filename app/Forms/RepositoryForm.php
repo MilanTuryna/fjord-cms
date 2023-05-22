@@ -4,7 +4,7 @@
 namespace App\Forms;
 
 
-use App\Model\Database\AbstractRepository;
+use App\Model\Database\Repository;
 use App\Model\Database\Entity;
 use JetBrains\PhpStorm\Pure;
 use Nette\Application\AbortException;
@@ -18,9 +18,9 @@ class RepositoryForm extends Form
     /**
      * RepositoryForm constructor.
      * @param Presenter $presenter
-     * @param AbstractRepository $repository
+     * @param Repository $repository
      */
-    #[Pure] public function __construct(protected Presenter $presenter, protected AbstractRepository $repository)
+    #[Pure] public function __construct(protected Presenter $presenter, protected Repository $repository)
     {
         parent::__construct($this->presenter);
     }

@@ -4,14 +4,14 @@
 namespace App\Model\Database\Repository\Dynamic;
 
 
-use App\Model\Database\AbstractRepository;
+use App\Model\Database\Repository;
 use Nette\Database\Explorer;
 
 /**
  * Class IdRepository
  * @package App\Model\Database\Repository\Dynamic
  */
-class IdRepository extends AbstractRepository
+class IdRepository extends Repository
 {
     /**
      * IdRepository constructor.

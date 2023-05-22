@@ -12,7 +12,7 @@ use Traversable;
  * Class Repository
  * @package App\Model\Database
  */
-abstract class AbstractRepository
+abstract class Repository
 {
     protected string $table;
     protected Explorer $explorer;

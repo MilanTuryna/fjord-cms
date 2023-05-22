@@ -4,10 +4,10 @@
 namespace App\Model\Database\Repository\Dynamic;
 
 
-use App\Model\Database\AbstractRepository;
+use App\Model\Database\Repository;
 use Nette\Database\Explorer;
 
-class ValueRepository extends AbstractRepository
+class ValueRepository extends Repository
 {
     /**
      * ValueRepository constructor.
