@@ -8,6 +8,8 @@ use App\Model\Database\Repository\Dynamic\AttributeRepository;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicAttribute;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicEntity;
 use App\Model\Database\Repository\Dynamic\EntityRepository;
+use InvalidArgumentException;
+use Nette\Database\Table\ActiveRow;
 
 class DynamicEntityFactory
 {
@@ -27,16 +29,18 @@ class DynamicEntityFactory
 
     /**
      * @param DynamicEntity $entity
-     * @param array|DynamicAttribute[] $dynamicAttributes
+     * @param array $dynamicAttributes
+     * @return int|null
      */
-    public function createEntity(DynamicEntity $entity, array $dynamicAttributes)
+    public function createEntity(DynamicEntity $entity, array $dynamicAttributes): ?int
     {
         $insertedEntity = $this->entityRepository->insert($entity->iterable());
         foreach ($dynamicAttributes as $attribute) {
             if (!($attribute instanceof DynamicAttribute || is_array($attribute))) {
-                throw new \InvalidArgumentException("Zadaný atribut je špatného typu.");
+                throw new InvalidArgumentException("Zadaný atribut je špatného typu.");
             }
             $this->attributeRepository->addAttribute($insertedEntity->id, $attribute);
         }
+        return $insertedEntity->{'id'} ?? null;
     }
 }
