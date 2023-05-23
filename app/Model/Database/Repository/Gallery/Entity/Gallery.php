@@ -12,8 +12,8 @@ use App\Model\Database\Entity;
  */
 class Gallery extends Entity
 {
-    const name = "name", description = "description", uri = "uri", edited = "edited", created = "createed", admin_id = "admin_id", id = "id";
-    
+    const name = "name", description = "description", uri = "uri", edited = "edited", created = "created", admin_id = "admin_id", id = "id";
+
     public string $name;
     public string $description;
     public string $uri;
