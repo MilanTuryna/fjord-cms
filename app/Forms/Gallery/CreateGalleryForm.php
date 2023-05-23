@@ -4,7 +4,7 @@
 namespace App\Forms\Gallery;
 
 
-class CreateGalleryForm
+class CreateGalleryForm extends GalleryForm
 {
 
 }

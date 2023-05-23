@@ -4,7 +4,7 @@
 namespace App\Forms\Gallery;
 
 
-class EditGalleryForm
+class EditGalleryForm extends GalleryForm
 {
 
 }
