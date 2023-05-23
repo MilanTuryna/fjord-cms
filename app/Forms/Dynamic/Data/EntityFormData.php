@@ -39,7 +39,8 @@ class EntityFormData
         foreach ($attributes as $attribute) {
             $d_attribute = new DynamicAttribute();
             $d_attribute->createFrom($attribute);
-            $fullEntity->attributes[] = $d_attribute;
+            $fullEntity->attributes[$attribute->{'id'}] = $d_attribute;
         }
+        return $fullEntity;
     }
 }
