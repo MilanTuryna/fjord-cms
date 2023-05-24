@@ -5,14 +5,19 @@ namespace App\Forms\Gallery\Data;
 
 
 use App\Model\Database\Repository\Gallery\Entity\GalleryItem;
+use Nette\Http\FileUpload;
 
+/**
+ * Class ItemFormData
+ * @package App\Forms\Gallery\Data
+ */
 class ItemFormData extends GalleryItem
 {
     // 10MB
     const MAX_FILE_SIZE = 10*(1024**2);
     const COMPRESSED_NAME_LENGTH = 14;
 
-    public mixed $file_content;
+    public FileUpload $file_upload;
 
     /**
      * @param string $filename
@@ -20,6 +25,6 @@ class ItemFormData extends GalleryItem
      * @return string
      */
     public static function encodeName(string $filename, string $extension): string {
-        return substr($filename, 0, self::COMPRESSED_NAME_LENGTH);
+        return substr(md5($filename), 0, self::COMPRESSED_NAME_LENGTH - 4) . substr(md5(time()), 0, 4) . "." . $extension;
     }
 }
