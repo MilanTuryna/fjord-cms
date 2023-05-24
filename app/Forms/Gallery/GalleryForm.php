@@ -8,6 +8,7 @@ use App\Forms\FlashMessages;
 use App\Forms\Form;
 use App\Forms\Gallery\Data\GalleryFormData;
 use App\Forms\Gallery\Data\ItemFormData;
+use App\Forms\RepositoryForm;
 use App\Model\Database\Repository\Gallery\GalleryRepository;
 use App\Model\Database\Repository\Gallery\ItemsRepository;
 use JetBrains\PhpStorm\Pure;
@@ -19,7 +20,7 @@ use Nette\Http\FileUpload;
  * Class GalleryForm
  * @package App\Forms\Gallery
  */
-class GalleryForm extends Form
+class GalleryForm extends RepositoryForm
 {
     /**
      * GalleryForm constructor.
@@ -30,7 +31,7 @@ class GalleryForm extends Form
      */
     #[Pure] public function __construct(protected Presenter $presenter, private GalleryRepository $galleryRepository, private ItemsRepository $itemsRepository, private int $admin_id)
     {
-        parent::__construct($this->presenter);
+        parent::__construct($this->presenter, $this->galleryRepository);
     }
 
     /**
@@ -43,7 +44,7 @@ class GalleryForm extends Form
         $form->addText("description", "Popis")->setRequired(false);
         $form->addText("URI", "URL adresa")->setRequired(false);
         $items = $form->addMultiplier("_items", function (Container $container, Form $form) {
-            $container->addUpload("file_content", "Nahrát obrázek")->addRule(\Nette\Forms\Form::Image)
+            $container->addUpload("file_upload", "Nahrát obrázek")->addRule(\Nette\Forms\Form::Image)
                 ->addRule(\Nette\Forms\Form::MAX_FILE_SIZE, ItemFormData::MAX_FILE_SIZE);
             $container->addText("alt", "Alternativní text")->setRequired(false);
             $container->addText("image_description", "Popis obrázku");
@@ -54,26 +55,32 @@ class GalleryForm extends Form
         return $form;
     }
 
-    public function success(\Nette\Application\UI\Form $form, GalleryFormData $data): void {
-        $itemsToUpload = $data->_items;
-        foreach ($data->_items as $item) {
-            if($item->file_content->isOk() && $item->file_content->isImage()) {
-
-            }
-        }
-        foreach ($data->_global_upload as $anonymousItem) {
-            /**
-             * @var $anonymousItem FileUpload
-             */
-            if($anonymousItem->isOk() && $anonymousItem->isImage()) {
-                $itemData = new ItemFormData();
-                $itemData->file_content = $anonymousItem->getContents();
-                $itemData->original_file = $anonymousItem->getUntrustedName();
-                $itemData->compressed_file = ItemFormData
-                    ::encodeName($anonymousItem->getUntrustedName(), $anonymousItem->getImageFileExtension());
-                $itemData->admin_id = $this->admin_id;
+    /**
+     * @param \Nette\Application\UI\Form $form
+     * @param GalleryFormData $data
+     */
+    protected function uploadImages(\Nette\Application\UI\Form $form, GalleryFormData $data): void {
+        $errorMessage = function (string $alt, int $key) {
+            return "Obrázek č. " . $key+1 . `({$alt ?? "neuvedeno"})` . "nebyl z neznámého důvodu nahrán.";
+        };
+        foreach (array_merge($data->_items, $data->_global_upload) as $i => $item) {
+            if($item instanceof FileUpload) {
+                $itemUpload = $item;
+                $item = new ItemFormData();
             } else {
-                $this->presenter->flashMessage("", FlashMessages::ERROR);
+                $itemUpload = $item->file_upload;
+            }
+            if($itemUpload->isOk() && $itemUpload->isImage()) {
+                $item->original_file = $itemUpload->getUntrustedName();
+                $item->compressed_file = ItemFormData::encodeName($itemUpload->getUntrustedName(), $itemUpload->getImageFileExtension());
+                $item->admin_id = $this->admin_id;
+                if($this->itemsRepository->insert($item->iterable(true))) {
+                    $this->presenter->flashMessage(`Obrázek č. {$i+1} byl úspěšně nahrán!`, FlashMessages::SUCCESS);
+                } else {
+                    $form->addError($errorMessage($item->alt, $i));
+                }
+            } else {
+                $form->addError($errorMessage($item->alt, $i));
             }
         }
     }
