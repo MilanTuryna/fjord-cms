@@ -4,6 +4,7 @@
 namespace App\Forms;
 
 use JetBrains\PhpStorm\NoReturn;
+use JetBrains\PhpStorm\Pure;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Presenter;
 
@@ -40,5 +41,9 @@ class FormRedirect
         $presenter->redirect($this->route, array_map(function ($arg) use($lastInsertedId) {
             return $arg === FormRedirect::LAST_INSERT_ID ? $lastInsertedId : $arg;
         }, $this->args));
+    }
+
+    #[Pure] public static function this(): self {
+        return new self("this");
     }
 }
