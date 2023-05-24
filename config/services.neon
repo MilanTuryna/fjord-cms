@@ -1,10 +1,16 @@
 search:
-	-
+	factories:
 		in: %appDir%
 		classes:
 			- *Factory
 			- *Facade
+	repositories:
+	    in: %appDir%/Model/Database/Repository
+	    files:
+	        - *Repository.php
 
+extensions:
+	form-multipier: Contributte\FormMultiplier\DI\MultiplierExtension
 
 services:
-	- App\Router\RouterFactory::createRouter
+    router: App\Router\RouterFactory::createRouter

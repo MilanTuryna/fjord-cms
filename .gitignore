@@ -3,4 +3,7 @@ temp/
 log/
 bin/
 .idea
+/.idea
 /vendor
+composer.lock
+composer.phar
