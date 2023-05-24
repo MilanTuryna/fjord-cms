@@ -23,6 +23,13 @@ use Nette\Application\UI\Presenter;
  */
 class SettingsForm extends RepositoryForm
 {
+    // for comparison purposes
+    const INPUTS_LABELS = [
+        "app_name" => "Název aplikace",
+        "app_author" => "Vlastníci webu",
+        "app_keywords" => "Klíčová slova",
+    ];
+
     private Repository\Settings\GlobalSettingsRepository $settingsRepository;
 
     /**
@@ -44,10 +51,10 @@ class SettingsForm extends RepositoryForm
         $form = parent::create();
         $actualSettings = $this->settingsRepository->getActualSettings();
 
-        $form->addText("app_name", "Název aplikace")
+        $form->addText("app_name", "Název webu")
             ->setMaxLength(DataRegulation::TITLE)
             ->setDefaultValue($actualSettings->app_name ?? "")->setRequired(true);
-        $form->addText("app_author", "Autoři aplikace")
+        $form->addText("app_author", "Vlastníci webu")
             ->setMaxLength(DataRegulation::TITLE)
             ->setDefaultValue($actualSettings->app_author ?? "")->setRequired(true);
         $form->addText("app_keywords", "Klíčová slova")
