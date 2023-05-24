@@ -22,9 +22,15 @@ class AdminBasePresenter extends BasePresenter
      */
     public GlobalSettingsRepository $settingsRepository;
 
+    /**
+     * @var GlobalSettingsRepository @inject
+     */
+    public GlobalSettingsRepository $accountRepository;
+
     protected ?ActiveRow $admin;
 
-    protected ?ActiveRow $settings;
+
+    protected ActiveRow|Repository\Settings\Entity\GlobalSettings|null $settings;
 
     private string $permissionNode;
 
