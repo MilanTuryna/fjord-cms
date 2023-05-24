@@ -6,6 +6,7 @@ namespace App\Forms;
 
 use App\Model\Database\Repository;
 use App\Model\Database\Entity;
+use Exception;
 use JetBrains\PhpStorm\Pure;
 use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
@@ -58,11 +59,13 @@ class RepositoryForm extends Form
      * @param bool $throwExceptions
      * @param bool $deletePrivateVars
      * @param callable|null $afterInsert function($lastInsertId)
+     * @return bool If process was OK
      * @throws AbortException
      * @throws InvalidLinkException
      */
     public function successTemplate(\Nette\Application\UI\Form $form, Entity $entity, FormMessage $message, ?FormRedirect $formRedirect = null, ?int $rowId = null, array $dataExceptions = [], bool $throwExceptions = false, bool $deletePrivateVars = true, ?callable $afterInsert = null) {
         if(!$formRedirect) $formRedirect = new FormRedirect("this");
+        $error = false;
         try {
             // delete "form private" vars
             if($deletePrivateVars) {
@@ -80,12 +83,15 @@ class RepositoryForm extends Form
                 $this->presenter->redirect($formRedirect->route, $formRedirect->args);
             } else {
                 $form->addError($message->error);
+                $error = true;
             }
         } catch (Exception $exception) {
             // throw only redirect exception or if $throwExceptions will be true
             if($throwExceptions || $exception instanceof AbortException || $exception instanceof InvalidLinkException) throw $exception;
             $exceptionClass = get_class($exception);
             $form->addError($message->catchMessages[$exceptionClass] ?? $message->error);
+            $error = true;
         }
+        return !$error;
     }
 }
