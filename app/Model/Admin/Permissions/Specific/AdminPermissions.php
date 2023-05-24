@@ -6,6 +6,7 @@ namespace App\Model\Admin\Permissions\Specific;
 
 use App\Model\Admin\Permissions\PermissionManager;
 use App\Model\Admin\Permissions\Utils;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * Class AdminPermissions
@@ -29,9 +30,13 @@ class AdminPermissions extends PermissionManager
     const GALLERY_EDIT = "gallery_edit";
     CONST GALLERY_PHOTO = "gallery_add";
 
-    public function __construct()
+    #[Pure] public function __construct()
     {
-        parent::__construct([
+        parent::__construct(self::selectBox());
+    }
+
+    public static function selectBox(): array {
+        return [
             self::ADMIN_FULL => "Plná práva (superuser)",
 
             self::DEVELOPER_SETTINGS => "Správa vývojářského nastavení (šablony, widgety, web...)",
@@ -47,6 +52,6 @@ class AdminPermissions extends PermissionManager
 
             self::GALLERY_EDIT => "Tvorba a správa galerií",
             self::GALLERY_PHOTO => "Správa obsahu jednotlivých galerií (fotky/videa)"
-        ]);
+        ];
     }
 }
