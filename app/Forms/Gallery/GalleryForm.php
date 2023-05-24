@@ -4,13 +4,16 @@
 namespace App\Forms\Gallery;
 
 
+use App\Forms\FlashMessages;
 use App\Forms\Form;
+use App\Forms\Gallery\Data\GalleryFormData;
 use App\Forms\Gallery\Data\ItemFormData;
 use App\Model\Database\Repository\Gallery\GalleryRepository;
 use App\Model\Database\Repository\Gallery\ItemsRepository;
 use JetBrains\PhpStorm\Pure;
 use Nette\Application\UI\Presenter;
 use Nette\Forms\Container;
+use Nette\Http\FileUpload;
 
 /**
  * Class GalleryForm
@@ -23,8 +26,9 @@ class GalleryForm extends Form
      * @param Presenter $presenter
      * @param GalleryRepository $galleryRepository
      * @param ItemsRepository $itemsRepository
+     * @param int $admin_id
      */
-    #[Pure] public function __construct(protected Presenter $presenter, private GalleryRepository $galleryRepository, private ItemsRepository $itemsRepository)
+    #[Pure] public function __construct(protected Presenter $presenter, private GalleryRepository $galleryRepository, private ItemsRepository $itemsRepository, private int $admin_id)
     {
         parent::__construct($this->presenter);
     }
@@ -48,5 +52,29 @@ class GalleryForm extends Form
         $items->addCreateButton("Přidat položku")->addClass('btn btn-dark w-100');;
         $form->addSubmit("submit", "Vytvořit galerii");
         return $form;
+    }
+
+    public function success(\Nette\Application\UI\Form $form, GalleryFormData $data): void {
+        $itemsToUpload = $data->_items;
+        foreach ($data->_items as $item) {
+            if($item->file_content->isOk() && $item->file_content->isImage()) {
+
+            }
+        }
+        foreach ($data->_global_upload as $anonymousItem) {
+            /**
+             * @var $anonymousItem FileUpload
+             */
+            if($anonymousItem->isOk() && $anonymousItem->isImage()) {
+                $itemData = new ItemFormData();
+                $itemData->file_content = $anonymousItem->getContents();
+                $itemData->original_file = $anonymousItem->getUntrustedName();
+                $itemData->compressed_file = ItemFormData
+                    ::encodeName($anonymousItem->getUntrustedName(), $anonymousItem->getImageFileExtension());
+                $itemData->admin_id = $this->admin_id;
+            } else {
+                $this->presenter->flashMessage("", FlashMessages::ERROR);
+            }
+        }
     }
 }
