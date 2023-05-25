@@ -6,6 +6,7 @@ namespace App\Presenters;
 use App\Forms\FlashMessages;
 use App\Forms\FormMessage;
 use App\Model\Admin\Permissions\Utils;
+use App\Model\Database\IRepository;
 use App\Model\Database\Repository;
 use App\Model\Database\Repository\Settings\GlobalSettingsRepository;
 use App\Model\Security\Auth\AdminAuthenticator;
@@ -76,7 +77,7 @@ class AdminBasePresenter extends BasePresenter
      * @param string $route
      * @throws AbortException
      */
-    #[NoReturn] public function prepareActionRemove(Repository $repository, int $id, FormMessage $formMessage, string $route) {
+    #[NoReturn] public function prepareActionRemove(IRepository $repository, int $id, FormMessage $formMessage, string $route) {
         $deleted = $repository->deleteById($id);
         if($deleted) {
             $this->flashMessage($formMessage->success, FlashMessages::SUCCESS);
