@@ -7,6 +7,7 @@ namespace App\Model\Database\EAV;
 use App\Model\Cryptography;
 use App\Model\Database\EAV\Exceptions\EntityNotFoundException;
 use App\Model\Database\EAV\Exceptions\InvalidAttributeException;
+use App\Model\Database\IRepository;
 use App\Model\Database\Repository\Dynamic\AttributeRepository;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicEntity;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicId;
@@ -19,7 +20,7 @@ use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\FileSystem;
 
-class EAVRepository
+class EAVRepository implements IRepository
 {
     /**
      * @var ActiveRow|DynamicEntity|null
@@ -31,8 +32,8 @@ class EAVRepository
      */
     public function __construct(private Explorer $explorer, public AttributeRepository $attributeRepository,
                                 public EntityRepository $entityRepository, public IdRepository $idRepository,
-                                public ValueRepository $valueRepository, public string $table) {
-        $this->entity = $this->entityRepository->findByColumn(DynamicEntity::name, $table)->fetch();
+                                public ValueRepository $valueRepository, public string $entityName) {
+        $this->entity = $this->entityRepository->findByColumn(DynamicEntity::name, $entityName)->fetch();
         if(!$this->entity) throw new EntityNotFoundException();
     }
 
@@ -59,17 +60,18 @@ class EAVRepository
      * @param mixed $data
      * @return mixed (associative: [attr => value])
      */
-    public function findByColumn(string $column, mixed $data) {
+    public function findByColumn(string $column, mixed $data): mixed
+    {
         $sql = FileSystem::read("SQL/findByColumn.sql");
         $rows = $this->explorer->query($sql, $this->entity->id, $column, $data)->fetchAll();
         return self::createAssociativeArray($rows)[$this->entity->id];
     }
 
     /**
-     * @param int $uniqueId
+     * @param string $uniqueId
      * @return array (associative: [attr => value])
      */
-    public function findByUnique(int $uniqueId): array {
+    public function findByUnique(string $uniqueId): array {
         return $this->findByColumn(DynamicId::row_unique, $uniqueId);
     }
 
@@ -129,14 +131,8 @@ class EAVRepository
         return $result;
     }
 
-
-
-    /**
-     * @param string $unique
-     * @return int
-     */
-    public function deleteByUnique(string $unique): int
+    public function deleteById(int $id): int
     {
-        return $this->idRepository->deleteByColumn(DynamicId::row_unique, $unique); // TODO: set foreign keys for delete all values for t
+        return $this->idRepository->deleteByColumn(DynamicId::row_unique, $id); // TODO: set foreign keys for delete all values for t
     }
 }
