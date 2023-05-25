@@ -4,6 +4,7 @@
 namespace App\Forms;
 
 
+use App\Model\Database\IRepository;
 use App\Model\Database\Repository;
 use App\Model\Database\Entity;
 use Exception;
@@ -21,7 +22,7 @@ class RepositoryForm extends Form
      * @param Presenter $presenter
      * @param Repository $repository
      */
-    #[Pure] public function __construct(protected Presenter $presenter, protected Repository $repository)
+    #[Pure] public function __construct(protected Presenter $presenter, protected IRepository $repository)
     {
         parent::__construct($this->presenter);
     }
