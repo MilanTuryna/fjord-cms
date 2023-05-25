@@ -4,27 +4,30 @@
 namespace App\Model\Database\EAV;
 
 
+use App\Model\Database\EAV\Exceptions\EntityNotFoundException;
 use App\Model\Database\Repository\Dynamic\AttributeRepository;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicAttribute;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicEntity;
 use App\Model\Database\Repository\Dynamic\EntityRepository;
+use App\Model\Database\Repository\Dynamic\IdRepository;
+use App\Model\Database\Repository\Dynamic\ValueRepository;
 use InvalidArgumentException;
+use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 
 class DynamicEntityFactory
 {
-    private EntityRepository$entityRepository;
-    private AttributeRepository$attributeRepository;
 
     /**
      * DynamicEntityFactory constructor.
+     * @param Explorer $explorer
      * @param EntityRepository $entityRepository
      * @param AttributeRepository $attributeRepository
      */
-    public function __construct(EntityRepository $entityRepository, AttributeRepository $attributeRepository)
+    public function __construct(private Explorer $explorer, private EntityRepository $entityRepository,
+                                private AttributeRepository $attributeRepository, private IdRepository $idRepository, private ValueRepository $valueRepository
+    )
     {
-        $this->entityRepository = $entityRepository;
-        $this->attributeRepository = $attributeRepository;
     }
 
     /**
@@ -42,5 +45,13 @@ class DynamicEntityFactory
             $this->attributeRepository->addAttribute($insertedEntity->id, $attribute);
         }
         return $insertedEntity->{'id'} ?? null;
+    }
+
+    /**
+     * @throws EntityNotFoundException
+     */
+    public function getEntityRepository(string $entityName): EAVRepository
+    {
+        return new EAVRepository($this->explorer, $this->attributeRepository, $this->entityRepository, $this->idRepository, $this->valueRepository, $entityName);
     }
 }
