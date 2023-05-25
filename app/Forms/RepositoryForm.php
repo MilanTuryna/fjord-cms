@@ -10,6 +10,7 @@ use App\Model\Database\Entity;
 use Exception;
 use JetBrains\PhpStorm\Pure;
 use Nette\Application\AbortException;
+use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;
@@ -28,13 +29,13 @@ class RepositoryForm extends Form
     }
 
     /**
-     * @param \Nette\Application\UI\Form $form
-     * @param ActiveRow $activeRow
+     * @param Form $form
+     * @param object $activeRow
      * @param string $submitCaption
      * @param array $exceptions For inputs that's not same as columns in database
-     * @return \Nette\Application\UI\Form
+     * @return Form
      */
-    public static function createEditForm(\Nette\Application\UI\Form $form, ActiveRow $activeRow, string $submitCaption = "Aktualizovat změny", array $exceptions = []): \Nette\Application\UI\Form {
+    public static function createEditForm(\Nette\Application\UI\Form $form, object $activeRow, string $submitCaption = "Aktualizovat změny", array $exceptions = []): \Nette\Application\UI\Form {
         /**
          * @var $controls TextInput[]
          * Only for IDE hinting (non-tested)
