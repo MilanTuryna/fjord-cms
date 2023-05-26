@@ -35,7 +35,8 @@ class RepositoryForm extends Form
      * @param array $exceptions For inputs that's not same as columns in database
      * @return Form
      */
-    public static function createEditForm(\Nette\Application\UI\Form $form, object $activeRow, string $submitCaption = "Aktualizovat změny", array $exceptions = []): \Nette\Application\UI\Form {
+    public static function createEditForm(Form $form, object $activeRow, string $submitCaption = "Aktualizovat změny", array $exceptions = []): Form
+    {
         /**
          * @var $controls TextInput[]
          * Only for IDE hinting (non-tested)
@@ -52,8 +53,8 @@ class RepositoryForm extends Form
     }
 
     /**
-     * @param \Nette\Application\UI\Form $form
-     * @param Entity $entity
+     * @param Form $form
+     * @param iterable $entity
      * @param FormMessage $message
      * @param ?FormRedirect $formRedirect
      * @param int|null $rowId
@@ -65,17 +66,17 @@ class RepositoryForm extends Form
      * @throws AbortException
      * @throws InvalidLinkException
      */
-    public function successTemplate(\Nette\Application\UI\Form $form, Entity $entity, FormMessage $message, ?FormRedirect $formRedirect = null, ?int $rowId = null, array $dataExceptions = [], bool $throwExceptions = false, bool $deletePrivateVars = true, ?callable $afterInsert = null) {
+    public function successTemplate(Form $form, iterable $entity, FormMessage $message, ?FormRedirect $formRedirect = null, ?int $rowId = null, array $dataExceptions = [], bool $throwExceptions = false, bool $deletePrivateVars = true, ?callable $afterInsert = null): bool
+    {
         if(!$formRedirect) $formRedirect = new FormRedirect("this");
         $error = false;
         try {
             // delete "form private" vars
             if($deletePrivateVars) {
-                foreach (get_object_vars($entity) as $k => $i) if($k[0] === "_") unset($entity->{$k});
+                foreach ($entity as $k => $i) if($k[0] === "_") unset($entity[$k]);
             }
             foreach ($dataExceptions as $dataException) unset($entity->{$dataException});
-            $iterable = $entity->iterable();
-            $updatedRow = $rowId ? $this->repository->updateById($rowId, $iterable) : $this->repository->insert($iterable);
+            $updatedRow = $rowId ? $this->repository->updateById($rowId, $entity) : $this->repository->insert($entity);
             if($updatedRow) {
                 $this->presenter->flashMessage($message->success, FlashMessages::SUCCESS);
                 foreach ($formRedirect->args as $i => $v) { // replacing FormRedirect special argument constants as real value
