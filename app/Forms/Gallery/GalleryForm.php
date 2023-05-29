@@ -11,6 +11,8 @@ use App\Forms\Gallery\Data\ItemFormData;
 use App\Forms\RepositoryForm;
 use App\Model\Database\Repository\Gallery\GalleryRepository;
 use App\Model\Database\Repository\Gallery\ItemsRepository;
+use App\Model\FileSystem\GalleryUploadManager;
+use Exception;
 use JetBrains\PhpStorm\Pure;
 use Nette\Application\UI\Presenter;
 use Nette\Forms\Container;
@@ -29,7 +31,7 @@ class GalleryForm extends RepositoryForm
      * @param ItemsRepository $itemsRepository
      * @param int $admin_id
      */
-    #[Pure] public function __construct(protected Presenter $presenter, private GalleryRepository $galleryRepository, private ItemsRepository $itemsRepository, private int $admin_id)
+    #[Pure] public function __construct(protected Presenter $presenter, private GalleryRepository $galleryRepository, private ItemsRepository $itemsRepository, private int $admin_id, private GalleryUploadManager $galleryUploadManager)
     {
         parent::__construct($this->presenter, $this->galleryRepository);
     }
@@ -58,6 +60,7 @@ class GalleryForm extends RepositoryForm
     /**
      * @param \Nette\Application\UI\Form $form
      * @param GalleryFormData $data
+     * @throws Exception
      */
     protected function uploadImages(\Nette\Application\UI\Form $form, GalleryFormData $data): void {
         $errorMessage = function (string $alt, int $key) {
@@ -74,6 +77,7 @@ class GalleryForm extends RepositoryForm
                 $item->original_file = $itemUpload->getUntrustedName();
                 $item->compressed_file = ItemFormData::encodeName($itemUpload->getUntrustedName(), $itemUpload->getImageFileExtension());
                 $item->admin_id = $this->admin_id;
+                $this->galleryUploadManager->add($itemUpload, $item->compressed_file);
                 if($this->itemsRepository->insert($item->iterable(true))) {
                     $this->presenter->flashMessage(`Obrázek č. {$i+1} byl úspěšně nahrán!`, FlashMessages::SUCCESS);
                 } else {
