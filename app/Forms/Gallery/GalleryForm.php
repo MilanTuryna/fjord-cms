@@ -30,6 +30,7 @@ class GalleryForm extends RepositoryForm
      * @param GalleryRepository $galleryRepository
      * @param ItemsRepository $itemsRepository
      * @param int $admin_id
+     * @param GalleryUploadManager $galleryUploadManager
      */
     #[Pure] public function __construct(protected Presenter $presenter, private GalleryRepository $galleryRepository, private ItemsRepository $itemsRepository, private int $admin_id, private GalleryUploadManager $galleryUploadManager)
     {
