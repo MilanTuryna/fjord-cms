@@ -51,7 +51,7 @@ class GalleryForm extends RepositoryForm
             $container->addText("alt", "Alternativní text")->setRequired(false);
             $container->addText("image_description", "Popis obrázku");
         });
-        $form->addMultiUpload("_global-upload")->setRequired(false);
+        $form->addMultiUpload("_global-upload", "Hromadné nahrání obrázků")->setRequired(false);
         $items->addCreateButton("Přidat položku")->addClass('btn btn-dark w-100');;
         $form->addSubmit("submit", "Vytvořit galerii");
         return $form;
