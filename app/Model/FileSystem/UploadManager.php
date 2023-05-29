@@ -3,6 +3,7 @@
 namespace App\Model\FileSystem;
 
 use App\Model\Cryptography;
+use App\Model\FileSystem\Exceptions\UploadNotValidException;
 use Exception;
 use Nette\FileNotFoundException;
 use Nette\Http\FileUpload;
@@ -21,22 +22,18 @@ class UploadManager
     }
 
     /**
-     * @param callable $errorCallback
-     * @param FileUpload[] $fileUploads
+     * @param FileUpload $upload
+     * @param string $fileName
+     * @return void
      * @throws Exception
      */
-    public function add(callable $errorCallback, array $fileUploads)
+    public function add(FileUpload $upload, string $fileName): void
     {
-        $errorUploads = [];
-        foreach ($fileUploads as $upload) {
-            if ($upload->hasFile() && $upload->isOk() && $upload->isImage()) {
-                $upload->move($this->path . Cryptography::createUnique(). "." . pathinfo($upload->getName(), PATHINFO_EXTENSION));
-            } else {
-                $errorUploads[] = $upload;
-            }
+        if($upload->hasFile() && $upload->isOk()) {
+            $upload->move($this->path . $fileName);
+        } else {
+            throw new UploadNotValidException();
         }
-
-        $errorCallback($errorUploads);
     }
 
     /**
@@ -49,12 +46,12 @@ class UploadManager
     }
 
     /**
-     * @param $name
+     * @param $fileName (with extension)
      */
-    public function deleteUpload($name): void
+    public function deleteUpload($fileName): void
     {
-        if (file_exists($this->path . $name)) {
-            FileSystem::delete($this->path . $name);
+        if (file_exists($this->path . $fileName)) {
+            FileSystem::delete($this->path . $fileName);
         } else {
             throw new FileNotFoundException();
         }
