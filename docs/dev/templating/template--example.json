@@ -1,0 +1,40 @@
+{
+  "title": "Název šablony",
+  "author": {
+    "name": "Milan Turyna",
+    "email": "milan@turyna.eu",
+    "web": "https://turyna.eu"
+  },
+  "pages": {
+    "category1": [
+      {
+        "page_title": "",
+        "description": "",
+        "output": {
+          "content": "",
+          "type": "enum(SRC, PATH)"
+        }
+      }
+    ],
+    "category2": [],
+    "category3": []
+  },
+  "eav": [
+    {
+      "entity_name": "Article",
+      "entity_description": "Entita pro správu článků",
+      "attributes": [{
+          "name": "xx",
+          "date_type": "string|bool|int|float",
+          "description": "lorem ipsum dolor amet",
+          "placeholder": "",
+          "generate_value": "created|edit|created_admin|edited_admin (AttributeData::GENERATED_VALUES)",
+          "preset_value": "přednastavená hodnota",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "description": "Popis šablony",
+  "version": "1.00"
+}
