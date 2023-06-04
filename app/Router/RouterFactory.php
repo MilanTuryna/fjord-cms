@@ -7,7 +7,10 @@ namespace App\Router;
 use Nette;
 use Nette\Application\Routers\RouteList;
 
-
+/**
+ * Class RouterFactory
+ * @package App\Router
+ */
 final class RouterFactory
 {
 	use Nette\StaticClass;
@@ -36,6 +39,11 @@ final class RouterFactory
             ->addRoute("/admin/gallery/view/<galleryId>/image/view/<imageId>")
             ->addRoute("/admin/gallery/view/<galleryId>/image/remove/<imageId>")
             ->addRoute("/admin/gallery/remove/<galleryId>")
+
+            ->addRoute("/admin/account/list", "Administrator:Account:list")
+            ->addRoute("/admin/account/new", "Administrator:Account:new")
+            ->addRoute("/admin/account/view[/<id>]", "Administrator:Account:new")
+            ->addRoute("/admin/account/remove[/<id>]", "Administrator:Account:remove")
 
             ->addRoute("/admin/settings", "Settings:overview")
             ->addRoute("/admin/settings/history/<id>", "Settings:history")
