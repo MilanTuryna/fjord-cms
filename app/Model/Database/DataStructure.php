@@ -2,6 +2,15 @@
 
 namespace App\Model\Database;
 
+use App\Model\Database\Repository\Admin\Entity\AccessLog;
+use App\Model\Database\Repository\Admin\Entity\Account;
+use App\Model\Database\Repository\Dynamic\Entity\DynamicAttribute;
+use App\Model\Database\Repository\Dynamic\Entity\DynamicEntity;
+use App\Model\Database\Repository\Dynamic\Entity\DynamicId;
+use App\Model\Database\Repository\Dynamic\Entity\DynamicValue;
+use App\Model\Database\Repository\Gallery\Entity\Gallery;
+use App\Model\Database\Repository\Gallery\Entity\GalleryItem;
+use App\Model\Database\Repository\Settings\Entity\GlobalSettings;
 use Exception;
 use Nette\Utils\DateTime;
 
@@ -15,6 +24,15 @@ abstract class DataStructure
     const MAXIMUM_LIMIT = 999999999;
 
     const ENTITIES = [
+        "fjord_admin_accesslog" => AccessLog::class,
+        "fjord_admin_account" => Account::class,
+        "fjord_dynamic_attributes" => DynamicAttribute::class,
+        "fjord_dynamic_entity" => DynamicEntity::class,
+        "fjord_dynamic_ids" => DynamicId::class,
+        "fjord_dynamic_values" => DynamicValue::class,
+        "fjord_gallery" => Gallery::class,
+        "fjord_gallery_items" => GalleryItem::class,
+        "fjord_global_settings" => GlobalSettings::class,
     ];
 
     /**
