@@ -1,1 +1,2 @@
-Require all denied
+RewriteEngine On
+RewriteRule (.*) www/$1 [L]
