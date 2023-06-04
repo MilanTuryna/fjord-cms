@@ -18,17 +18,20 @@ class EntityPresenter extends AdminBasePresenter
 {
     /**
      * @param AdminAuthenticator $adminAuthenticator
-     * @param string $permissionNode
-     * @param EAVRepository $EAVRepository
      * @param DynamicEntityFactory $dynamicEntityFactory
+     * @param string $permissionNode
      */
-    public function __construct(AdminAuthenticator $adminAuthenticator, string $permissionNode = AdminPermissions::DYNAMIC_ENTITY_EDIT, protected EAVRepository $EAVRepository, protected DynamicEntityFactory $dynamicEntityFactory)
+    public function __construct(AdminAuthenticator $adminAuthenticator, protected DynamicEntityFactory $dynamicEntityFactory, string $permissionNode = AdminPermissions::DYNAMIC_ENTITY_EDIT,)
     {
         parent::__construct($adminAuthenticator, $permissionNode);
     }
 
+    /**
+     * @throws EntityNotFoundException
+     */
     public function renderList(string $entityName) {
-        $this->template->rows = $this->EAVRepository->findAll();
+        $EAVRepository = $this->dynamicEntityFactory->getEntityRepository($entityName);
+        $this->template->rows = $EAVRepository->findAll();
     }
 
     /**
