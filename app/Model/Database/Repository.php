@@ -2,7 +2,7 @@
 
 namespace App\Model\Database;
 
-use App\Repository\Common\Entity\SoftDeleteObject;
+use App\Model\Database\Repository\Common\Entity\SoftDeleteObject;
 use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
@@ -168,7 +168,7 @@ abstract class Repository implements IRepository
         if(property_exists(DataStructure::ENTITIES[$this->table], SoftDeleteObject::deleted)) {
             return $this->updateById($id, [
                 SoftDeleteObject::deleted => 1
-            ]);
+            ])[0];
         }
         return $this->explorer->table($this->table)->wherePrimary($id)->delete();
     }
