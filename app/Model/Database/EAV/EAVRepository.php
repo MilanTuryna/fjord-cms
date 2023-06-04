@@ -76,17 +76,17 @@ class EAVRepository implements IRepository
     }
 
     /**
-     * @param int $uniqueId
+     * @param int $id
      * @param array $data
      * @return array (info about updated rows [attr => bool(updated)])
      * TODO: check problem with updating value that isn't inserted
      */
-    public function updateByUnique(int $uniqueId, array $data): array
+    public function updateById(int $id, iterable $data): array
     {
         $sql = FileSystem::read("SQL/updateByUnique.sql");
         $result = [];
         foreach ($data as $k => $v) {
-            $result[$k] = $this->explorer->query($sql, $v, $k);
+            $result[$k] = (bool)$this->explorer->query($sql, $v, $k)->getRowCount();
         }
         return $result;
     }
@@ -108,7 +108,7 @@ class EAVRepository implements IRepository
      * @throws InvalidAttributeException
      * @throws Exception
      */
-    public function insert(array $data): array {
+    public function insert(iterable $data): array {
         $attributes = $this->getEntityAttributesAssoc();
         $result = [];
         $newDynamicID = $this->idRepository->insert([

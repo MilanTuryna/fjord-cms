@@ -111,11 +111,11 @@ abstract class Repository implements IRepository
     /**
      * @param int $id
      * @param iterable $data
-     * @return int
+     * @return array
      */
-    public function updateById(int $id, iterable $data): int
+    public function updateById(int $id, iterable $data): array
     {
-        return $this->explorer->table($this->table)->wherePrimary($id)->update($data);
+        return [$this->explorer->table($this->table)->wherePrimary($id)->update($data)];
     }
 
     /**
@@ -151,10 +151,11 @@ abstract class Repository implements IRepository
     }
 
     /**
-     * @param array $data
-     * @return array|bool|int|iterable|ActiveRow|Selection|Traversable
+     * @param iterable $data
+     * @return int|bool|ActiveRow|Selection|iterable
      */
-    public function insert(array $data) { // TODO: return type
+    public function insert(iterable $data): int|bool|ActiveRow|Selection|iterable
+    { // TODO: return type
         return $this->explorer->table($this->table)->insert($data);
     }
 

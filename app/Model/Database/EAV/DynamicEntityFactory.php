@@ -23,6 +23,8 @@ class DynamicEntityFactory
      * @param Explorer $explorer
      * @param EntityRepository $entityRepository
      * @param AttributeRepository $attributeRepository
+     * @param IdRepository $idRepository
+     * @param ValueRepository $valueRepository
      */
     public function __construct(private Explorer $explorer, private EntityRepository $entityRepository,
                                 private AttributeRepository $attributeRepository, private IdRepository $idRepository, private ValueRepository $valueRepository
