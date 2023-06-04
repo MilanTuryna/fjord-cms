@@ -39,9 +39,9 @@ class SettingsForm extends RepositoryForm
      * @param FormRedirect $formRedirect
      * @param int $admin_id
      */
-    #[Pure] public function __construct(protected Presenter $presenter, protected Repository\Settings\GlobalSettingsRepository $repository, private FormRedirect $formRedirect, private int $admin_id)
+    public function __construct(protected Presenter $presenter, Repository\Settings\GlobalSettingsRepository $repository, private FormRedirect $formRedirect, private int $admin_id)
     {
-        parent::__construct($this->presenter, $this->repository);
+        parent::__construct($this->presenter, $repository);
 
         $this->settingsRepository = $repository;
     }

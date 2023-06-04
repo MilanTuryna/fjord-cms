@@ -18,14 +18,18 @@ use Nette\Forms\Controls\TextInput;
 
 class RepositoryForm extends Form
 {
+    protected Repository $repository;
+
     /**
      * RepositoryForm constructor.
      * @param Presenter $presenter
      * @param Repository $repository
      */
-    #[Pure] public function __construct(protected Presenter $presenter, protected IRepository $repository)
+    public function __construct(protected Presenter $presenter, Repository $repository)
     {
         parent::__construct($this->presenter);
+
+        $this->repository = $repository;
     }
 
     /**
