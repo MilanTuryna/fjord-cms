@@ -34,7 +34,6 @@ class AuthPresenter extends BasePresenter
      */
     public function startup() {
         parent::startup();
-        // admin is logged
         if($this->adminAuthenticator->getId()) $this->redirect(":Admin:Overview:home");
     }
 
