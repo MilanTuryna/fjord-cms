@@ -1,0 +1,94 @@
+{import TEMPLATE_COMMON . "/admin.latte"}
+<!doctype html>
+<html lang="en" xmlns:n="http://www.w3.org/1999/xhtml">
+<head>
+    {ifset #headScripts}{include headScripts}{/ifset}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Miloslav Turyna https://turyna.eu">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>{include title}</title>
+    <link rel="stylesheet" href="{$basePath}/styles/admin/ui.css">
+    <link rel="stylesheet" href="{$basePath}/styles/admin/bootstrap-addon.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    {ifset #head}
+    {include head}
+    {/ifset}
+</head>
+<body class="bg-white">
+<script>
+    function newPopup(el, event) {
+        event.preventDefault();
+        let popupWindow = window.open(
+            el.href,'popUpWindow','left=10,top=10,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no,status=yes')
+    }
+</script>
+<div class="navbar" style="background-color:#bbdefb; color:#444;">
+  <span class="navbar-text float-right">
+      <a href="" style="color: #FF43D6">Powered by FjordCMS</a>
+  </span>
+</div>
+<header class="jumbotron jumbotron-fluid text-white " style="background-color:#01579b; margin-bottom:0;">
+    <div class="container">
+        <h1 class="display-4" style="font-size: 50px;">Administrace aplikace</h1>
+    </div>
+</header>
+<style>
+    .aktivni {
+        background-color:#ffeeff!important;
+    }
+</style>
+<div class="navbar navbar-expand-lg navbar-light bg-light border-bottom"></div>
+<div class="container-fluid wrapper" style="margin-top:16px;">
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            <div n:foreach="$flashes as $flash" n:class="alert, 'alert alert-' . $flash->type">{$flash->message}</div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    {include breadcrumb}
+                </ol>
+            </nav>
+            <div class="row">
+                <div n:class="isset($admin) ? 'col-md-8' : 'col-md-12'">
+                    {include content}
+                </div>
+                {ifset $admin}
+                <div class="col-md-4">
+                    <div class="card classic-shadow mb-3" style="background:#f1f1f1;">
+                        <div class="card-body">
+                            <div class="card-text">
+                                <b>{$admin->first_name} {$admin->surname} <br><small>{$admin->email}</small></b>
+                                <hr>
+                                <ul>
+                                    <li n:if="$admin->isFullPermission()">Plné právo: <b>Ano</b></li>
+                                    <li><a href="" class="black-href">Nastavení účtu a změna hesla</li>
+                                    <li><a n:href=":Admin:Auth:logout" class="black-href">Odhlásit se</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-group classic-shadow">
+
+                    </div>
+                </div>
+
+                {/ifset}
+            </div>
+        </div>
+        <div class="col-md-12 mb-3">
+            <p class="text-muted text-center"><small><a href="https://github.com/MilanTuryna/fjord-cms">FjordCMS</a> © {="now"|date:'Y'}</small></p>
+        </div>
+    </div>
+</div>
+<script src="{$basePath}/js/admin.js"></script>
+<script src="{$basePath}/styles/admin/jquery.min.js"></script> TODO
+<script src="{$basePath}/styles/admin/bootstrap.min.js"></script>
+<script>
+    $(document).on('click', '.dropdown .dropdown-menu', function (e) {
+        e.stopPropagation();
+    });
+</script>
+{ifset #endScripts}{include endScripts}{/ifset}
+</body>
+</html>
