@@ -3,6 +3,8 @@ temp/
 log/
 bin/
 .idea
+www/styles/admin/bootstrap.min.js
+www/styles/admin/jquery.min.js
 /.idea
 /vendor
 composer.lock
