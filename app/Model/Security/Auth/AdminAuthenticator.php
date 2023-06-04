@@ -94,4 +94,8 @@ class AdminAuthenticator implements IAuthenticator
         if (!$section['id']) throw new LoggedOutException();
         $section->remove();
     }
+
+    public function getPasswords(): Passwords {
+        return $this->passwords;
+    }
 }
