@@ -8,6 +8,10 @@ search:
 	    in: %appDir%/Model/Database/Repository
 	    files:
 	        - *Repository.php
+	authenticator:
+	    in: %appDir%/Model/Security/Auth
+	    classes:
+	        - *Authenticator
 
 extensions:
 	form-multipier: Contributte\FormMultiplier\DI\MultiplierExtension
