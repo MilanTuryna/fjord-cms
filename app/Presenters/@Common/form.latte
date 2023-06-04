@@ -1,23 +1,68 @@
-{* Breadcrumb (weird code i know, but when i want use array like normal programmer, nette blocked me with illegal offset) *}
-{define f_breadcrumb, $links}
-{varType array $links}
-{foreach $links as $link => $name}
-{var $link = App\Presenters\TemplateUtils::stringRedirect($link)}
-<li {if !$iterator->isLast()}
-    {if $link[1]}
-    href="{$presenter->link($link[0], $link[1])}"
-    {else}
-    href="{$presenter->link($link[0])}"
+<form n:name=$form>
+    {varType Nette\Application\UI\Form $form}
+    {foreach $form->getControls() as $input}
+    {if $input->getOption(type) !== hidden}
+    {varType Nette\Forms\Controls\TextInput $input}
+    {if $input->getName() !== "submit"}
+    {if $input->getOption(App\Forms\FormOption::UPPER_BR)}
+    <br>
+    {/if}
+    <div class="form-group row" style="{$input instanceof Nette\Forms\Controls\Checkbox ? 'margin-bottom: 0!important;'|noescape}
+                {$input->getOption(App\Forms\FormOption::BACKGROUND) ? 'background: ' . $input->getOption(App\Forms\FormOption::BACKGROUND)|noescape}">
+        {if !($input instanceof Nette\Forms\Controls\Checkbox)}
+        <div class="col-12">
+            <hr n:if="$input->getOption(App\Forms\FormOption::UPPER_LINE)">
+            <b n:if="$input->getOption(App\Forms\FormOption::GROUP_TITLE)" class="text-muted" style="text-transform: uppercase">{$input->getOption(App\Forms\FormOption::GROUP_TITLE)}</b>
+            <div class="row">
+                <label n:name="$input->getName()" n:class="'col-sm-2 col-form-label ' . ($input->isRequired() ? 'required-label' : '')">
+                    {$input->getCaption()}
+                </label>
+                <div class="col-sm-10">
+                    <div n:if="$input->getOption(App\Forms\FormOption::ALERT_SUCCESS)"
+                         class="alert alert text-center alert-success">{$input->getOption(App\Forms\FormOption::ALERT_SUCCESS)}</div>
+                    <div n:if="$input->getOption(App\Forms\FormOption::ALERT_ERROR)"
+                         class="alert alert text-center alert-danger">{$input->getOption(App\Forms\FormOption::ALERT_ERROR)}</div>
+                    <span class="text-muted small" n:if="$input->getOption(App\Forms\FormOption::OPTION_NOTE)">
+                                        {$input->getOption(App\Forms\FormOption::OPTION_NOTE)|noescape}
+                                    </span>
+                    {input $input, class: 'form-control'}
+                    <span class='text-danger' n:ifcontent>{inputError $input}</span>
+                </div>
+            </div>
+            <hr n:if="$input->getOption(App\Forms\FormOption::BOTTOM_LINE)">
+        </div>
+        {else}
+        <div class="col-12">
+            {if $input->getOption(App\Forms\FormOption::UPPER_BR)}
+            <br>
+            {/if}
+            <div class="row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10">
+                    <span class="text-muted small" n:if="$input->getOption(App\Forms\Form::OPTION_NOTE)">{$input->getOption(App\Forms\ForOption::OPTION_NOTE)}</span>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" n:name="$input->getName()">
+                        <label n:name="$input->getName()" n:class="$input->isRequired() ? 'required-label' : ''">
+                            {$input->getCaption()}
+                        </label>
+                        <span class='text-danger' n:ifcontent>{inputError $input}</span>
+                    </div>
+                </div>
+            </div>
+            <hr n:if="$input->getOption(App\Forms\FormOption::BOTTOM_LINE)">
+        </div>
+        {/if}
+    </div>
+    {if $input->getOption(App\Forms\FormOption::BOTTOM_BR)}
+    <br>
     {/if}
     {/if}
-    {if $iterator->isLast()} aria-current="page" {/if}
-    n:class="'breadcrumb-item', $iterator->isLast() ? 'active' : 'black-href'">
-    {if $link[1]}
-    <a class="black-href" n:href="$link[0], $link[1]" n:if="!$iterator->isLast()">{$name|trim}</a>
-    {else}
-    <a class="black-href" n:href="$link[0]" n:if="!$iterator->isLast()">{$name|trim}</a>
     {/if}
-    {if $iterator->isLast()}{$name}{/if}
-</li>
-{/foreach}
-{/define}
+    {/foreach}
+    <div class="row" n:ifset="$form['submit']">
+        <div class="col-sm-2 text-black-50 small"></div>
+        <div class="col-sm-10">
+            <button type="submit" n:name="submit" n:class="'btn float-right', ($form['submit']->getOption(App\Forms\FormOption::BUTTON_DANGER) ? 'btn-danger' : 'btn-success')">{$form['submit']->getCaption()}</button>
+        </div>
+    </div>
+</form>

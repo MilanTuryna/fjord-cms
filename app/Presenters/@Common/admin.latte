@@ -1,0 +1,23 @@
+{* Breadcrumb (weird code i know, but when i want use array like normal programmer, nette blocked me with illegal offset) *}
+{define f_breadcrumb, $links}
+{varType array $links}
+{foreach $links as $link => $name}
+{var $link = App\Presenters\TemplateUtils::stringRedirect($link)}
+<li {if !$iterator->isLast()}
+    {if $link[1]}
+    href="{$presenter->link($link[0], $link[1])}"
+    {else}
+    href="{$presenter->link($link[0])}"
+    {/if}
+    {/if}
+    {if $iterator->isLast()} aria-current="page" {/if}
+    n:class="'breadcrumb-item', $iterator->isLast() ? 'active' : 'black-href'">
+    {if $link[1]}
+    <a class="black-href" n:href="$link[0], $link[1]" n:if="!$iterator->isLast()">{$name|trim}</a>
+    {else}
+    <a class="black-href" n:href="$link[0]" n:if="!$iterator->isLast()">{$name|trim}</a>
+    {/if}
+    {if $iterator->isLast()}{$name}{/if}
+</li>
+{/foreach}
+{/define}
