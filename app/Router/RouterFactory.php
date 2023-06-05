@@ -32,6 +32,7 @@ final class RouterFactory
             ->addRoute("/admin/internal/eav/entity/new", "Internal:EAV:new")
             ->addRoute("/admin/internal/eav/entity/remove/<id>", "Internal:EAV:remove")
 
+            ->addRoute("/admin/entity/<entityName>/overview", "Dynamic:Entity:overview")
             ->addRoute("/admin/entity/<entityName>/list", "Dynamic:Entity:list")
             ->addRoute("/admin/entity/<entityName>/view/<rowUnique>", "Dynamic:Entity:view")
             ->addRoute("/admin/entity/<entityName>/remove/<rowUnique>", "Dynamic:Entity:remove")
