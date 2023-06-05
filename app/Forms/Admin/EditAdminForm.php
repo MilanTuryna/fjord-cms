@@ -67,6 +67,6 @@ class EditAdminForm extends AdminForm
      */
     public function success(\Nette\Application\UI\Form $form, AdminFormData $data) {
         $data->permissions = Utils::arrayToUnparsedList($data->permissions_array);
-        $this->successTemplate($form, $data, new FormMessage("Informace o daném administrátorovi byly úspěšně změněny.", "Informace o daném administrátorovi nemohli být z neznámého důvodu změněny."), null, $this->admin_id);
+        $this->successTemplate($form, $data->iterable(true), new FormMessage("Informace o daném administrátorovi byly úspěšně změněny.", "Informace o daném administrátorovi nemohli být z neznámého důvodu změněny."), null, $this->admin_id);
     }
 }
