@@ -30,6 +30,7 @@ class EntityPresenter extends AdminBasePresenter
      * @throws EntityNotFoundException
      */
     public function renderList(string $entityName) {
+        $this->setIfCurrentEntity($entityName);
         $EAVRepository = $this->dynamicEntityFactory->getEntityRepository($entityName);
         $this->template->rows = $EAVRepository->findAll();
     }
@@ -38,6 +39,7 @@ class EntityPresenter extends AdminBasePresenter
      * @throws EntityNotFoundException
      */
     public function renderView(string $entityName, string $rowUnique) {
+        $this->setIfCurrentEntity($entityName);
         $EAVRepository = $this->dynamicEntityFactory->getEntityRepository($entityName);
         $this->template->entityName = $entityName;
         $this->template->rowUnique = $rowUnique;
@@ -47,12 +49,14 @@ class EntityPresenter extends AdminBasePresenter
     /**
      * @throws AbortException|EntityNotFoundException
      */
-    #[NoReturn] public function renderRemove(string $entityName, string $rowUnique) {
+    #[NoReturn] public function actionRemove(string $entityName, string $rowUnique) {
+        $this->setIfCurrentEntity($entityName);
         $EAVRepository = $this->dynamicEntityFactory->getEntityRepository($entityName);
         $this->prepareActionRemove($EAVRepository, $rowUnique, new FormMessage("$entityName (ID: $rowUnique) byl úspěšně odebrán.", "$entityName (ID: $rowUnique) nebyl z neznámého důvodu odebrán."), "list");
     }
 
     public function renderNew(string $entityName) {
+        $this->setIfCurrentEntity($entityName);
         $this->template->entityName = $entityName;
     }
 }
