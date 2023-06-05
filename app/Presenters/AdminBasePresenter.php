@@ -5,6 +5,7 @@ namespace App\Presenters;
 
 use App\Forms\FlashMessages;
 use App\Forms\FormMessage;
+use App\Forms\FormRedirect;
 use App\Model\Admin\Permissions\Utils;
 use App\Model\Database\IRepository;
 use App\Model\Database\Repository;
@@ -86,12 +87,15 @@ class AdminBasePresenter extends BasePresenter
      * @param string $route
      * @throws AbortException
      */
-    #[NoReturn] public function prepareActionRemove(IRepository $repository, int $id, FormMessage $formMessage, string $route) {
+    #[NoReturn] public function prepareActionRemove(IRepository $repository, int $id, FormMessage $formMessage, string|FormRedirect $route) {
         $deleted = $repository->deleteById($id);
         if($deleted) {
             $this->flashMessage($formMessage->success, FlashMessages::SUCCESS);
         } else {
             $this->flashMessage($formMessage->error, FlashMessages::ERROR);
+        }
+        if($route instanceof FormRedirect) {
+            $this->redirect($route->route, $route->args);
         }
         $this->redirect($route);
     }
