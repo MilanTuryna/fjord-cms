@@ -21,7 +21,7 @@ final class RouterFactory
 		$router->withModule("Admin")
             ->addRoute('/admin', 'Overview:home')
             ->addRoute("/admin/login", "Auth:login")
-            ->addRoute("/admin/logout", "Auth:logout")
+            ->addRoute("/admin/logout", "Overview:logout")
             ->addRoute("/admin/overview", "Overview:home")
 
             ->addRoute("/admin/internal", "Internal:Main:home")

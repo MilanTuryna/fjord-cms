@@ -26,7 +26,7 @@
 </script>
 <div class="navbar" style="background-color:#bbdefb; color:#444;">
   <span class="navbar-text float-right">
-      <a href="" style="color: #FF43D6">Powered by FjordCMS</a>
+      <a href="" class="text-black">Powered by FjordCMS</a>
   </span>
 </div>
 <header class="jumbotron jumbotron-fluid text-white " style="background-color:#01579b; margin-bottom:0;">
@@ -63,13 +63,24 @@
                                 <ul>
                                     <li n:if="$admin->isFullPermission()">Plné právo: <b>Ano</b></li>
                                     <li><a href="" class="black-href">Nastavení účtu a změna hesla</li>
-                                    <li><a n:href=":Admin:Auth:logout" class="black-href">Odhlásit se</a></li>
+                                    <li><a n:href=":Admin:Overview:logout" class="black-href">Odhlásit se</a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                     <div class="list-group classic-shadow">
-
+                        {*Route => [Presenter (false if only pagea), Title, Condition, blank]*}
+                        {foreach [
+                        ":Admin:Overview:home" => [false, "Základní přehled"],
+                        ":Admin:Internal:Main:home" => [":Admin:Internal:Main", "Interní administrace"],
+                        ":Admin:Gallery:Main:overview" => [":Admin:Gallery:Main", "Galerie"],
+                        ":Admin:Administrator:Account:list" => [":Admin:Administrator:Account", "Správa účtů"],
+                        ":Admin:Settings:overview" => [":Admin:Settings", "Nastavení webu"]
+                        ] as $menuRoute => $title}
+                        <a n:href=$menuRoute n:if="isset($title[2]) ? $title[2] : true" n:class="$presenter->isLinkCurrent($title[0] ? $title[0] . ':*' : $menuRoute) ? aktivni, 'list-group-item', 'list-group-item-action'" {if isset($title[3])}target="_blank"{/if}>
+                        {$title[1]}
+                        </a>
+                        {/foreach}
                     </div>
                 </div>
 
@@ -82,7 +93,7 @@
     </div>
 </div>
 <script src="{$basePath}/js/admin.js"></script>
-<script src="{$basePath}/styles/admin/jquery.min.js"></script> TODO
+<script src="{$basePath}/styles/admin/jquery.min.js"></script>
 <script src="{$basePath}/styles/admin/bootstrap.min.js"></script>
 <script>
     $(document).on('click', '.dropdown .dropdown-menu', function (e) {
