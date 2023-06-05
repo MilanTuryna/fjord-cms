@@ -24,9 +24,9 @@ class AdminBasePresenter extends BasePresenter
     public GlobalSettingsRepository $settingsRepository;
 
     /**
-     * @var GlobalSettingsRepository @inject
+     * @var Repository\Admin\AccountRepository
      */
-    public GlobalSettingsRepository $accountRepository;
+    public Repository\Admin\AccountRepository $accountRepository;
 
     protected ?ActiveRow $admin;
 
@@ -61,7 +61,7 @@ class AdminBasePresenter extends BasePresenter
             $this->redirect(":Admin:Auth:login");
         }
         $this->admin = $this->adminAuthenticator->getUser();
-        $adminEntity = new Repository\Admin\Entity\Account($this->admin->username, $this->admin->email, $this->admin->password, $this->admin->permissions, $this->admin->id);
+        $adminEntity = new Repository\Admin\Entity\Account($this->admin->username, $this->admin->first_name, $this->admin->surname, $this->admin->email, $this->admin->password, $this->admin->permissions, $this->admin->created,$this->admin->id);
         if(!$adminEntity->getPermissionMap()[$this->permissionNode]) {
             $this->flashMessage("Pro vstup do této části administrace je zapotřebí vyšší oprávnění.", FlashMessages::ERROR);
             $this->redirect(":Admin:Overview:home");
