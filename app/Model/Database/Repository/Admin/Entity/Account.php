@@ -15,7 +15,7 @@ use App\Model\Database\Entity;
  */
 class Account extends Entity
 {
-    const password = "password", email = "email", username = "username";
+    const password = "password", email = "email", username = "username", first_name = "first_name", surname = "surname", permissions = "permissions", created = "created";
 
     private PermissionManager $permissionManager;
     private array $permissionMap = [];
@@ -23,12 +23,15 @@ class Account extends Entity
     /**
      * Account constructor.
      * @param string $username
+     * @param string $first_name
+     * @param string $surname
      * @param string $email
      * @param string $password
      * @param string $permissions
+     * @param string $created
      * @param int $id
      */
-    public function __construct(public string $username, public string $email, public string $password, public string $permissions, public int $id) {
+    public function __construct(public string $username, public string $first_name, public string $surname, public string $email, public string $password, public string $permissions, public string $created, public int $id) {
         $this->permissionManager = new AdminPermissions();
         $this->generatePermissionMap();
     }
@@ -48,6 +51,14 @@ class Account extends Entity
      */
     public function getPermissionMap(): array {
         return $this->permissionMap;
+    }
+
+    /**
+     * @return PermissionManager
+     * used in latte
+     */
+    public function getPermissionManager(): PermissionManager {
+        return $this->permissionManager;
     }
 
     /**
