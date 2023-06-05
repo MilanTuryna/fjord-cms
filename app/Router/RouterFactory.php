@@ -24,6 +24,8 @@ final class RouterFactory
             ->addRoute("/admin/logout", "Auth:logout")
             ->addRoute("/admin/overview", "Overview:home")
 
+            ->addRoute("/admin/internal", "Internal:Main:home")
+
             // EAV manager
             ->addRoute("/admin/internal/eav/entity/list", "Internal:EAV:list")
             ->addRoute("/admin/internal/eav/entity/view/<id>", "Internal:EAV:view")
@@ -35,10 +37,11 @@ final class RouterFactory
             ->addRoute("/admin/entity/<entityName>/remove/<rowUnique>", "Dynamic:Entity:remove")
             ->addRoute("/admin/entity/<entityName>/new", "Dynamic:Entity:new")
 
-            ->addRoute("/admin/gallery/view/<galleryId>")
-            ->addRoute("/admin/gallery/view/<galleryId>/image/view/<imageId>")
-            ->addRoute("/admin/gallery/view/<galleryId>/image/remove/<imageId>")
-            ->addRoute("/admin/gallery/remove/<galleryId>")
+            ->addRoute("/admin/gallery", "Gallery:Main:overview")
+            ->addRoute("/admin/gallery/view/<galleryId>", "Gallery:Main:view")
+            ->addRoute("/admin/gallery/view/<galleryId>/image/view/<imageId>", "Gallery:Main:viewImage")
+            ->addRoute("/admin/gallery/view/<galleryId>/image/remove/<imageId>", "Gallery:Main:removeImage")
+            ->addRoute("/admin/gallery/remove/<galleryId>", "Gallery:Main:remove")
 
             ->addRoute("/admin/account/list", "Administrator:Account:list")
             ->addRoute("/admin/account/new", "Administrator:Account:new")
