@@ -5,9 +5,15 @@
 Základní přehled
 {/block}
 {block content}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Vítejte v administraci</strong><br>Pokud jste tu poprvé, bylo by vhodné si přečíst pokyny k efektivní práci se systémem FjordCMS v <a href="">Nápovědě systému</a>.
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
 <div class="card classic-shadow default-margin-bot">
     <div class="card-body">
-        <h5 style="margin:0!important;" class="card-title">Základní nastavení systému <a n:href="Application:Settings:overview" n:if="!$settings && $permMap[$perm::ADMIN_FULL]" class="bg-warning rounded p-1" style="zoom:90%; color:#000">NENASTAVENO</a></h5>
+        <h5 style="margin:0!important;" class="card-title">Základní nastavení systému</h5>
         <div class="card-text">
             <ul n:if="$settings">
                 <li><u>Název webu</u> – {$settings->app_name}</li>
@@ -20,7 +26,7 @@ Základní přehled
             Přehled základního nastavení aplikace
         </div>
         <div class="float-right" n:if="$permMap[$perm::ADMIN_FULL]">
-            <a class="link-color" n:href="Application:Settings:overview">Upravit</a>
+            <a class="link-color" n:href=":Admin:Settings:overview">Upravit</a>
         </div>
     </div>
 </div>
