@@ -24,9 +24,14 @@ class AdminBasePresenter extends BasePresenter
     public GlobalSettingsRepository $settingsRepository;
 
     /**
-     * @var Repository\Admin\AccountRepository
+     * @var Repository\Admin\AccountRepository @inject
      */
     public Repository\Admin\AccountRepository $accountRepository;
+
+    /**
+     * @var Repository\Dynamic\EntityRepository @inject
+     */
+    public Repository\Dynamic\EntityRepository $entityRepository;
 
     protected ?ActiveRow $admin;
 
@@ -46,6 +51,10 @@ class AdminBasePresenter extends BasePresenter
 
         $this->adminAuthenticator = $adminAuthenticator;
         $this->permissionNode = $permissionNode;
+    }
+
+    protected function setIfCurrentEntity($entityName) {
+        $this->template->currentEntity = $entityName;
     }
 
     /**
@@ -89,7 +98,9 @@ class AdminBasePresenter extends BasePresenter
 
     public function beforeRender()
     {
+        $this->setIfCurrentEntity(null);
         $this->template->settings = $this->settings;
+        $this->template->dynamicEntities = $this->entityRepository->findAll()->fetchAll();
     }
 
     /**
