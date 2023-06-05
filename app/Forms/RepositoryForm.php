@@ -13,10 +13,9 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
-use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\TextInput;
 
-class RepositoryForm extends Form
+class RepositoryForm extends \App\Forms\Form
 {
     protected Repository $repository;
 
@@ -25,7 +24,7 @@ class RepositoryForm extends Form
      * @param Presenter $presenter
      * @param Repository $repository
      */
-    public function __construct(protected Presenter $presenter, Repository $repository)
+    #[Pure] public function __construct(protected Presenter $presenter, Repository $repository)
     {
         parent::__construct($this->presenter);
 

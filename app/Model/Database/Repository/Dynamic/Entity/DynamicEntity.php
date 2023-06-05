@@ -12,11 +12,26 @@ use App\Model\Database\Entity;
  */
 class DynamicEntity extends Entity
 {
-    const name = "name", created = "created", description = "description", last_edit = "last_edit", id = "id";
+    const name = "name", declension = "declension", created = "created", description = "description", last_edit = "last_edit", id = "id";
 
     public string $name;
+    public string $declension; // parse to three declension strings ["článek", "články", "článků"]
     public string $created;
     public string $description;
     public string $last_edit;
     public int $id;
+
+    /**
+     * @param string $text
+     * @return array
+     */
+    public static function toDeclension(string $text): array
+    {
+        return explode(",", $text);
+    }
+
+    public static function fromDeclension(array $declension): string
+    {
+        return implode(",", $declension);
+    }
 }

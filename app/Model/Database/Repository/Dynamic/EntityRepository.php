@@ -11,6 +11,6 @@ class EntityRepository extends Repository
 {
     public function __construct(Explorer $explorer)
     {
-        parent::__construct("fjord_dynamic_entity", $explorer);
+        parent::__construct("fjord_dynamic_entities", $explorer);
     }
 }
