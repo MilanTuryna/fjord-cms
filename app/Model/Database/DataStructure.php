@@ -27,7 +27,7 @@ abstract class DataStructure
         "fjord_admin_accesslog" => AccessLog::class,
         "fjord_admin_account" => Account::class,
         "fjord_dynamic_attributes" => DynamicAttribute::class,
-        "fjord_dynamic_entity" => DynamicEntity::class,
+        "fjord_dynamic_entities" => DynamicEntity::class,
         "fjord_dynamic_ids" => DynamicId::class,
         "fjord_dynamic_values" => DynamicValue::class,
         "fjord_gallery" => Gallery::class,
