@@ -20,18 +20,4 @@ class DynamicEntity extends Entity
     public string $description;
     public string $last_edit;
     public int $id;
-
-    /**
-     * @param string $text
-     * @return array
-     */
-    public static function toDeclension(string $text): array
-    {
-        return explode(",", $text);
-    }
-
-    public static function fromDeclension(array $declension): string
-    {
-        return implode(",", $declension);
-    }
 }
