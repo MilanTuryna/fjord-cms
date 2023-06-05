@@ -82,6 +82,18 @@
                         </a>
                         {/foreach}
                     </div>
+                    <br>
+                    <strong class="small text-muted" style="font-weight: bold">Správa obsahu</strong>
+                    <div class="list-group classic-shadow">
+                        {foreach $dynamicEntities as $entity}
+                        <a n:href=":Admin:Dynamic:Entity:Overview $entity->name" n:class="$presenter->isLinkCurrent($currentEntity === $entity->name) ? aktivni, 'list-group-item', 'list-group-item-action'" {if isset($title[3])}target="_blank"{/if}>
+                        Správa {App\Presenters\TemplateUtils::toDeclension($entity->declension)[2]}
+                        </a>
+                        {/foreach}
+                        {if !$dynamicEntities}
+                            <span class="small text-muted">Zatím tu nic není! Je potřeba prvně něco nastavit.</span>
+                        {/if}
+                    </div>
                 </div>
 
                 {/ifset}
