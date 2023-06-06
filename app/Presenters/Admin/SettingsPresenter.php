@@ -27,7 +27,8 @@ class SettingsPresenter extends AdminBasePresenter
     }
 
     public function renderOverview() {
-
+        $this->template->changeList = $this->settingsRepository->findAll()->order("created DESC");
+        $this->template->administratorMap = $this->accountRepository->findAll()->fetchPairs("id");
     }
 
     /**
