@@ -61,6 +61,7 @@ class SettingsForm extends RepositoryForm
             ->setOption(FormOption::OPTION_NOTE, "Bez diakritiky, ve formátu: music, play, split, sound")
             ->setMaxLength(DataRegulation::DESCRIPTION)
             ->setDefaultValue($actualSettings->app_keywords ?? "")->setRequired(true);
+        $form->addSubmit("submit", "Aktualizovat změny");
         return $form;
     }
 
