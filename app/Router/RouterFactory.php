@@ -39,6 +39,7 @@ final class RouterFactory
             ->addRoute("/admin/entity/<entityName>/new", "Dynamic:Entity:new")
 
             ->addRoute("/admin/gallery", "Gallery:Main:overview")
+            ->addRoute("/admin/gallery/new", "Gallery:Main:new")
             ->addRoute("/admin/gallery/view/<galleryId>", "Gallery:Main:view")
             ->addRoute("/admin/gallery/view/<galleryId>/image/view/<imageId>", "Gallery:Main:viewImage")
             ->addRoute("/admin/gallery/view/<galleryId>/image/remove/<imageId>", "Gallery:Main:removeImage")
