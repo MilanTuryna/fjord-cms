@@ -3,7 +3,6 @@ search:
 		in: %appDir%
 		classes:
 			- *Factory
-			- *Facade
 	repositories:
 	    in: %appDir%/Model/Database/Repository
 	    files:
