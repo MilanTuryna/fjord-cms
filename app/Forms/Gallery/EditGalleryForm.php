@@ -20,9 +20,9 @@ class EditGalleryForm extends GalleryForm
 {
     public ?ActiveRow $activeRow;
 
-    public function __construct(protected Presenter $presenter, protected GalleryRepository $galleryRepository, protected ItemsRepository $itemsRepository, protected int $admin_id, private int $gallery_id, private GalleryUploadManager $galleryUploadManager)
+    public function __construct(protected Presenter $presenter, protected GalleryRepository $galleryRepository, protected ItemsRepository $itemsRepository, protected int $admin_id, private int $gallery_id)
     {
-        parent::__construct($this->presenter, $this->galleryRepository, $this->itemsRepository, $this->admin_id, $this->galleryUploadManager);
+        parent::__construct($this->presenter, $this->galleryRepository, $this->itemsRepository, $this->admin_id);
 
         $this->activeRow = $this->galleryRepository->findById($this->gallery_id);
     }

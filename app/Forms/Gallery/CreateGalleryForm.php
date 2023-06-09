@@ -29,13 +29,12 @@ class CreateGalleryForm extends GalleryForm
      * @param Presenter $presenter
      * @param GalleryRepository $galleryRepository
      * @param ItemsRepository $itemsRepository
-     * @param GalleryUploadManager $galleryUploadManager
      * @param int $admin_id
      * @param FormRedirect $formRedirect
      */
-    #[Pure] public function __construct(protected Presenter $presenter, private GalleryRepository $galleryRepository, private ItemsRepository $itemsRepository, GalleryUploadManager $galleryUploadManager, private int $admin_id, private FormRedirect $formRedirect)
+    public function __construct(protected Presenter $presenter, private GalleryRepository $galleryRepository, private ItemsRepository $itemsRepository, private int $admin_id, private FormRedirect $formRedirect)
     {
-        parent::__construct($this->presenter, $this->galleryRepository, $this->itemsRepository, $this->admin_id, $galleryUploadManager);
+        parent::__construct($this->presenter, $this->galleryRepository, $this->itemsRepository, $this->admin_id);
     }
 
     /**
