@@ -7,6 +7,7 @@ namespace App\Forms\Gallery;
 use App\Forms\FormMessage;
 use App\Forms\FormRedirect;
 use App\Forms\Gallery\Data\GalleryFormData;
+use App\Model\Database\Repository\Gallery\Entity\Gallery;
 use App\Model\Database\Repository\Gallery\GalleryRepository;
 use App\Model\Database\Repository\Gallery\ItemsRepository;
 use App\Model\FileSystem\GalleryUploadManager;
@@ -43,9 +44,10 @@ class CreateGalleryForm extends GalleryForm
      * @throws Exception
      */
     public function success(Form $form, GalleryFormData $data) {
-        $success = $this->successTemplate($form, $data->iterable(true), new FormMessage("Galerie byla úspěšně vytvořena", "Galerie nemohla být z neznámého důvodu vytvořena."), $this->formRedirect, null, [] ,"");
+        $success = $this->successTemplate($form, $data->iterable(true), new FormMessage("Galerie byla úspěšně vytvořena", "Galerie nemohla být z neznámého důvodu vytvořena."), $this->formRedirect);
         if($success) {
-            $this->uploadImages($form, $data);
+            $galleryUploadManager = new GalleryUploadManager($this->galleryRepository->findByColumn(Gallery::uri, $data->uri)->fetch()->id);
+            $this->uploadImages($form, $data, $galleryUploadManager);
         }
     }
 }

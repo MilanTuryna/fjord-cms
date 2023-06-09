@@ -32,7 +32,7 @@ class GalleryForm extends RepositoryForm
      * @param int $admin_id
      * @param GalleryUploadManager $galleryUploadManager
      */
-    public function __construct(protected Presenter $presenter, private GalleryRepository $galleryRepository, private ItemsRepository $itemsRepository, private int $admin_id, private GalleryUploadManager $galleryUploadManager)
+    public function __construct(protected Presenter $presenter, private GalleryRepository $galleryRepository, private ItemsRepository $itemsRepository, private int $admin_id)
     {
         parent::__construct($this->presenter, $this->galleryRepository);
     }
@@ -63,7 +63,7 @@ class GalleryForm extends RepositoryForm
      * @param GalleryFormData $data
      * @throws Exception
      */
-    protected function uploadImages(\Nette\Application\UI\Form $form, GalleryFormData $data): void {
+    protected function uploadImages(\Nette\Application\UI\Form $form, GalleryFormData $data, GalleryUploadManager $galleryUploadManager): void {
         $errorMessage = function (string $alt, int $key) {
             $altExpression = $alt ?? "neuvedeno";
             return "Obrázek č. " . $key+1 . `({$altExpression})` . "nebyl z neznámého důvodu nahrán.";
@@ -79,7 +79,7 @@ class GalleryForm extends RepositoryForm
                 $item->original_file = $itemUpload->getUntrustedName();
                 $item->compressed_file = ItemFormData::encodeName($itemUpload->getUntrustedName(), $itemUpload->getImageFileExtension());
                 $item->admin_id = $this->admin_id;
-                $this->galleryUploadManager->add($itemUpload, $item->compressed_file);
+                $galleryUploadManager->add($itemUpload, $item->compressed_file);
                 if($this->itemsRepository->insert($item->iterable(true))) {
                     $iExpression = $i + 1;
                     $this->presenter->flashMessage(`Obrázek č. {$iExpression} byl úspěšně nahrán!`, FlashMessages::SUCCESS);
