@@ -12,13 +12,11 @@ use Nette\Utils\Finder;
 
 class UploadManager
 {
-    private string $path;
-
     /**
      * @param string $path
+     * @param array $allowedExtension
      */
-    public function __construct(string $path) {
-        $this->path = $path;
+    public function __construct(protected string $path, protected array $allowedExtension) {
     }
 
     /**
