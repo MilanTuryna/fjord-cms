@@ -9,6 +9,7 @@ use App\Forms\FormRedirect;
 use App\Forms\Gallery\CreateGalleryForm;
 use App\Forms\Gallery\EditGalleryForm;
 use App\Model\Admin\Permissions\Specific\AdminPermissions;
+use App\Model\Database\Repository\Gallery\Entity\Gallery;
 use App\Model\Database\Repository\Gallery\Entity\GalleryItem;
 use App\Model\Database\Repository\Gallery\GalleryRepository;
 use App\Model\Database\Repository\Gallery\ItemsRepository;
@@ -38,10 +39,16 @@ class MainPresenter extends AdminBasePresenter
     }
 
     public function renderOverview() {
-        $this->template->galleries = $this->galleryRepository->findAll()->fetchAll();
-        foreach($galleries as $gallery) {
-
+        $galleries = $this->galleryRepository->findAll()->fetchAll();
+        $lastItems = [];
+        /**
+         * @var $item GalleryItem
+         */
+        foreach ($galleries as $gallery) {
+             $lastItems[$gallery->id] = $gallery->related($this->itemsRepository->getTable() . ".gallery_id")->fetch();
         }
+        $this->template->lastItems = $lastItems;
+        $this->template->galleries = $galleries;
     }
 
     /**

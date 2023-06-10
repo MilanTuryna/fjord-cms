@@ -1,0 +1,16 @@
+{block title}
+Vytvořit novou galerii
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [":Admin:Auth:login" => "Administrace aplikace",
+":Admin:Gallery:Main:overview" => "Seznam galerií",
+":Admin:Gallery:Main:new" => "Vytvořit novou galerii"]}
+{/block}
+{block content}
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Vytvořit novou galerii</h5>
+        {include TEMPLATE_COMMON . "/form.latte", form: "createGalleryForm"}
+    </div>
+</div>
+{/block}

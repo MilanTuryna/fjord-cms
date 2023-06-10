@@ -1,0 +1,32 @@
+{block title}
+Seznam galerií
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [
+":Admin:Overview:home" => "Administrace aplikace",
+"this" => "Seznam galerií"
+]}
+{/block}
+{block content}
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="col" n:foreach="$galleries as $gallery">
+        <div class="card h-100">
+            <img src="" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">{$gallery->name}</h5>
+                <p class="card-text">{$gallery->description}</p>
+            </div>
+            <div class="card-footer">
+                <small class="text-body-secondary">Poslední změna {$gallery->edited|date:'d.m.Y H:i'}</small>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="text-center bg-light text-muted default-margin-bot p-4 card" n:if="count($galleries) == 0">
+    Žádná galerie nebyla nalezena
+</div>
+<a class="btn btn-success w-100 text-white" n:href=":Admin:Gallery:Main:new">Vytvořit novou galerii</a>
+{/block}
+{block end_body}
+<script src="https://nette.github.io/resources/js/3/netteForms.min.js" type="text/javascript"></script>
+{/block}

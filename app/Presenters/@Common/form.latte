@@ -1,6 +1,6 @@
 <form n:name=$form>
     {varType Nette\Application\UI\Form $form}
-    {foreach $form->getControls() as $input}
+    {foreach $form->getComponents() as $input}
     {if $input->getOption(type) !== hidden}
     {varType Nette\Forms\Controls\TextInput $input}
     {if $input->getName() !== "submit"}
@@ -14,6 +14,7 @@
             <hr n:if="$input->getOption(App\Forms\FormOption::UPPER_LINE)">
             <b n:if="$input->getOption(App\Forms\FormOption::GROUP_TITLE)" class="text-muted" style="text-transform: uppercase">{$input->getOption(App\Forms\FormOption::GROUP_TITLE)}</b>
             <div class="row">
+                {$input->getName()}
                 <label n:name="$input->getName()" n:class="'col-sm-2 col-form-label ' . ($input->isRequired() ? 'required-label' : '')">
                     {$input->getCaption()}
                 </label>

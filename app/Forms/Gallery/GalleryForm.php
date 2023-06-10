@@ -30,7 +30,6 @@ class GalleryForm extends RepositoryForm
      * @param GalleryRepository $galleryRepository
      * @param ItemsRepository $itemsRepository
      * @param int $admin_id
-     * @param GalleryUploadManager $galleryUploadManager
      */
     public function __construct(protected Presenter $presenter, private GalleryRepository $galleryRepository, private ItemsRepository $itemsRepository, private int $admin_id)
     {
@@ -46,21 +45,23 @@ class GalleryForm extends RepositoryForm
         $form->addText("name", "Název galerie")->setRequired(true);
         $form->addText("description", "Popis")->setRequired(false);
         $form->addText("URI", "URL adresa")->setRequired(false);
-        $items = $form->addMultiplier("_items", function (Container $container, Form $form) {
+        $items = $form->addMultiplier("_items", function (Container $container, \Nette\Application\UI\Form $form) {
             $container->addUpload("file_upload", "Nahrát obrázek")->addRule(\Nette\Forms\Form::Image)
                 ->addRule(\Nette\Forms\Form::MAX_FILE_SIZE, ItemFormData::MAX_FILE_SIZE);
             $container->addText("alt", "Alternativní text")->setRequired(false);
             $container->addText("image_description", "Popis obrázku");
         });
-        $form->addMultiUpload("_global-upload", "Hromadné nahrání obrázků")->setRequired(false);
-        $items->addCreateButton("Přidat položku")->addClass('btn btn-dark w-100');;
+        $form->addMultiUpload("_global_upload", "Hromadné nahrání obrázků")->setRequired(false);
+        $items->addCreateButton("Přidat položku")->addClass('btn btn-dark w-100');
         $form->addSubmit("submit", "Vytvořit galerii");
+        die(json_encode($form->getComponents()));
         return $form;
     }
 
     /**
      * @param \Nette\Application\UI\Form $form
      * @param GalleryFormData $data
+     * @param GalleryUploadManager $galleryUploadManager
      * @throws Exception
      */
     protected function uploadImages(\Nette\Application\UI\Form $form, GalleryFormData $data, GalleryUploadManager $galleryUploadManager): void {
