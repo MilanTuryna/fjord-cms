@@ -31,7 +31,7 @@ abstract class DataStructure
         "fjord_dynamic_ids" => DynamicId::class,
         "fjord_dynamic_values" => DynamicValue::class,
         "fjord_gallery" => Gallery::class,
-        "fjord_gallery_items" => GalleryItem::class,
+        "fjord_gallery_item" => GalleryItem::class,
         "fjord_global_settings" => GlobalSettings::class,
     ];
 
