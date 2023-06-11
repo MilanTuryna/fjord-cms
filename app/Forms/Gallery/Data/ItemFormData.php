@@ -14,8 +14,10 @@ use Nette\Http\FileUpload;
 class ItemFormData extends GalleryItem
 {
     // 10MB
-    const MAX_FILE_SIZE = 10*(1024**2);
+    const MAX_FILE_SIZE_MB = 10;
     const COMPRESSED_NAME_LENGTH = 14;
+
+    const MAX_FILE_SIZE = self::MAX_FILE_SIZE_MB*(1024**2);
 
     public FileUpload $file_upload;
 

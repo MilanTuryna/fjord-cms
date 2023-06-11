@@ -6,9 +6,11 @@ namespace App\Forms\Gallery;
 
 use App\Forms\FlashMessages;
 use App\Forms\Form;
+use App\Forms\FormOption;
 use App\Forms\Gallery\Data\GalleryFormData;
 use App\Forms\Gallery\Data\ItemFormData;
 use App\Forms\RepositoryForm;
+use App\Model\Database\Columns\URI;
 use App\Model\Database\Repository\Gallery\GalleryRepository;
 use App\Model\Database\Repository\Gallery\ItemsRepository;
 use App\Model\FileSystem\GalleryUploadManager;
@@ -44,17 +46,19 @@ class GalleryForm extends RepositoryForm
         $form = parent::create();
         $form->addText("name", "Název galerie")->setRequired(true);
         $form->addText("description", "Popis")->setRequired(false);
-        $form->addText("URI", "URL adresa")->setRequired(false);
         $items = $form->addMultiplier("_items", function (Container $container, \Nette\Application\UI\Form $form) {
             $container->addUpload("file_upload", "Nahrát obrázek")->addRule(\Nette\Forms\Form::Image)
-                ->addRule(\Nette\Forms\Form::MAX_FILE_SIZE, ItemFormData::MAX_FILE_SIZE);
-            $container->addText("alt", "Alternativní text")->setRequired(false);
-            $container->addText("image_description", "Popis obrázku");
+                ->addRule(\Nette\Forms\Form::MAX_FILE_SIZE, sprintf("Tento obrázek je moc velký. Nahrajte prosím jeho menší alternativu (<%smb). ", ItemFormData::MAX_FILE_SIZE), ItemFormData::MAX_FILE_SIZE_MB)->setOption(FormOption::MULTIPLIER_PARENT, "_items");;
+            $container->addText("alt", "Alternativní text")
+                ->setOption(FormOption::OPTION_NOTE, "Text stručně popisujicí obrázek v případě nenačtení obrázku")
+                ->setHtmlAttribute("placeholder", "Velký létajicí drak")->setRequired(false)->setOption(FormOption::MULTIPLIER_PARENT, "_items");;
+            $container->addText("image_description", "Popis obrázku")->setOption(FormOption::MULTIPLIER_PARENT, "_items")->setOption(FormOption::OPTION_NOTE, "(vlastní poznámka)");
         });
-        $form->addMultiUpload("_global_upload", "Hromadné nahrání obrázků")->setRequired(false);
+        $items->setCaption("Jednotlivé fotky");
+        $form->addMultiUpload("_global_upload", "Hromadné nahrání obrázků")->setRequired(false)->setOption(FormOption::UPPER_LINE, 1);
         $items->addCreateButton("Přidat položku")->addClass('btn btn-dark w-100');
         $form->addSubmit("submit", "Vytvořit galerii");
-        die(json_encode($form->getComponents()));
+
         return $form;
     }
 
@@ -65,6 +69,7 @@ class GalleryForm extends RepositoryForm
      * @throws Exception
      */
     protected function uploadImages(\Nette\Application\UI\Form $form, GalleryFormData $data, GalleryUploadManager $galleryUploadManager): void {
+        $data->uri = new URI($data->name);
         $errorMessage = function (string $alt, int $key) {
             $altExpression = $alt ?? "neuvedeno";
             return "Obrázek č. " . $key+1 . `({$altExpression})` . "nebyl z neznámého důvodu nahrán.";
