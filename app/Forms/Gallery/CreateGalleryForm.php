@@ -42,7 +42,9 @@ class CreateGalleryForm extends GalleryForm
      * @throws AbortException
      * @throws Exception
      */
-    public function success(Form $form, GalleryFormData $data) {
+    public function success(Form $form, GalleryFormData &$data) {
+        parent::success($form, $data);
+        $data->created = new \DateTime();
         $success = $this->successTemplate($form, $data->iterable(true), new FormMessage("Galerie byla úspěšně vytvořena", "Galerie nemohla být z neznámého důvodu vytvořena."), $this->formRedirect);
         if($success) {
             $galleryUploadManager = new GalleryUploadManager($this->galleryRepository->findByColumn(Gallery::uri, $data->uri)->fetch()->id);

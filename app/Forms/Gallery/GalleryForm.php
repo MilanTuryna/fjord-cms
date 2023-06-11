@@ -65,11 +65,18 @@ class GalleryForm extends RepositoryForm
     /**
      * @param \Nette\Application\UI\Form $form
      * @param GalleryFormData $data
+     */
+    protected function success(\Nette\Application\UI\Form $form, GalleryFormData &$data) {
+        $data->uri = new URI($data->name);
+    }
+
+    /**
+     * @param \Nette\Application\UI\Form $form
+     * @param GalleryFormData $data
      * @param GalleryUploadManager $galleryUploadManager
      * @throws Exception
      */
     protected function uploadImages(\Nette\Application\UI\Form $form, GalleryFormData $data, GalleryUploadManager $galleryUploadManager): void {
-        $data->uri = new URI($data->name);
         $errorMessage = function (string $alt, int $key) {
             $altExpression = $alt ?? "neuvedeno";
             return "Obrázek č. " . $key+1 . `({$altExpression})` . "nebyl z neznámého důvodu nahrán.";
