@@ -30,7 +30,7 @@ class RepositoryForm extends \App\Forms\Form
 
         $this->repository = $repository;
     }
-    
+
     /**
      * @param Form $form
      * @param object $activeRow
