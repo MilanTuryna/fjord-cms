@@ -13,7 +13,7 @@ search:
 	        - *Authenticator
 
 extensions:
-	form-multipier: Contributte\FormMultiplier\DI\MultiplierExtension
+	form-multipier: App\Model\Extensions\FormMultiplier\DI\MultiplierExtension
 
 services:
     router: App\Router\RouterFactory::createRouter
