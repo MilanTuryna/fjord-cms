@@ -22,4 +22,6 @@ interface FormOption
 
     const BUTTON_DANGER = "___button_danger___";
     const BUTTON_SUCCESS = "___button_success___";
+
+    const MULTIPLIER_PARENT = "___multiplier_parent___";
 }
