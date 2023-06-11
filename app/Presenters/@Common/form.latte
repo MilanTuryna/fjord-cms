@@ -1,7 +1,41 @@
+{define multiplierRecursion, $inputComponent, $counter = 0}
+<div class="row" n:if="$inputComponent instanceof App\Model\Extensions\FormMultiplier\Multiplier" n:multiplier="$inputComponent->getName()">
+    <div class="col-sm-2 text-black-50 small"></div>
+    <div class="col-sm-10">
+        <div n:class="(int)$counter % 2 === 0 ? 'bg-light' : 'bg-white', 'border p-3 mb-3'">
+            <b>{$inputComponent->getCaption()}</b>
+            <div class="form-group row" n:foreach="$inputComponent->getControls() as $childComponent">
+                {skipIf $childComponent->getName() === 'multiplier_creator'}
+                {skipIf !($childComponent->getOption(App\Forms\FormOption::MULTIPLIER_PARENT) == $inputComponent->getName())}
+                {if $childComponent instanceof App\Model\Extensions\FormMultiplier\Multiplier}
+                    <div class="col-sm-12">
+                        {include multiplierRecursion, $childComponent, (int)$counter+1}
+                    </div>
+                {else}
+                <label class="col-sm-2 col-form-label">
+                    {$childComponent instanceof App\Model\Extensions\FormMultiplier\Multiplier ? "" : $childComponent->getCaption()}
+                </label>
+                <div class="col-sm-10">
+                                        <span class="text-muted small" n:if="$childComponent->getOption(App\Forms\FormOption::OPTION_NOTE)">
+                                        {$childComponent->getOption(App\Forms\FormOption::OPTION_NOTE)|noescape}
+                                    </span>
+                    {if $childComponent instanceof App\Model\Extensions\FormMultiplier\Multiplier}
+                    {include multiplierRecursion, $childComponent, (int)$counter+1}
+                    {else}
+                    {input $childComponent->getName(), class: 'form-control'}
+                    {/if}
+                </div>
+                {/if}
+            </div>
+        </div>
+    </div>
+</div>
+{/define}
 <form n:name=$form>
     {varType Nette\Application\UI\Form $form}
-    {foreach $form->getComponents() as $input}
-    {if $input->getOption(type) !== hidden}
+    {foreach (array)$form->getComponents() as $inputComponent}
+    {var $input = $form[$inputComponent->getName()]}
+    {if !($inputComponent instanceof App\Model\Extensions\FormMultiplier\Multiplier) && $input->getOption(type) !== hidden}
     {varType Nette\Forms\Controls\TextInput $input}
     {if $input->getName() !== "submit"}
     {if $input->getOption(App\Forms\FormOption::UPPER_BR)}
@@ -14,7 +48,6 @@
             <hr n:if="$input->getOption(App\Forms\FormOption::UPPER_LINE)">
             <b n:if="$input->getOption(App\Forms\FormOption::GROUP_TITLE)" class="text-muted" style="text-transform: uppercase">{$input->getOption(App\Forms\FormOption::GROUP_TITLE)}</b>
             <div class="row">
-                {$input->getName()}
                 <label n:name="$input->getName()" n:class="'col-sm-2 col-form-label ' . ($input->isRequired() ? 'required-label' : '')">
                     {$input->getCaption()}
                 </label>
@@ -59,6 +92,7 @@
     {/if}
     {/if}
     {/if}
+    {include multiplierRecursion, $inputComponent, $inputComponent->getName()}
     {/foreach}
     <div class="row" n:ifset="$form['submit']">
         <div class="col-sm-2 text-black-50 small"></div>
