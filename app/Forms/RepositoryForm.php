@@ -48,8 +48,11 @@ class RepositoryForm extends \App\Forms\Form
         foreach ($controls as $input) {
             $inputName = $input->getName();
             if($input->getOption(FormOption::OPTION_NOTE)) continue;
-            if(!in_array($inputName, $exceptions) && $inputName !== "submit")
-                if(property_exists($activeRow, $inputName)) $form[$inputName]->setDefaultValue($activeRow->{$inputName});
+            if(!in_array($inputName, $exceptions) && $inputName !== "submit") {
+                if(property_exists($activeRow, $inputName)) {
+                    $form[$inputName]->setDefaultValue($activeRow->{$inputName});
+                }
+            }
         }
         !isset($form['submit']) ? $form->addSubmit("submit", $submitCaption) : $form['submit']->setCaption($submitCaption);
         return $form;
@@ -83,7 +86,7 @@ class RepositoryForm extends \App\Forms\Form
             if($updatedRow) {
                 $this->presenter->flashMessage($message->success, FlashMessages::SUCCESS);
                 foreach ($formRedirect->args as $i => $v) { // replacing FormRedirect special argument constants as real value
-                    if($v === FormRedirect::LAST_INSERT_ID) $formRedirect->args[$i] = $updatedRow->{'id'};
+                    if($v === FormRedirect::LAST_INSERT_ID) $formRedirect->args[$i] = is_int($updatedRow) ? $updatedRow : $updatedRow->{'id'};
                 }
                 if($afterInsert) $afterInsert($updatedRow->{'id'});
                 $this->presenter->redirect($formRedirect->route, $formRedirect->args);
