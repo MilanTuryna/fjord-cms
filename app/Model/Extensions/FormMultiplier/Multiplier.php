@@ -126,6 +126,10 @@ class Multiplier extends Container implements Control
         });
     }
 
+    public function getTotalCopies(): int {
+        return $this->totalCopies;
+    }
+
     public function getForm(bool $throw = true): ?Form
     {
         if ($this->form) {
@@ -382,7 +386,7 @@ class Multiplier extends Container implements Control
         return $this->getForm() !== null && $this->getForm()->isAnchored() && $this->getForm()->isSubmitted();
     }
 
-    protected function loadHttpData(): void
+    public function loadHttpData(): void
     {
         if ($this->form !== null && $this->isFormSubmitted()) {
             $this->httpData = (array)Arrays::get($this->form->getHttpData(), $this->getHtmlName(), []);
@@ -420,6 +424,10 @@ class Multiplier extends Container implements Control
         $this->fillContainer($control);
 
         return $control;
+    }
+
+    public function getRemoveButton($multiplier): string {
+        return $this->removeButton->create($multiplier)->getName();
     }
 
     /**

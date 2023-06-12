@@ -2,9 +2,9 @@
 
 namespace App\Model\Extensions\FormMultiplier\Latte\Extension;
 
-use Contributte\FormMultiplier\Latte\Extension\Node\MultiplierAddNode;
-use Contributte\FormMultiplier\Latte\Extension\Node\MultiplierNode;
-use Contributte\FormMultiplier\Latte\Extension\Node\MultiplierRemoveNode;
+use App\Model\Extensions\FormMultiplier\Latte\Extension\Node\MultiplierAddNode;
+use App\Model\Extensions\FormMultiplier\Latte\Extension\Node\MultiplierNode;
+use App\Model\Extensions\FormMultiplier\Latte\Extension\Node\MultiplierRemoveNode;
 use Latte\Extension;
 
 final class MultiplierExtension extends Extension

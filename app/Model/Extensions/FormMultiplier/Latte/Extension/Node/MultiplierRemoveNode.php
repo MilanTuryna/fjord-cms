@@ -47,10 +47,6 @@ final class MultiplierRemoveNode extends StatementNode
 	{
 		$container = end($formsStack);
 
-		if (!$container || !$container->getParent() instanceof Multiplier) {
-			throw new LogicException('{multiplier:remove} macro must be inside {multiplier} macro.');
-		}
-
 		return $container->getComponent(Multiplier::SUBMIT_REMOVE_NAME, false);
 	}
 

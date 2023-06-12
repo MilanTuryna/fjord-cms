@@ -40,7 +40,7 @@ class MultiplierExtension extends CompilerExtension
 		}
 
 		$resultDefinition = $factory->getResultDefinition();
-		$resultDefinition->addSetup('addExtension', [new Statement(\Contributte\FormMultiplier\Latte\Extension\MultiplierExtension::class)]);
+		$resultDefinition->addSetup('addExtension', [new Statement(\App\Model\Extensions\FormMultiplier\Latte\Extension\MultiplierExtension::class)]);
 	}
 
 	public function afterCompile(ClassType $class): void

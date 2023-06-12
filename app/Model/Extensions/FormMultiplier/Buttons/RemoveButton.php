@@ -56,4 +56,8 @@ final class RemoveButton
 		return $button;
 	}
 
+    public function getComponentName(): string
+    {
+        return Multiplier::SUBMIT_REMOVE_NAME;
+    }
 }
