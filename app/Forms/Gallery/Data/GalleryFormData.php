@@ -16,6 +16,6 @@ class GalleryFormData extends Gallery
     /**
      * @var array|ItemFormData[]
      */
-    public array $_items;
-    public array $_global_upload;
+    public ?array $_items;
+    public ?array $_global_upload;
 }

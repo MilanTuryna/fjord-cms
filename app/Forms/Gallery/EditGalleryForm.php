@@ -30,7 +30,7 @@ class EditGalleryForm extends GalleryForm
     public function create(): \Nette\Application\UI\Form
     {
         $form = parent::create();
-        return self::createEditForm($form, $this->activeRow);
+        return self::createEditForm($form,  $this->galleryRepository->findById($this->gallery_id));
     }
 
     /**

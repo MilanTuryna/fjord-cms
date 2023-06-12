@@ -17,6 +17,7 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Nette\Utils\DateTime;
 
 /**
  * Class CreateGalleryForm
@@ -44,7 +45,7 @@ class CreateGalleryForm extends GalleryForm
      */
     public function success(Form $form, GalleryFormData &$data) {
         parent::success($form, $data);
-        $data->created = new \DateTime();
+        $data->created = new DateTime();
         $success = $this->successTemplate($form, $data->iterable(true), new FormMessage("Galerie byla úspěšně vytvořena", "Galerie nemohla být z neznámého důvodu vytvořena."), $this->formRedirect);
         if($success) {
             $galleryUploadManager = new GalleryUploadManager($this->galleryRepository->findByColumn(Gallery::uri, $data->uri)->fetch()->id);
