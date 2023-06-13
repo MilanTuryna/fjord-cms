@@ -1,4 +1,4 @@
-**FjordCMS je aktuálně ve vývoji.**: Průběh vývoje můžete sledovat v reálném čase pomocí historie commitů a nebo také screenshotů (již brzy).
+> **FjordCMS je aktuálně ve vývoji.** Průběh vývoje můžete sledovat v reálném čase pomocí historie commitů a nebo také screenshotů (již brzy).
 
 # Fjord-CMS
 
