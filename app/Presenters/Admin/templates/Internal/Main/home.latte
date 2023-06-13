@@ -1,0 +1,224 @@
+{var $perm = $admin->getPermissionManager()}
+{var $permMap = $admin->getPermissionMap()}
+{layout ../../@layout.latte}
+{block title}
+Interní administrace
+{/block}
+{block content}
+<div class="card bg-light default-margin-bot">
+    <div class="card-body">
+        <h5 class="card-title" style="margin-bottom: 3px;">Interní administrace</h5>
+        <div class="card-text ">
+            Interní administrace popisuje a nastavuje prostředí pro správnou funkčnost webu jako celky (bezpečnost, protokoly, design webu). Před prací s touto částí webu nejprve prostudujte nápovědu nebo to nechte na
+        </div>
+    </div>
+</div>
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="card-title default-margin-bot">Nastavení SMTP serverů <span class="float-right">(3)</span></h5>
+        <div class="card-text ">
+            <div id="accordion">
+                <div class="card br-0">
+                    <div class="card-header" id="headingTwo">
+                        <div class="d-flex align-content-center justify-content-between">
+                            <div>
+                                <h5 class="mb-0">
+                                <span style="font-weight: bold" class="btn non-underline collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    $server->name: ($sender_email -> $receiver_email)
+                                </span>
+                                    <span class="small text-muted">(320 emailů)</span>
+                                </h5>
+                            </div>
+                            <div class="text-muted" style="letter-spacing: 1.5px; margin-top: 4px">
+                                <div class="d-flex align-content-center flex-wrap" style="gap:6px">
+                                    <div>– aktivní</div>
+                                    <div style="padding-top:1px">
+                                        <i class="ri-checkbox-blank-circle-fill text-success" style="zoom:80%;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                        <div class="card-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex align-content-center justify-content-between default-margin-top">
+            <div>
+                <span class="text-muted small">Při nastavování jednotlivých serverů pečlivě zkontrolujte zadané údaje.</span>
+            </div>
+            <div>
+                <a href="" class="btn btn-primary float-right">Přidat nový SMTP server</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="default-margin-bot">Nastavení dynamických entit</h5>
+        <div class="card-text ">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-sm">
+                    <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Název</th>
+                        <th scope="col">Popis</th>
+                        <th scope="col">Vytvořena</th>
+                        <th scope="col">Poslední editace</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach $entityList as $entity}
+                    <tr>
+                        <td>{$entity->id}</td>
+                        <td><a n:href="Dynamic:Entity:view">{$entity->name}</a></td>
+                        <td>{$entity->description|slice: 0, 20}{if strlen($entity->description) > 20}...{/if}</td>
+                        <td>{$entity->created|date:'d.m.Y H:i'}</td>
+                        <td>{$entity->edited|date:'d.m.Y H:i'}</td>
+                        <td>
+                            <div class="row gap-2">
+                                <div class="col">
+                                    <button class="btn btn-primary">adsd</button>
+                                </div>
+                                <div class="col">
+                                    <button class="btn btn-light">asdsad</button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {/foreach}
+                    <tr n:if="$entityCount === 0">
+                        <td colspan="8" class="text-center p-3 text-muted">
+                            Žádné dynamické entity nebyly nalezeny.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <a n:href=":Admin:Internal:EAV:new" class="btn btn-primary w-100">Vytvořit novou dynamickou entitu</a>
+        </div>
+    </div>
+</div>
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="default-margin-bot">Šablonování</h5>
+        <div class="card-text ">
+            <div class="row">
+                <div class="col-sm-7">
+                    <div class="card classic-shadow bg-success text-white default-margin-bot">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between" style="  align-items: center;
+  justify-content: center;">
+                                <div>
+                                    <h6 class="mb-1"> $template->name</h6>
+                                    <div class="card-text">
+                                        Aktuálně vybraná šablona
+                                    </div>
+                                </div>
+                                <div class="justify-content-center">
+                                    <a href="" class="text-white non-underline">
+                                        <i class="ri-settings-3-fill" style="font-size: 26px"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="card classic-shadow  default-margin-bot">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between" style="  align-items: center;
+  justify-content: center;">
+                                <div>
+                                    <h6 class="mb-1"> $template->name</h6>
+                                    <div class="card-text">
+                                        Aktuálně vybraná šablona
+                                    </div>
+                                </div>
+                                <div class="justify-content-center">
+                                    <a href="" class="text-muted non-underline">
+                                        <i class="ri-settings-3-fill" style="font-size: 26px"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card classic-shadow default-margin-bot">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between" style="  align-items: center;
+  justify-content: center;">
+                                <div>
+                                    <h6 class="mb-1"> $template->name</h6>
+                                    <div class="card-text">
+                                        Aktuálně vybraná šablona
+                                    </div>
+                                </div>
+                                <div class="justify-content-center">
+                                    <a href="" class="text-muted non-underline">
+                                        <i class="ri-settings-3-fill" style="font-size: 26px"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card classic-shadow  default-margin-bot">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between" style="  align-items: center;
+  justify-content: center;">
+                                <div>
+                                    <h6 class="mb-1"> $template->name</h6>
+                                    <div class="card-text">
+                                        Aktuálně vybraná šablona
+                                    </div>
+                                </div>
+                                <div class="justify-content-center">
+                                    <a href="" class="text-muted non-underline">
+                                        <i class="ri-settings-3-fill" style="font-size: 26px"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="" class="btn btn-light w-100 border">Zobrazit podrobnější seznam</a>
+                </div>
+                <div class="col-sm-5">
+                    <div class="card classic-shadow default-margin-bot alert-success">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="default-margin-bot">Aktuálně vybraná šablona</h6>
+                                </div>
+                                <div>
+                                    <a href="" class="btn-sm btn-dark">NASTAVENÍ</a>
+                                </div>
+                            </div>
+                            <div class="card-text">
+                                <ul>
+                                    <li>Název šablony: $template->name</li>
+                                    <li>Autor šablony: $template->author</li>
+                                    <li>Nápověda k šabloně: $template->website</li>
+                                    <li>Popis: $template->description</li>
+                                </ul>
+                                <hr>
+                                <ul>
+                                    <li>Poslední změna: $template->edited</li>
+                                    <li>Přidána: $template->created</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <a href="" class="btn btn-primary float-right">Instalace a přidání nové šablony</a>
+        </div>
+    </div>
+</div>
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [":Admin:Overview:home" => "Administrace systému", "" => "Základní přehled"]}
+{/block}
