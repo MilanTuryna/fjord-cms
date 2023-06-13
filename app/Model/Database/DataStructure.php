@@ -11,6 +11,8 @@ use App\Model\Database\Repository\Dynamic\Entity\DynamicValue;
 use App\Model\Database\Repository\Gallery\Entity\Gallery;
 use App\Model\Database\Repository\Gallery\Entity\GalleryItem;
 use App\Model\Database\Repository\Settings\Entity\GlobalSettings;
+use App\Model\Database\Repository\Template\Entity\Author;
+use App\Model\Database\Repository\Template\Entity\Template;
 use Exception;
 use Nette\Utils\DateTime;
 
@@ -32,6 +34,8 @@ abstract class DataStructure
         "fjord_dynamic_values" => DynamicValue::class,
         "fjord_gallery" => Gallery::class,
         "fjord_gallery_item" => GalleryItem::class,
+        "fjord_template" => Template::class,
+        "fjord_template_author" => Author::class,
         "fjord_global_settings" => GlobalSettings::class,
     ];
 
