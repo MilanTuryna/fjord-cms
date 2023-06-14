@@ -24,7 +24,8 @@ class MainPresenter extends AdminBasePresenter
         $this->template->entityCount = count($entityList);
         $templates = $this->template->templates = $this->templateRepository->findAll()->fetchAll();
         $this->template->templateCount = count($templates);
-        $this->template->usedTemplate = $this->templateRepository->findByColumn(Template::used, true)->fetch();
+        $template = $this->template->usedTemplate = $this->templateRepository->findByColumn(Template::used, true)->fetch();
+        $this->template->usedTemplateAuthor = $template->related("author_id")->fetch();
         $this->template->emailServers = $this->serverRepository->findAll()->fetchAll();
     }
 }
