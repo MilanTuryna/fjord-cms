@@ -9,7 +9,9 @@ use App\Forms\Admin\EditAdminForm;
 use App\Forms\FormMessage;
 use App\Forms\FormRedirect;
 use App\Model\Admin\Permissions\Utils;
+use App\Model\Database\Repository\Admin\AccessLogRepository;
 use App\Model\Database\Repository\Admin\AccountRepository;
+use App\Model\Database\Repository\Admin\Entity\AccessLog;
 use App\Model\Security\Auth\AdminAuthenticator;
 use App\Presenters\AdminBasePresenter;
 use JetBrains\PhpStorm\NoReturn;
@@ -23,12 +25,14 @@ use Nette\Application\UI\Multiplier;
  */
 class AccountPresenter extends AdminBasePresenter
 {
-    public function __construct(AdminAuthenticator $adminAuthenticator, public AccountRepository $accountRepository, string $permissionNode = Utils::SPECIAL_WITHOUT_PERMISSION)
+    public function __construct(AdminAuthenticator $adminAuthenticator, public AccountRepository $accountRepository, private AccessLogRepository $accessLogRepository, string $permissionNode = Utils::SPECIAL_WITHOUT_PERMISSION)
     {
         parent::__construct($adminAuthenticator, $permissionNode);
     }
 
     public function renderList() {
+        $this->template->administrators = $this->accountRepository->findAll()->fetchPairs("id");
+        $this->template->accessLogs = $this->accessLogRepository->findAll()->order(AccessLog::created . " DESC")->limit(12);
         $this->template->accounts = $this->accountRepository->findAll()->fetchAll();
     }
 
