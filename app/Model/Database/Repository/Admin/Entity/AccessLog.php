@@ -7,7 +7,7 @@ namespace App\Model\Database\Repository\Admin\Entity;
 use App\Model\Database\Entity;
 
 /**
- * Class AccessLog
+ * Class AccessLogPresenter
  * @package App\Model\Database\Repository\Admin\Entity
  */
 class AccessLog extends Entity
