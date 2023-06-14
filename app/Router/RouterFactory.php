@@ -32,8 +32,13 @@ final class RouterFactory
             ->addRoute("/admin/internal/eav/entity/new", "Internal:EAV:new")
             ->addRoute("/admin/internal/eav/entity/remove/<id>", "Internal:EAV:remove")
 
+            ->addRoute("/admin/internal/template/list", "Internal:Template:list")
+            ->addRoute("/admin/internal/template/view/<id>", "Internal:Template:view")
+            ->addRoute("/admin/internal/template/remove/<id>", "Internal:Template:remove")
+
             ->addRoute("/admin/internal/smtp/new", "Internal:SMTP:new")
             ->addRoute("/admin/internal/smtp/view/<id>", "Internal:SMTP:view")
+            ->addRoute("/admin/internal/smtp/view/<server_id>/mail/<id>", "Internal:SMTP:viewMail")
             ->addRoute("/admin/internal/smtp/remove/<id>", "Internal:SMTP:remove")
 
             ->addRoute("/admin/entity/<entityName>/overview", "Dynamic:Entity:overview")
