@@ -15,8 +15,10 @@ class AccessLog extends Entity
     const admin_id = "admin_id";
     const ip = "ip";
     const device = "device";
+    const created = "created";
 
     public string $ip;
     public string $device;
+    public string $created;
     public string $admin_id;
 }
