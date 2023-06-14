@@ -33,6 +33,8 @@ final class RouterFactory
             ->addRoute("/admin/internal/eav/entity/remove/<id>", "Internal:EAV:remove")
 
             ->addRoute("/admin/internal/template/list", "Internal:Template:list")
+            ->addRoute("/admin/internal/template/install", "Internal:Template:install")
+            // todo: history backups
             ->addRoute("/admin/internal/template/view/<id>", "Internal:Template:view")
             ->addRoute("/admin/internal/template/remove/<id>", "Internal:Template:remove")
 
