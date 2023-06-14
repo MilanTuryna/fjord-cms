@@ -12,7 +12,7 @@ use App\Model\Database\Entity;
  */
 class Template extends Entity
 {
-    const title = "title", author_id = "author_id", help_link = "help_link", description = "description", version = "version", created = "created", edited = "edited"
+    const title = "title", author_id = "author_id", used = "used", help_link = "help_link", description = "description", version = "version", created = "created", edited = "edited"
 , id = "id";
 
     public string $title;
@@ -22,5 +22,6 @@ class Template extends Entity
     public string $version;
     public string $created;
     public string $edited;
+    public bool $used;
     public int $id;
 }
