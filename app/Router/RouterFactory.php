@@ -58,8 +58,8 @@ final class RouterFactory
 
             ->addRoute("/admin/account/list", "Administrator:Account:list")
             ->addRoute("/admin/account/new", "Administrator:Account:new")
-            ->addRoute("/admin/account/view[/<id>]", "Administrator:Account:new")
-            ->addRoute("/admin/account/remove[/<id>]", "Administrator:Account:remove")
+            ->addRoute("/admin/account/view/<id>", "Administrator:Account:view")
+            ->addRoute("/admin/account/remove/<id>", "Administrator:Account:remove")
 
             ->addRoute("/admin/settings", "Settings:overview")
             ->addRoute("/admin/settings/history/<id>", "Settings:history")
