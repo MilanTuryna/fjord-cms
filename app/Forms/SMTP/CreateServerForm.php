@@ -31,7 +31,7 @@ class CreateServerForm extends ServerForm
      * @throws AbortException
      * @throws InvalidLinkException
      */
-    public function success(Form $form, ServerFormData $serverFormData): void
+    public function success(Form $form, ServerFormData &$serverFormData): void
     {
         parent::success($form, $serverFormData);
         $this->successTemplate($form, $serverFormData->iterable(), new FormMessage("Daný SMTP byl úspěšně aktualizován.", "Daný SMTP nemohl být z neznámého důovdu aktualizován"), $this->formRedirect);

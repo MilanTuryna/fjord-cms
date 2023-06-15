@@ -38,7 +38,7 @@ class EditServerForm extends ServerForm
      * @throws InvalidLinkException
      * @throws AbortException
      */
-    public function success(Form $form, ServerFormData $serverFormData): void
+    public function success(Form $form, ServerFormData &$serverFormData): void
     {
         parent::success($form, $serverFormData);
         $this->successTemplate($form, $serverFormData->iterable(), new FormMessage("SMTP server byl úspěšně aktualizován.", "SMTP server byl úspěšně aktualizován."), new FormRedirect("this"), $this->server_id);
