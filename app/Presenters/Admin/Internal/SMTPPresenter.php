@@ -78,7 +78,7 @@ class SMTPPresenter extends AdminBasePresenter
      */
     public function createComponentEditServerForm(): Multiplier {
         return new Multiplier(function ($server_id) {
-            return (new EditServerForm($this, $this->serverRepository, (int)$server_id));
+            return (new EditServerForm($this, $this->serverRepository, (int)$server_id))->create();
         });
     }
 }
