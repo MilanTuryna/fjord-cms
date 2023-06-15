@@ -62,7 +62,7 @@
                                 <hr>
                                 <ul>
                                     <li n:if="$admin->isFullPermission()">Plné právo: <b>Ano</b></li>
-                                    <li><a href="" class="black-href">Nastavení účtu a změna hesla</li>
+                                    <li><a n:href=":Admin:Administrator:Account:view $admin->id" class="black-href">Nastavení účtu a změna hesla</a></li>
                                     <li><a n:href=":Admin:Overview:logout" class="black-href">Odhlásit se</a></li>
                                 </ul>
                             </div>
