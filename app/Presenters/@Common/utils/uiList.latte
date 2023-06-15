@@ -1,0 +1,14 @@
+{define ulList, $arr}
+    <ul>
+        {foreach $arr as $k => $v}
+            {if is_array($v)}
+                <li>
+                    {$k}: {include ulList, $arr[$k]}
+                </li>
+            {else}
+                <li>{$k}: <b>{$v}</b></li>
+            {/if}
+        {/foreach}
+    </ul>
+{/define}
+{include ulList, $arr}
