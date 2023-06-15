@@ -5,6 +5,7 @@ namespace App\Forms\SMTP;
 
 
 use App\Forms\FlashMessages;
+use App\Forms\FormOption;
 use App\Forms\RepositoryForm;
 use App\Forms\SMTP\Data\ServerFormData;
 use App\Model\Database\DataRegulation;
@@ -39,13 +40,15 @@ class ServerForm extends RepositoryForm
     public function create(): Form
     {
        $form = parent::create();
-       $form->addText("name", "Název SMTP serveru")->setHtmlAttribute("placeholder", "Zakázkový email")->setRequired(true);
+       $form->addText("name", "Název SMTP serveru")
+           ->setOption(FormOption::OPTION_NOTE, "Využijte jméno, díky kterému snadno identifikujete správný SMTP server.")
+           ->setHtmlAttribute("placeholder", "")->setRequired(true);
 
-       $form->addEmail("server_email", "Emailová adresa (odesílatel)")->setHtmlAttribute("placeholder", "john@example.com")->setRequired(true);
-       $form->addPassword("server_password", "Heslo k emailové adrese")->setRequired(true);
+       $form->addEmail("server_email", "Emailová adresa (odesílatel)")->setOption(FormOption::UPPER_LINE, 1)->setOption(FormOption::OPTION_NOTE, "Z tohoto emailu bude odeslán obsah zprávy kontaktního formuláře vč. reálného emailu odesílatele.")->setHtmlAttribute("placeholder", "john@example.com")->setRequired(true);
+       $form->addPassword("server_password", "Heslo")->setRequired(true);
        $form->addText("server_host", "Hostitel serveru")->setHtmlAttribute("placeholder", "vase-firma.cz")->setRequired(true);
-
-        $form->addEmail("receiver_email", "Emailová adresa (příjemce)")->setHtmlAttribute("placeholder", "john@example.com")->setRequired(false);
+        $form->addEmail("receiver_email", "Emailová adresa (příjemce)")->setOption(FormOption::UPPER_LINE,1)
+            ->setOption(FormOption::OPTION_NOTE, "Na tento a dále i v administračním výpisu budete příjimat odeslané zprávy.")->setHtmlAttribute("placeholder", "john@example.com")->setRequired(false);
 
         $form->addSubmit("submit", "Vytvořit nový SMTP server");
        return $form;
