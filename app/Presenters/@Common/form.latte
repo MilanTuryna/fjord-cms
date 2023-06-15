@@ -103,9 +103,14 @@
     {include multiplierRecursion, $form, $inputComponent, $inputComponent->getName()}
     {/foreach}
     <div class="row" n:ifset="$form['submit']">
-        <div class="col-sm-2 text-black-50 small"></div>
-        <div class="col-sm-10">
-            <button type="submit" n:name="submit" n:class="'btn float-right', ($form['submit']->getOption(App\Forms\FormOption::BUTTON_DANGER) ? 'btn-danger' : 'btn-success')">{$form['submit']->getCaption()}</button>
+        <div class="col-sm-12">
+            <div class="d-flex justify-content-between" style="align-content: center">
+                <div>
+                    {var $deleteRoute = $form['submit']->getOption(App\Forms\FormOption::DELETE_LINK)}
+                    <a n:if="$deleteRoute" n:href="$deleteRoute->route, implode(',', $deleteRoute->args)" class="text-danger delete-href">Odstranit tento záznam</a>
+                </div>
+                <button type="submit" n:name="submit" n:class="'btn', ($form['submit']->getOption(App\Forms\FormOption::BUTTON_DANGER) ? 'btn-danger' : 'btn-success')">{$form['submit']->getCaption()}</button>
+            </div>
         </div>
     </div>
 </form>

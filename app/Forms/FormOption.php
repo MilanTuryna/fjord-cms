@@ -7,6 +7,7 @@ namespace App\Forms;
 interface FormOption
 {
     const OPTION_NOTE = "option_note";
+    const DELETE_LINK = "___delete_link___";
 
     const BOTTOM_LINE = "___bottom_line___";
     const UPPER_LINE = "___upper_line___";
