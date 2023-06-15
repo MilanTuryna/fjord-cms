@@ -13,6 +13,7 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\TextInput;
 
 class RepositoryForm extends \App\Forms\Form
@@ -33,12 +34,12 @@ class RepositoryForm extends \App\Forms\Form
 
     /**
      * @param Form $form
-     * @param object $activeRow
+     * @param ActiveRow $activeRow
      * @param string $submitCaption
      * @param array $exceptions For inputs that's not same as columns in database
      * @return Form
      */
-    public static function createEditForm(Form $form, object $activeRow, string $submitCaption = "Aktualizovat změny", array $exceptions = []): Form
+    public static function createEditForm(Form $form, ActiveRow $activeRow, string $submitCaption = "Aktualizovat změny", array $exceptions = []): Form
     {
         /**
          * @var $controls TextInput[]
@@ -47,9 +48,8 @@ class RepositoryForm extends \App\Forms\Form
         $controls = $form->getControls();
         foreach ($controls as $input) {
             $inputName = $input->getName();
-            if($input->getOption(FormOption::OPTION_NOTE)) continue;
             if(!in_array($inputName, $exceptions) && $inputName !== "submit") {
-                if(property_exists($activeRow, $inputName)) {
+                if($activeRow->offsetExists($inputName)) {
                     $form[$inputName]->setDefaultValue($activeRow->{$inputName});
                 }
             }
