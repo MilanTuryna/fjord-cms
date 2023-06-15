@@ -1,6 +1,6 @@
+{layout ../../@layout.latte}
 {var $perm = $admin->getPermissionManager()}
 {var $permMap = $admin->getPermissionMap()}
-{layout ../../@layout.latte}
 {block title}
 Interní administrace
 {/block}
@@ -110,111 +110,81 @@ Interní administrace
         <h5 class="default-margin-bot">Šablonování</h5>
         <div class="card-text ">
             <div class="row">
-                <div class="col-sm-7">
-                    <div class="card classic-shadow bg-success text-white default-margin-bot">
+                <div class="col-sm-7" n:if="$templateCount > 0">
+                    <div n:if="$usedTemplate">
+                        <div class="card classic-shadow bg-success text-white default-margin-bot">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between" style="  align-items: center;
+  justify-content: center;">
+                                    <div>
+                                        <h6 class="mb-1">{$usedTemplate->name}</h6>
+                                        <div class="card-text">
+                                            Aktuálně vybraná šablona
+                                        </div>
+                                    </div>
+                                    <div class="justify-content-center">
+                                        <a href="" class="text-white non-underline">
+                                            <i class="ri-settings-3-fill" style="font-size: 26px"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                    <div class="card classic-shadow default-margin-bot" n:foreach="$templates as $template">
                         <div class="card-body">
                             <div class="d-flex justify-content-between" style="  align-items: center;
   justify-content: center;">
                                 <div>
-                                    <h6 class="mb-1"> $template->name</h6>
+                                    <h6 class="mb-1">{$template->name}</h6>
                                     <div class="card-text">
                                         Aktuálně vybraná šablona
                                     </div>
                                 </div>
                                 <div class="justify-content-center">
-                                    <a href="" class="text-white non-underline">
+                                    <a n:href=":Admin:Internal:Template:view $template->id" class="text-muted non-underline">
                                         <i class="ri-settings-3-fill" style="font-size: 26px"></i>
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="card classic-shadow  default-margin-bot">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between" style="  align-items: center;
-  justify-content: center;">
-                                <div>
-                                    <h6 class="mb-1"> $template->name</h6>
-                                    <div class="card-text">
-                                        Aktuálně vybraná šablona
-                                    </div>
-                                </div>
-                                <div class="justify-content-center">
-                                    <a href="" class="text-muted non-underline">
-                                        <i class="ri-settings-3-fill" style="font-size: 26px"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card classic-shadow default-margin-bot">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between" style="  align-items: center;
-  justify-content: center;">
-                                <div>
-                                    <h6 class="mb-1"> $template->name</h6>
-                                    <div class="card-text">
-                                        Aktuálně vybraná šablona
-                                    </div>
-                                </div>
-                                <div class="justify-content-center">
-                                    <a href="" class="text-muted non-underline">
-                                        <i class="ri-settings-3-fill" style="font-size: 26px"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card classic-shadow  default-margin-bot">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between" style="  align-items: center;
-  justify-content: center;">
-                                <div>
-                                    <h6 class="mb-1"> $template->name</h6>
-                                    <div class="card-text">
-                                        Aktuálně vybraná šablona
-                                    </div>
-                                </div>
-                                <div class="justify-content-center">
-                                    <a href="" class="text-muted non-underline">
-                                        <i class="ri-settings-3-fill" style="font-size: 26px"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="" class="btn btn-light w-100 border">Zobrazit podrobnější seznam</a>
+                    <a n:href=":Admin:Internal:Template:list" class="btn btn-light w-100 border">Zobrazit podrobnější seznam</a>
                 </div>
-                <div class="col-sm-5">
-                    <div class="card classic-shadow default-margin-bot alert-success">
+                <div n:class="$templateCount > 0 ? 'col-sm-5' : 'col-sm-12'">
+                    <div n:class="'card classic-shadow default-margin-bot', $usedTemplate ? 'alert-success' : 'alert-danger'">
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <h6 class="default-margin-bot">Aktuálně vybraná šablona</h6>
+                                    {if $usedTemplate}
+                                        <h6 class="default-margin-bot">Aktuálně vybraná šablona</h6>
+                                    {else}
+                                        <h6>Žádná šablona nebyla zvolena</h6>
+                                    {/if}
                                 </div>
-                                <div>
-                                    <a href="" class="btn-sm btn-dark">NASTAVENÍ</a>
+                                <div n:if="$usedTemplate">
+                                    <a n:href=":Admin:Internal:Template:view $usedTemplate->id" class="btn-sm btn-dark">NASTAVENÍ</a>
                                 </div>
                             </div>
-                            <div class="card-text">
+                            <div class="card-text" n:if="$usedTemplate">
                                 <ul>
-                                    <li>Název šablony: $template->name</li>
-                                    <li>Autor šablony: $template->author</li>
-                                    <li>Nápověda k šabloně: $template->website</li>
-                                    <li>Popis: $template->description</li>
+                                    <li>Název šablony: {$usedTemplate->name}</li>
+                                    <li>Autor šablony: {$usedTemplate->author}</li>
+                                    <li>Nápověda k šabloně: {$usedTemplate->website}</li>
+                                    <li>Popis: {$usedTemplate->description|slice:0, 150} {if strlen($usedTemplate->description) > 150}...{/if}</li>
                                 </ul>
                                 <hr>
                                 <ul>
-                                    <li>Poslední změna: $template->edited</li>
-                                    <li>Přidána: $template->created</li>
+                                    <li>Poslední změna: {$usedTemplate->edited|date:'d.m.Y H:i'}</li>
+                                    <li>Přidána: {$usedTemplate->created|date:'d.m.Y H:i'}</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-                <a href="" class="btn btn-primary float-right">Instalace a přidání nové šablony</a>
+                <a n:href=":Admin:Internal:Template:install" class="btn btn-primary float-right">Instalace a přidání nové šablony</a>
         </div>
     </div>
 </div>
