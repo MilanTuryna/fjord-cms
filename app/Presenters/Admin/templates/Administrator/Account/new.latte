@@ -1,0 +1,18 @@
+{block title}
+Přidat nového administrátora
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [
+":Admin:Overview:home" => "Administrace",
+":Admin:Administrator:Account:list" => "Administrátorské účty",
+":Admin:Administrator:Account:new" => "Přidat nového administrátora"
+]}
+{/block}
+{block content}
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Vyplňte zadané údaje</h5>
+        {include TEMPLATE_COMMON . "/form.latte", form: "createAdminForm"}
+    </div>
+</div>
+{/block}
