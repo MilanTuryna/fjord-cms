@@ -1,0 +1,73 @@
+{block title}
+Administrátoři
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [
+":Admin:Overview:home" => "Administrace aplikace",
+"this" => "Administrátorské účty",
+]}
+{/block}
+{block content}
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Poslední přístupy</h5>
+        <table class="table table-bordered table-hover table-striped table-sm" style="zoom:85%">
+            <thead>
+            <tr>
+                <th scope="col">Administrátor</th>
+                <th scope="col">Zařízení</th>
+                <th scope="col">Čas</th>
+                <th scope="col">IP</th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach $accessLogs as $log}
+            <tr>
+                <td><a n:href=":Admin:Administrator:Account:view, $log->admin_id" class="blue-href">{$administrators[$log->admin_id]->username}</a></td>
+                <td>{$log->device}</td>
+                <td>{$log->time|date:'d.m.Y H:i'}</td>
+                <td>{$log->ip}</td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+        <a n:href=":Admin:Administrator:AccessLog:global" class="btn btn-light border w-100 br-0">Zobrazit celou historii přístupů</a>
+    </div>
+</div>
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Seznam administátorů <small>(celkem: {count($accounts)})</small></h5>
+        <table class="table table-bordered table-striped table-sm">
+            <thead>
+            <tr>
+                <th scope="col">Uživatelské jméno</th>
+                <th scope="col">Celé jméno</th>
+                <th scope="col">Email</th>
+                <th scope="col">Správce</th>
+                <th scope="col">Přístupový log</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach $accounts as $acc}
+            <tr>
+                <td>{$acc->username}</td>
+                <td>{$acc->first_name} {$acc->surname}</td>
+                <td>{$acc->email}</td>
+                {var $isFull = App\Model\Admin\Permissions\Utils::checkPermission( App\Model\Admin\Permissions\Utils::listToArray($acc->permissions), "*")}
+                <td n:class="$isFull ? 'bg-light-success' : 'bg-light-danger'">{$isFull ? "Ano" : "Ne"}</td>
+                <td><a n:href=":Admin:Administrator:AccessLog:view, $acc->id">Zobrazit</a></td>
+                <td class="p-0"><a n:href=":Admin:Administrator:Account:view, $acc->id" class="btn btn-primary br-0 w-100">Zobrazit</a></td>
+            </tr>
+            {/foreach}
+            <tr n:if="count($accounts) === 0">
+                <td colspan="8" class="text-center p-3 text-muted">
+                    Žádní administrátoři nebyli nalezeny.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<a class="btn btn-success w-100 text-white" n:href=":Admin:Administrator:Account:new">Přidat nového administrátora</a>
+{/block}
