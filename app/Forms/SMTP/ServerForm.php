@@ -49,14 +49,20 @@ class ServerForm extends RepositoryForm
        $form->addText("server_host", "Hostitel serveru")->setHtmlAttribute("placeholder", "vase-firma.cz")->setRequired(true);
         $form->addEmail("receiver_email", "Emailová adresa (příjemce)")->setOption(FormOption::UPPER_LINE,1)
             ->setOption(FormOption::OPTION_NOTE, "Na tento a dále i v administračním výpisu budete příjimat odeslané zprávy.")->setHtmlAttribute("placeholder", "john@example.com")->setRequired(false);
+        $form->addCheckbox("active", "Je server aktivní?");
 
         $form->addSubmit("submit", "Vytvořit nový SMTP server");
        return $form;
     }
 
-    public function success(Form $form, ServerFormData $serverFormData): void {
-        if(!$serverFormData->receiver_server_email) {
-            $this->presenter->flashMessage("Z důvodu nevyplnění byl jako emailový účet příjemce přijat email odesílatele", FlashMessages::INFO);
+    /**
+     * @param Form $form
+     * @param ServerFormData $serverFormData
+     */
+    public function success(Form $form, ServerFormData &$serverFormData): void {
+        if(!$serverFormData->receiver_email) {
+            $this->presenter->flashMessage("Z důvodu nevyplnění byl jako emailový účet příjemce přijat email odesílatele.", FlashMessages::INFO);
+            $serverFormData->receiver_email = $serverFormData->server_email;
         }
     }
 }

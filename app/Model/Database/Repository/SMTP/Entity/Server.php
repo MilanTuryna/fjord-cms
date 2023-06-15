@@ -13,7 +13,7 @@ use App\Model\Database\Entity;
 class Server extends Entity
 {
     const name = "name";
-    const server_email = "server_email", server_password = "server_password", server_host = "server_host", receiver_email = "receiver_server_email";
+    const server_email = "server_email", server_password = "server_password", server_host = "server_host", receiver_email = "receiver_server_email", active = "active";
 
     public string $name;
 
@@ -23,5 +23,6 @@ class Server extends Entity
 
     public string $receiver_email;
 
+    public bool $active;
     public int $id;
 }
