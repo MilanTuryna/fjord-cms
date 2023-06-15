@@ -30,12 +30,21 @@ Interní administrace
                                 </h5>
                             </div>
                             <div class="text-muted" style="letter-spacing: 1.5px; margin-top: 4px">
+                                {if $server->active}
                                 <div class="d-flex align-content-center flex-wrap" style="gap:6px">
                                     <div>– aktivní</div>
                                     <div style="padding-top:1px">
                                         <i class="ri-checkbox-blank-circle-fill text-success" style="zoom:80%;"></i>
                                     </div>
                                 </div>
+                                {else}
+                                <div class="d-flex align-content-center flex-wrap" style="gap:6px">
+                                    <div>– neaktivní</div>
+                                    <div style="padding-top:1px">
+                                        <i class="ri-checkbox-blank-circle-fill text-danger" style="zoom:80%;"></i>
+                                    </div>
+                                </div>
+                                {/if}
                             </div>
                         </div>
                     </div>
