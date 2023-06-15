@@ -1,0 +1,19 @@
+{varType App\Model\Database\Repository\Admin\Entity\Account $account}
+{block title}
+{$account->first_name} {$account->surname}
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [
+":Admin:Overview:home" => "Administrace aplikace",
+":Admin:Administrator:Account:list" => "Administrátorské účty",
+":Admin:Administrator:view" => $account->first_name . " " . $account->surname
+]}
+{/block}
+{block content}
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Účet administrátora {$account->first_name} {$account->surname}</h5>
+        {include TEMPLATE_COMMON . "/form.latte", form: "editAdminForm-" . $account->id}
+    </div>
+</div>
+{/block}
