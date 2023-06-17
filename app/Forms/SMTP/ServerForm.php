@@ -46,7 +46,9 @@ class ServerForm extends RepositoryForm
 
        $form->addEmail("server_email", "Emailová adresa (odesílatel)")->setOption(FormOption::UPPER_LINE, 1)->setOption(FormOption::OPTION_NOTE, "Z tohoto emailu bude odeslán obsah zprávy kontaktního formuláře vč. reálného emailu odesílatele.")->setHtmlAttribute("placeholder", "john@example.com")->setRequired(true);
        $form->addPassword("server_password", "Heslo")->setRequired(true);
-       $form->addText("server_host", "Hostitel serveru")->setHtmlAttribute("placeholder", "vase-firma.cz")->setRequired(true);
+       $form->addText("server_host", "Hostitel serveru")
+           ->setOption(FormOption::OPTION_NOTE, "Zadejte validního hostitele serveru. V opačném případě nebude služba správně fungovat.")
+           ->setHtmlAttribute("placeholder", "vase-firma.cz")->setRequired(true);
         $form->addEmail("receiver_email", "Emailová adresa (příjemce)")->setOption(FormOption::UPPER_LINE,1)
             ->setOption(FormOption::OPTION_NOTE, "Na tento a dále i v administračním výpisu budete příjimat odeslané zprávy.")->setHtmlAttribute("placeholder", "john@example.com")->setRequired(false);
         $form->addCheckbox("active", "Je server aktivní?");
