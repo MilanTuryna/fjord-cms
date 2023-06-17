@@ -26,7 +26,7 @@ Interní administrace
                                 <span class="btn non-underline collapsed">
                                     <span style="font-weight: bold">{$server->name}</span>: ({$server->server_email})
                                 </span>
-                                    <span class="small text-muted">(320 emailů)</span>
+                                    {if array_key_exists($server->id, $mailCounts)}<span class="small text-muted">({$mailCounts[$server->id]} emailů)</span>{/if}
                                 </h5>
                             </div>
                             <div class="text-muted" style="letter-spacing: 1.5px; margin-top: 4px">
@@ -208,5 +208,5 @@ Interní administrace
 </div>
 {/block}
 {block breadcrumb}
-{include f_breadcrumb, [":Admin:Overview:home" => "Administrace systému", "" => "Základní přehled"]}
+{include f_breadcrumb, [":Admin:Overview:home" => "Administrace systému", "" => "Interní administrace"]}
 {/block}
