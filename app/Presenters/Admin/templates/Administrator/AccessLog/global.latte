@@ -1,0 +1,56 @@
+{block title}
+Historie přístupů
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [
+":Admin:Overview:home" => "Administrace aplikace",
+":Admin:Administrator:AccessLog:global" => "Administrátorské účty",
+"this" => "Historie přístupů do administrace",
+]}
+{/block}
+{block content}
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Poslední přístupy</h5>
+        <table class="table table-bordered table-hover table-striped table-sm" style="zoom:85%">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Administrátor</th>
+                <th scope="col">Zařízení</th>
+                <th scope="col">Čas</th>
+                <th scope="col">IP</th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach $accessLogs as $log}
+            <tr>
+                <td>{$log->id}</td>
+                <td><a n:href=":Admin:Application:Administrator:view, $log->admin_id" class="blue-href">{$administrators[$log->admin_id]->username}</a></td>
+                <td>{$log->device}</td>
+                <td>{$log->time|date:'d.m.Y H:i'}</td>
+                <td>{$log->ip}</td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+        <div class="text-center mt-2" n:if="$lastPage > 0">
+            {if $page > 1}
+            <a n:href="this, 1">První</a>
+            &nbsp;|&nbsp;
+            <a n:href="this, $page - 1">Předchozí</a>
+            &nbsp;|&nbsp;
+            {/if}
+
+            Stránka {$page} z {$lastPage}
+
+            {if $page < $lastPage}
+            &nbsp;|&nbsp;
+            <a n:href="this, $page + 1">Další</a>
+            &nbsp;|&nbsp;
+            <a n:href="this, $lastPage">Poslední</a>
+            {/if}
+        </div>
+    </div>
+</div>
+{/block}
