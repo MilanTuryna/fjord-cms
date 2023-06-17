@@ -14,8 +14,9 @@
                         {include multiplierRecursion, $childComponent, (int)$counter+1}
                     </div>
                     {else}
-                    <label class="col-sm-2 col-form-label">
+                    <label n:class="$childComponent->isRequired() ? 'required-label' : '', 'col-sm-2 col-form-label'">
                         {$childComponent instanceof App\Model\Extensions\FormMultiplier\Multiplier ? "" : $childComponent->getCaption()}
+
                     </label>
                     <div class="col-sm-10">
                                         <span class="text-muted small" n:if="$childComponent->getOption(App\Forms\FormOption::OPTION_NOTE)">
@@ -33,7 +34,9 @@
                     {multiplier:remove class: 'btn btn-danger'}
                 </div>
             </div>
-            {input $inputComponent->getCreateButtons()[0]}
+            {foreach $inputComponent->getCreateButtons() as $d}
+                {input $d}
+            {/foreach}
         </div>
     </div>
 </div>
