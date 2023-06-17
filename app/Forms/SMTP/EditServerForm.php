@@ -5,6 +5,7 @@ namespace App\Forms\SMTP;
 
 
 use App\Forms\FormMessage;
+use App\Forms\FormOption;
 use App\Forms\FormRedirect;
 use App\Forms\SMTP\Data\ServerFormData;
 use App\Model\Database\Repository;
@@ -13,6 +14,7 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Nette\Forms\Controls\TextInput;
 
 /**
  * Class EditServerForm
@@ -20,7 +22,7 @@ use Nette\Application\UI\Presenter;
  */
 class EditServerForm extends ServerForm
 {
-    #[Pure] public function __construct(Presenter $presenter, private Repository\SMTP\ServerRepository $serverRepository, private int $server_id)
+    #[Pure] public function __construct(Presenter $presenter, private Repository\SMTP\ServerRepository $serverRepository, private int $server_id, private FormRedirect $deleteRoute)
     {
         parent::__construct($presenter, $serverRepository);
     }
@@ -31,6 +33,7 @@ class EditServerForm extends ServerForm
     public function create(): Form {
         $form = parent::create();
         $activeRow = $this->serverRepository->findById($this->server_id);
+        $form['submit']->setOption(FormOption::DELETE_LINK, $this->deleteRoute);
         return $this::createEditForm($form, $activeRow);
     }
 
