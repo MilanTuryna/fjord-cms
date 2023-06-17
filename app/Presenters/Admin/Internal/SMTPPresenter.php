@@ -63,7 +63,7 @@ class SMTPPresenter extends AdminBasePresenter
      * @throws AbortException
      */
     #[NoReturn] public function actionRemove(int $id): void {
-        $this->prepareActionRemove($this->serverRepository, $id, new FormMessage("Daný SMTP server byl úspěšně odstraněn. Zkontrolujte si prosím, zda máte všechny zveřejněné formuláře na webu funkční.", "Daný SMTP server nemohl být z neznámého důvodu odstraněn."), new FormRedirect("list"));
+        $this->prepareActionRemove($this->serverRepository, $id, new FormMessage("Daný SMTP server byl úspěšně odstraněn. Zkontrolujte si prosím, zda máte všechny zveřejněné formuláře na webu funkční.", "Daný SMTP server nemohl být z neznámého důvodu odstraněn."), new FormRedirect(":Admin:Internal:Main:home"));
     }
 
     /**
