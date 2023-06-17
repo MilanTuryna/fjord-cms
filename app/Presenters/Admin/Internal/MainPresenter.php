@@ -26,6 +26,9 @@ class MainPresenter extends AdminBasePresenter
         $this->template->templateCount = count($templates);
         $template = $this->template->usedTemplate = $this->templateRepository->findByColumn(Template::used, true)->fetch();
         $this->template->usedTemplateAuthor = $template ? $template->related("author_id")->fetch() : null;
-        $this->template->emailServers = $this->serverRepository->findAll()->fetchAll();
+        $emailServers = $this->template->emailServers = $this->serverRepository->findAll()->fetchAll();
+        $mailCounts = [];
+        foreach ($emailServers as $emailServer) $mailCounts[$emailServer->id] = $emailServer->related("fjord_smtp_mails")->count("*");
+        $this->template->mailCounts = $mailCounts;
     }
 }
