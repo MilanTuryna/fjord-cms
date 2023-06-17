@@ -45,8 +45,7 @@ class EditServerForm extends ServerForm
     public function success(Form $form, ServerFormData &$serverFormData): void
     {
         parent::success($form, $serverFormData);
-        $exceptions = [];
-        if(!$serverFormData->server_password) $exceptions[] = ServerFormData::server_password;
-        $this->successTemplate($form, $serverFormData->iterable(), new FormMessage("SMTP server byl úspěšně aktualizován.", "SMTP server byl úspěšně aktualizován."), new FormRedirect("this"), $this->server_id, $exceptions);
+        if(!$serverFormData->server_password || $serverFormData->server_password == "") unset($serverFormData->server_password);
+        $this->successTemplate($form, $serverFormData->iterable(), new FormMessage("SMTP server byl úspěšně aktualizován.", "SMTP server byl úspěšně aktualizován."), new FormRedirect("this"), $this->server_id);
     }
 }
