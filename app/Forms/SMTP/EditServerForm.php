@@ -33,6 +33,7 @@ class EditServerForm extends ServerForm
     public function create(): Form {
         $form = parent::create();
         $activeRow = $this->serverRepository->findById($this->server_id);
+        $form[ServerFormData::server_password]->setRequired(false);
         $form['submit']->setOption(FormOption::DELETE_LINK, $this->deleteRoute);
         return $this::createEditForm($form, $activeRow);
     }
@@ -44,6 +45,8 @@ class EditServerForm extends ServerForm
     public function success(Form $form, ServerFormData &$serverFormData): void
     {
         parent::success($form, $serverFormData);
-        $this->successTemplate($form, $serverFormData->iterable(), new FormMessage("SMTP server byl úspěšně aktualizován.", "SMTP server byl úspěšně aktualizován."), new FormRedirect("this"), $this->server_id);
+        $exceptions = [];
+        if(!$serverFormData->server_password) $exceptions[] = ServerFormData::server_password;
+        $this->successTemplate($form, $serverFormData->iterable(), new FormMessage("SMTP server byl úspěšně aktualizován.", "SMTP server byl úspěšně aktualizován."), new FormRedirect("this"), $this->server_id, $exceptions);
     }
 }
