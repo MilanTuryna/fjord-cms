@@ -4,26 +4,36 @@
 namespace App\Presenters\Admin\Dynamic;
 
 
+use App\Forms\Dynamic\CreateEntityForm;
+use App\Forms\Dynamic\EditEntityForm;
 use App\Forms\FormMessage;
+use App\Forms\FormRedirect;
 use App\Model\Admin\Permissions\Specific\AdminPermissions;
 use App\Model\Database\EAV\DynamicEntityFactory;
 use App\Model\Database\EAV\EAVRepository;
 use App\Model\Database\EAV\Exceptions\EntityNotFoundException;
+use App\Model\Database\Repository\Dynamic\AttributeRepository;
+use App\Model\Extensions\FormMultiplier\Multiplier;
 use App\Model\Security\Auth\AdminAuthenticator;
 use App\Presenters\AdminBasePresenter;
 use JetBrains\PhpStorm\NoReturn;
 use Nette\Application\AbortException;
+use Nette\Application\UI\Form;
 
+/**
+ * Class EntityPresenter
+ * @package App\Presenters\Admin\Dynamic
+ */
 class EntityPresenter extends AdminBasePresenter
 {
     /**
      * @param AdminAuthenticator $adminAuthenticator
      * @param DynamicEntityFactory $dynamicEntityFactory
-     * @param string $permissionNode
+     * @param AttributeRepository $attributeRepository
      */
-    public function __construct(AdminAuthenticator $adminAuthenticator, protected DynamicEntityFactory $dynamicEntityFactory, string $permissionNode = AdminPermissions::DYNAMIC_ENTITY_EDIT,)
+    public function __construct(AdminAuthenticator $adminAuthenticator, protected DynamicEntityFactory $dynamicEntityFactory, private AttributeRepository $attributeRepository)
     {
-        parent::__construct($adminAuthenticator, $permissionNode);
+        parent::__construct($adminAuthenticator, AdminPermissions::DYNAMIC_ENTITY_ADMIN);
     }
 
     /**
