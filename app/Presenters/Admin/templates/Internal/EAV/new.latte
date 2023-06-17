@@ -1,0 +1,19 @@
+{block title}
+Přidat novou dynamickou entitu
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [
+":Admin:Overview:home" => "Administrace",
+":Admin:Internal:Main:home" => "Interní administrace",
+":Admin:Internal:EAV:list" => "Seznam dynamických entit",
+"this" => "Přidat novou dynamickou entitu"
+]}
+{/block}
+{block content}
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Přidat novou dynamickou entitu</h5>
+        {include TEMPLATE_COMMON . "/form.latte", form: "createEntityForm"}
+    </div>
+</div>
+{/block}
