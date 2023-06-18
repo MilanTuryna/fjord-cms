@@ -44,7 +44,7 @@ class Multiplier extends Container implements Control
     protected $created = false;
 
     /** @var mixed[] */
-    protected $values = [];
+    public $values = [];
 
     /** @var bool */
     protected $erase = false;
@@ -238,26 +238,20 @@ class Multiplier extends Container implements Control
     }
 
     /**
-     * @param mixed[]|object $defaults
+     * @param object|mixed[] $defaults
      */
-    public function addCopy(?int $number = null, $defaults = []): Container
+    public function addCopy(?string $number = null, array|object $defaults = []): Container
     {
-        if (!is_numeric($number)) {
-            $number = $this->createNumber();
-        } else {
-            /** @var Container|null $component */
-            $component = $this->getComponent((string)$number, false);
-            if ($component !== null) {
-                return $component;
-            }
-        }
-
         $container = $this->createContainer();
+        if(!$number) $number = (string)$this->createNumber();
         if ($defaults) {
+            foreach ($defaults as $k => $v) {
+                if(!$v) unset($defaults[$k]);
+            }
             $container->setDefaults($defaults, $this->erase);
         }
 
-        $this->attachContainer($container, (string)$number);
+        $this->attachContainer($container, $number);
         $this->attachRemoveButton($container);
 
         $this->totalCopies++;
@@ -272,7 +266,7 @@ class Multiplier extends Container implements Control
         // Components from httpData
         if ($this->isFormSubmitted()) {
             foreach ($resolver->getValues() as $number => $_) {
-                $containers[] = $container = $this->addCopy($number);
+                $containers[] = $container = $this->addCopy((string)$number);
 
                 /** @var BaseControl $control */
                 foreach ($container->getControls() as $control) {
@@ -417,7 +411,7 @@ class Multiplier extends Container implements Control
         return explode('-', $this->lookupPath(Form::class) ?? '');
     }
 
-    protected function createContainer(): Container
+    public function createContainer(): Container
     {
         $control = new Container();
         $control->currentGroup = $this->currentGroup;
