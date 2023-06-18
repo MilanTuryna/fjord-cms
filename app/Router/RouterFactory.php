@@ -43,7 +43,6 @@ final class RouterFactory
             ->addRoute("/admin/internal/smtp/view/<server_id>/mail/<id>", "Internal:SMTP:viewMail")
             ->addRoute("/admin/internal/smtp/remove/<id>", "Internal:SMTP:remove")
 
-            ->addRoute("/admin/entity/<entityName>/overview", "Dynamic:Entity:overview")
             ->addRoute("/admin/entity/<entityName>/list", "Dynamic:Entity:list")
             ->addRoute("/admin/entity/<entityName>/view/<rowUnique>", "Dynamic:Entity:view")
             ->addRoute("/admin/entity/<entityName>/remove/<rowUnique>", "Dynamic:Entity:remove")
