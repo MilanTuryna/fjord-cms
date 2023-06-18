@@ -12,7 +12,7 @@ class AttributeRepository extends Repository
 {
     public function __construct(Explorer $explorer)
     {
-        parent::__construct("dynamic_attribute", $explorer);
+        parent::__construct("fjord_dynamic_attributes", $explorer);
     }
 
     /**
