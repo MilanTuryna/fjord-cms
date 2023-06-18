@@ -95,19 +95,12 @@ Interní administrace
                     {foreach $entityList as $entity}
                     <tr>
                         <td>{$entity->id}</td>
-                        <td><a n:href="Dynamic:Entity:view">{$entity->name}</a></td>
+                        <td><a n:href=":Admin:Internal:EAV:view $entity->id">{$entity->name}</a></td>
                         <td>{$entity->description|slice: 0, 20}{if strlen($entity->description) > 20}...{/if}</td>
                         <td>{$entity->created|date:'d.m.Y H:i'}</td>
                         <td>{$entity->edited|date:'d.m.Y H:i'}</td>
                         <td>
-                            <div class="row gap-2">
-                                <div class="col">
-                                    <button class="btn btn-primary">adsd</button>
-                                </div>
-                                <div class="col">
-                                    <button class="btn btn-light">asdsad</button>
-                                </div>
-                            </div>
+                            <a n:href=":Admin:Internal:EAV:view $entity->id" class="btn btn-primary br-0 w-100 btn-sm">Zobrazit</a>
                         </td>
                     </tr>
                     {/foreach}

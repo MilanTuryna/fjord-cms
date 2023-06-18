@@ -69,15 +69,15 @@
                         </div>
                     </div>
                     <div class="list-group classic-shadow">
-                        {*Route => [Presenter (false if only pagea), Title, Condition, blank]*}
+                        {*Route => [Presenter (false if only pagea), Title, Condition, blank, useModule]*}
                         {foreach [
                         ":Admin:Overview:home" => [false, "Základní přehled"],
-                        ":Admin:Internal:Main:home" => [":Admin:Internal:Main", "Interní administrace"],
+                        ":Admin:Internal:Main:home" => [":Admin:Internal", "Interní administrace", null, null, "m"],
                         ":Admin:Gallery:Main:overview" => [":Admin:Gallery:Main", "Galerie"],
                         ":Admin:Administrator:Account:list" => [":Admin:Administrator:Account", "Správa účtů"],
                         ":Admin:Settings:overview" => [":Admin:Settings", "Nastavení webu"]
                         ] as $menuRoute => $title}
-                        <a n:href=$menuRoute n:if="isset($title[2]) ? $title[2] : true" n:class="$presenter->isLinkCurrent($title[0] ? $title[0] . ':*' : $menuRoute) ? aktivni, 'list-group-item', 'list-group-item-action'" {if isset($title[3])}target="_blank"{/if}>
+                        <a n:href=$menuRoute n:if="isset($title[2]) ? $title[2] : true" n:class="(!isset($title[4]) ? $presenter->isLinkCurrent($title[0] ? $title[0] . ':*' : $menuRoute) : $presenter->isModuleCurrent($title[0])) ? aktivni, 'list-group-item', 'list-group-item-action'" {if isset($title[3])}target="_blank"{/if}>
                         {$title[1]}
                         </a>
                         {/foreach}
