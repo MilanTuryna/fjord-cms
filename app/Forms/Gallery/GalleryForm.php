@@ -45,20 +45,8 @@ class GalleryForm extends RepositoryForm
     {
         $form = parent::create();
         $form->addText("name", "Název galerie")->setRequired(true);
-        $form->addText("description", "Popis")->setRequired(false)->setOption(FormOption::BOTTOM_LINE, 1);
-        $items = $form->addMultiplier("_items", function (Container $container, \Nette\Application\UI\Form $form) {
-            $container->addUpload("file_upload", "Nahrát obrázek")->addRule(\Nette\Forms\Form::Image)
-                ->addRule(\Nette\Forms\Form::MAX_FILE_SIZE, sprintf("Tento obrázek je moc velký. Nahrajte prosím jeho menší alternativu (<%smb). ", ItemFormData::MAX_FILE_SIZE), ItemFormData::MAX_FILE_SIZE_MB)->setOption(FormOption::MULTIPLIER_PARENT, "_items");;
-            $container->addText("alt", "Alternativní text")
-                ->setOption(FormOption::OPTION_NOTE, "Text stručně popisujicí obrázek v případě nenačtení obrázku")
-                ->setHtmlAttribute("placeholder", "Velký létajicí drak")->setRequired(false)->setOption(FormOption::MULTIPLIER_PARENT, "_items");;
-            $container->addText("image_description", "Popis obrázku")->setOption(FormOption::MULTIPLIER_PARENT, "_items")->setOption(FormOption::OPTION_NOTE, "(vlastní poznámka)");
-        });
-        $items->addRemoveButton("Smazat položku");
-        $items->setOption(FormOption::FULL_WIDTH, 1);
-        $items->addCreateButton("Přidat položku", 0)->addClass('btn btn-dark w-100');
-        $items->setCaption("Nahrávání fotografií");
-        $form->addMultiUpload("_global_upload", "Hromadné nahrání obrázků")->setRequired(false)->setOption(FormOption::UPPER_LINE, 1);
+        $form->addText("description", "Popis")->setRequired(false);
+        $form->addMultiUpload("_global_upload", "Hromadné nahrání obrázků")->setRequired(false);
         $form->addSubmit("submit", "Vytvořit galerii");
 
         return $form;

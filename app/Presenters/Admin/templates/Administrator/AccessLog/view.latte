@@ -1,0 +1,43 @@
+{block title}
+Přístupový log: {$account->username}
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [
+":Admin:Overview:home" => "Administrace aplikace",
+":Admin:Administrator:Account:list" => "Administrátorské účty",
+":Admin:Administrator:AccessLog:global" => "Historie přístupů",
+"this" => "Přístupový log: ". $account->username
+]}
+{/block}
+{block content}
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Přístupový log administrátora {$account->username}</h5>
+        <table class="table table-bordered table-hover table-striped table-sm">
+            <thead>
+            <tr>
+                <th scope="col">Administrátor</th>
+                <th scope="col">Zařízení</th>
+                <th scope="col">Čas</th>
+                <th scope="col">IP</th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach $accessLogs as $log}
+            <tr>
+                <td><a n:href=":Admin:Administrator:Account:view, $account->id" class="blue-href">{$account->username}</a></td>
+                <td>{$log->device}</td>
+                <td>{$log->time|date:'d.m.Y H:i'}</td>
+                <td>{$log->ip}</td>
+            </tr>
+            {/foreach}
+            <tr n:if="count($accessLogs) === 0">
+                <td colspan="4" class="text-center p-3 text-muted">
+                    Tento administrátor se ještě nepřihlásil.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{/block}

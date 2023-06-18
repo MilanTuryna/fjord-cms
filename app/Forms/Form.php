@@ -11,6 +11,10 @@ abstract class Form
     public function __construct(protected Presenter $presenter) {
     }
 
+    public static function passNested(Form $form, object $data) {
+        
+    }
+
     /**
      * @param array $values ([input_name => value])
      */

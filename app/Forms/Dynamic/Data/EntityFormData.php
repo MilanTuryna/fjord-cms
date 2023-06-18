@@ -21,7 +21,7 @@ class EntityFormData
     /**
      * @var array|DynamicAttribute[]
      */
-    public array $attributes;
+    public ?array $attributes;
 
     /**
      * @throws ReflectionException

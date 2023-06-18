@@ -10,5 +10,6 @@ interface DataType
     const FLOAT = "float";
     const STRING = "string";
     const TRANSLATED_VALUE = TranslatedValue::class;
+    const ARBITRARY = "ARBITRARY";
     const BOOL = "bool";
 }

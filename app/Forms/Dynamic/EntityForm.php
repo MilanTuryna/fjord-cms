@@ -11,6 +11,7 @@ use App\Forms\Form;;
 use App\Forms\FormOption;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicEntity;
 use Nette\Forms\Container;
+use Nette\Utils\DateTime;
 
 /**
  * Class EntityForm
@@ -29,7 +30,8 @@ class EntityForm extends Form
         $form->addText("entity_description", "Popis položky")->setRequired(true);
         $maxAttributes = 50;
         $attrMultiplier = $form->addMultiplier("attributes", function (Container $container, \Nette\Forms\Form $form) use(&$attrMultiplier) {
-            $container->addText(AttributeData::name, "Název atributu")->setOption(FormOption::MULTIPLIER_PARENT, "attributes")->setRequired(true);
+            $container->addText(AttributeData::id_name, "Jmenný identifikátor")->setOption(FormOption::OPTION_NOTE, "Například 'name'")->setOption(FormOption::MULTIPLIER_PARENT, "attributes")->setRequired(true);
+            $container->addText(AttributeData::title, "Název atributu")->setOption(FormOption::OPTION_NOTE, "Uživatelsky přívětivý název atributu (např. 'Název článku')")->setOption(FormOption::MULTIPLIER_PARENT, "attributes")->setRequired(true);
             $container->addSelect(AttributeData::data_type, "Datový typ", AttributeData::DATA_TYPES)->setOption(FormOption::MULTIPLIER_PARENT, "attributes")->setRequired(true);
             $container->addText(AttributeData::description, "Popis atributu")->setOption(FormOption::MULTIPLIER_PARENT, "attributes");
             $container->addText(AttributeData::placeholder, "HTML Placeholder")->setOption(FormOption::OPTION_NOTE, "Vyjadřuje náhledový text před rozkliknutím inputu")->setOption(FormOption::MULTIPLIER_PARENT, "attributes");
@@ -54,8 +56,8 @@ class EntityForm extends Form
         $entity = new DynamicEntity();
         $entity->name = $data->entity_name;
         $entity->description = $data->entity_description;
-        $entity->created = new \DateTime();
-        $entity->last_edit = new \DateTime();
+        $entity->created = new DateTime();
+        $entity->last_edit = new DateTime();
         return $entity;
     }
 }

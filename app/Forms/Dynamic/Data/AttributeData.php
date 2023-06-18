@@ -11,6 +11,7 @@ use App\Model\Database\Repository\Dynamic\Entity\DynamicAttribute;
 class AttributeData extends DynamicAttribute
 {
     const DATA_TYPES = [
+        DataType::ARBITRARY => "Libovolný datový typ",
         DataType::INTEGER  => "Celé číslo",
         DataType::FLOAT  => "Číslo s desetinným místem",
         DataType::STRING => "Textový řetězec",

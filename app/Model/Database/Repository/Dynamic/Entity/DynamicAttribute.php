@@ -12,13 +12,14 @@ use App\Model\Database\Entity;
  */
 class DynamicAttribute extends Entity
 {
-    const name = "name";
-    const data_type = "data_type", placeholder = "placeholder", preset_val = "preset_val", entity_id = "entity_id",
+    const id_name = "id_name";
+    const data_type = "data_type", title = "title", placeholder = "placeholder", preset_val = "preset_val", entity_id = "entity_id",
        description = "description",
         generate_value = "generate_value",
         allowed_translation = "allowed_translation", required = "required";
 
-    public string $name;
+    public string $id_name;
+    public string $title;
     public string $description;
     public bool $allowed_translation;
     public string $data_type;

@@ -14,6 +14,9 @@ use JetBrains\PhpStorm\Pure;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
+use Tracy\Debugger;
+use Tracy\Dumper;
+use Tracy\Helpers;
 
 /**
  * Class CreateEntityForm
@@ -36,6 +39,7 @@ class CreateEntityForm extends EntityForm
      * @throws AbortException
      */
     #[NoReturn] public function success(Form $form, EntityFormData &$data): void {
+        $data->attributes = $form->getHttpData()["attributes"];
         $entity = $this->buildEntity($data);
         $entityId = $this->dynamicEntityFactory->createEntity($entity, $data->attributes);
         $this->presenter->flashMessage("Entita byla úpěšně vytvořena", FlashMessages::SUCCESS);
