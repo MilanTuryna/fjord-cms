@@ -14,6 +14,8 @@ use JetBrains\PhpStorm\Pure;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
+use Nette\Database\UniqueConstraintViolationException;
+use ReflectionException;
 use Tracy\Debugger;
 use Tracy\Dumper;
 use Tracy\Helpers;
@@ -36,13 +38,17 @@ class CreateEntityForm extends EntityForm
     }
 
     /**
-     * @throws AbortException
+     * @throws AbortException|ReflectionException
      */
     #[NoReturn] public function success(Form $form, EntityFormData &$data): void {
         $data->attributes = $form->getHttpData()["attributes"];
         $entity = $this->buildEntity($data);
-        $entityId = $this->dynamicEntityFactory->createEntity($entity, $data->attributes);
-        $this->presenter->flashMessage("Entita byla úpěšně vytvořena", FlashMessages::SUCCESS);
-        $this->redirect->presenter($this->presenter, $entityId);
+        try {
+            $entityId = $this->dynamicEntityFactory->createEntity($entity, $data->attributes);
+            $this->presenter->flashMessage("Entita byla úpěšně vytvořena", FlashMessages::SUCCESS);
+            $this->redirect->presenter($this->presenter, $entityId);
+        } catch (UniqueConstraintViolationException $exception) {
+            $form->addError("Název dynamické entity se shoduje s již vytvořenou dynamickou entitou. Opravte to.");
+        }
     }
 }

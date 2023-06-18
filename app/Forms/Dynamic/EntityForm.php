@@ -20,9 +20,10 @@ use Nette\Utils\DateTime;
 class EntityForm extends Form
 {
     /**
+     * @param int $minCopies
      * @return \Nette\Application\UI\Form
      */
-    public function create(): \Nette\Application\UI\Form
+    public function create(int $minCopies = 1): \Nette\Application\UI\Form
     {
         $form = parent::create();
         $form->addText("entity_name", "Název entity/položky")
@@ -38,10 +39,10 @@ class EntityForm extends Form
             // If AttributeData::generate_value and ::preset_val then use prese_val;
             $container->addSelect(AttributeData::generate_value, "Vygenerované hodnoty",
                 AttributeData::GENERATED_VALUES)->setRequired(false)->setOption(FormOption::MULTIPLIER_PARENT, "attributes")->setPrompt("Vyber generovanou hodnotu");
-            $container->addTextarea(AttributeData::preset_val, "Přednastavení hodnoty")->setOption(FormOption::OPTION_NOTE, "V případě využití přednastavené hodnoty v kombinaci s datovým typem překladu, využijte prosím JSON dle struktrury uvedené v dokumentaci FjordCMS.")->setOption(FormOption::MULTIPLIER_PARENT, "attributes")->setRequired(false);
+            $container->addTextarea(AttributeData::preset_value, "Přednastavení hodnoty")->setOption(FormOption::OPTION_NOTE, "V případě využití přednastavené hodnoty v kombinaci s datovým typem překladu, využijte prosím JSON dle struktrury uvedené v dokumentaci FjordCMS.")->setOption(FormOption::MULTIPLIER_PARENT, "attributes")->setRequired(false);
             $container->addCheckbox(AttributeData::required, "Je atribut povinný?")->setOption(FormOption::MULTIPLIER_PARENT, "attributes")->setRequired(false);
             $attrMultiplier->addRemoveButton("Odebrat atribut")->addClass('btn btn-danger');
-        }, 1, $maxAttributes);
+        }, $minCopies, $maxAttributes);
         $attrMultiplier->addCreateButton("Přidat krok")->addClass('btn btn-dark w-100');
         $form->addSubmit("submit", "Vytvořit novou entitu");
         return $form;
@@ -57,7 +58,7 @@ class EntityForm extends Form
         $entity->name = $data->entity_name;
         $entity->description = $data->entity_description;
         $entity->created = new DateTime();
-        $entity->last_edit = new DateTime();
+        $entity->edited = new DateTime();
         return $entity;
     }
 }
