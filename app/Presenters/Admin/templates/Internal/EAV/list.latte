@@ -1,0 +1,42 @@
+{block title}
+Přidat novou dynamickou entitu
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [
+":Admin:Overview:home" => "Administrace",
+":Admin:Internal:Main:home" => "Interní administrace",
+":Admin:Internal:EAV:list" => "Seznam dynamických entit"
+]}
+{/block}
+{block content}
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Seznam dynamických entit</h5>
+        <table class="table table-bordered table-hover table-striped table-sm" style="zoom:85%">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Název entity</th>
+                <th scope="col">Popis entity</th>
+                <th scope="col">Vytvořena</th>
+                <th scope="col">Poslední změna</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach $dynamicEntities as $entityRow}
+            <tr>
+                <td><a n:href=":Admin:Internal:EAV:view $entityRow->id" class="blue-href">{$entityRow->id}</a></td>
+                <td>{$entityRow->name}</td>
+                <td>{$entityRow->description|slice:0,20}</td>
+                <td>{$entityRow->created|date:'d.m.Y H:i'}</td>
+                <td>{$entityRow->edited|date:'d.m.Y H:i'}</td>
+                <td><a n:href=":Admin:Internal:EAV:view $entityRow->id" class="btn btn-primary br-0 w-100">Zobrazit</a></td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    </div>
+</div>
+<a class="btn btn-success w-100 text-white" n:href=":Admin:Internal:EAV:new">Přidat novou dynamickou entitu</a>
+{/block}
