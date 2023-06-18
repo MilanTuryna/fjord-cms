@@ -14,6 +14,8 @@ use App\Model\Database\Repository\Dynamic\ValueRepository;
 use InvalidArgumentException;
 use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
+use Nette\Database\UniqueConstraintViolationException;
+use ReflectionException;
 
 class DynamicEntityFactory
 {
@@ -36,17 +38,21 @@ class DynamicEntityFactory
      * @param DynamicEntity $entity
      * @param array $dynamicAttributes
      * @return int|null
+     * @throws ReflectionException
+     * @throws UniqueConstraintViolationException
      */
     public function createEntity(DynamicEntity $entity, array $dynamicAttributes): ?int
     {
-        $insertedEntity = $this->entityRepository->insert($entity->iterable());
-        foreach ($dynamicAttributes as $attribute) {
-            if (!($attribute instanceof DynamicAttribute || is_array($attribute))) {
-                throw new InvalidArgumentException("Zadaný atribut je špatného typu.");
+            $insertedEntity = $this->entityRepository->insert($entity->iterable());
+            foreach ($dynamicAttributes as $attribute) {
+                if (!($attribute instanceof DynamicAttribute || is_array($attribute))) {
+                    throw new InvalidArgumentException("Zadaný atribut je špatného typu.");
+                }
+                $attributeObject = new DynamicAttribute();
+                $attributeObject->createFrom($attribute);
+                $this->attributeRepository->addAttribute($insertedEntity->id, $attribute);
             }
-            $this->attributeRepository->addAttribute($insertedEntity->id, $attribute);
-        }
-        return $insertedEntity->{'id'} ?? null;
+            return $insertedEntity->{'id'} ?? null;
     }
 
     /**
