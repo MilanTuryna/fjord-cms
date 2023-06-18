@@ -19,7 +19,6 @@ class DynamicEntity extends Entity
     public string $created;
     public string $edited;
     public string $description;
-    public string $last_edit;
     public string $generated_by;
     public int $id;
 }
