@@ -42,7 +42,7 @@ class EAVPresenter extends AdminBasePresenter
     }
 
     public function renderView(int $id) {
-        $this->template->entity = $this->entityRepository->findById($id);
+        $this->template->dynamicEntity = $this->entityRepository->findById($id);
         $this->template->attributes = $this->attributeRepository->findByColumn(DynamicAttribute::entity_id, $id);
         $this->template->valuesCount = $this->valueRepository->findByColumn(DynamicAttribute::entity_id, $id)->count("id");
     }
@@ -65,8 +65,8 @@ class EAVPresenter extends AdminBasePresenter
      * @return Multiplier
      */
     public function createComponentEditEntityForm(): Multiplier {
-        return new Multiplier(function (int $entityId) {
-            return (new EditEntityForm($this, $entityId, $this->entityRepository, $this->attributeRepository))->create();
+        return new Multiplier(function ($entityId) {
+            return (new EditEntityForm($this, (int)$entityId, $this->entityRepository, $this->attributeRepository))->create();
         });
     }
 }
