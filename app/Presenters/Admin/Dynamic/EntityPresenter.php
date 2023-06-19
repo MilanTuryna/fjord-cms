@@ -6,6 +6,7 @@ namespace App\Presenters\Admin\Dynamic;
 
 use App\Forms\Dynamic\CreateEntityForm;
 use App\Forms\Dynamic\EditEntityForm;
+use App\Forms\EAV\SpecificEntityForm;
 use App\Forms\FormMessage;
 use App\Forms\FormRedirect;
 use App\Model\Admin\Permissions\Specific\AdminPermissions;
@@ -13,7 +14,8 @@ use App\Model\Database\EAV\DynamicEntityFactory;
 use App\Model\Database\EAV\EAVRepository;
 use App\Model\Database\EAV\Exceptions\EntityNotFoundException;
 use App\Model\Database\Repository\Dynamic\AttributeRepository;
-use App\Model\Extensions\FormMultiplier\Multiplier;
+use App\Model\Database\Repository\Dynamic\Entity\DynamicAttribute;
+use App\Model\Database\Repository\Dynamic\Entity\DynamicEntity;
 use App\Model\Security\Auth\AdminAuthenticator;
 use App\Presenters\AdminBasePresenter;
 use JetBrains\PhpStorm\NoReturn;
@@ -42,6 +44,9 @@ class EntityPresenter extends AdminBasePresenter
     public function renderList(string $entityName) {
         $this->setIfCurrentEntity($entityName);
         $EAVRepository = $this->dynamicEntityFactory->getEntityRepository($entityName);
+        $this->template->entityName = $entityName;
+        $entity = $this->template->entity = $this->entityRepository->findByColumn(DynamicEntity::name, $entityName)->fetch();
+        $this->template->attributes = $this->attributeRepository->findByColumn(DynamicAttribute::entity_id, $entity->id)->fetchAll();
         $this->template->rows = $EAVRepository->findAll();
     }
 
@@ -68,5 +73,16 @@ class EntityPresenter extends AdminBasePresenter
     public function renderNew(string $entityName) {
         $this->setIfCurrentEntity($entityName);
         $this->template->entityName = $entityName;
+        $this->template->entity = $this->entityRepository->findByColumn(DynamicEntity::name, $entityName)->fetch();
+    }
+
+    /**
+     * @return \Nette\Application\UI\Multiplier
+     */
+    public function createComponentCreateSpecificEntityForm(): \Nette\Application\UI\Multiplier
+    {
+        return new \Nette\Application\UI\Multiplier(function ($entityId) {
+            return (new SpecificEntityForm($this, $this->dynamicEntityFactory->getEntityRepositoryById($entityId)))->create();
+        });
     }
 }

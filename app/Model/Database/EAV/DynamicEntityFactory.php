@@ -62,4 +62,12 @@ class DynamicEntityFactory
     {
         return new EAVRepository($this->explorer, $this->attributeRepository, $this->entityRepository, $this->idRepository, $this->valueRepository, $entityName);
     }
+
+    /**
+     * @throws EntityNotFoundException
+     */
+    public function getEntityRepositoryById(int $id): EAVRepository {
+        $entity = $this->entityRepository->findById($id);
+        return $this->getEntityRepository($entity->name);
+    }
 }

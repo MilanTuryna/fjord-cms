@@ -1,0 +1,19 @@
+{block title}
+Přidat nový záznam: {$entityName}
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [
+":Admin:Overview:home" => "Administrace",
+"" => "Správa obsahu",
+":Admin:Dynamic:Entity:list, $entityName" => "Seznam záznamů (" . $entityName . ")",
+":Admin:Dynamic:Entity:new, $entityName" => "Přidat nový záznam"
+]}
+{/block}
+{block content}
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Vyplňte zadané údaje</h5>
+        {include TEMPLATE_COMMON . "/form.latte", form: "createSpecificEntityForm-$entity->id"}
+    </div>
+</div>
+{/block}

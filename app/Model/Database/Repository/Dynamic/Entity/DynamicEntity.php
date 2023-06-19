@@ -12,8 +12,9 @@ use App\Model\Database\Entity;
  */
 class DynamicEntity extends Entity
 {
-    const name = "name", declension = "declension", created = "created", description = "description", generated_by = "generated_by", edited = "edited", id = "id";
+    const name = "name", declension = "declension", menu_item_name = "menu_item_name", created = "created", description = "description", generated_by = "generated_by", edited = "edited", id = "id";
 
+    public string $menu_item_name;
     public string $name;
     public string $declension; // parse to three declension strings ["článek", "články", "článků"]
     public string $created;

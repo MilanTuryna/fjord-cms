@@ -9,6 +9,7 @@ use App\Model\Database\EAV\Exceptions\EntityNotFoundException;
 use App\Model\Database\EAV\Exceptions\InvalidAttributeException;
 use App\Model\Database\IRepository;
 use App\Model\Database\Repository\Dynamic\AttributeRepository;
+use App\Model\Database\Repository\Dynamic\Entity\DynamicAttribute;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicEntity;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicId;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicValue;
@@ -41,8 +42,8 @@ class EAVRepository implements IRepository
      * @param string $path
      * @return array
      */
-    public function getEntityAttributesAssoc(string $path = "name"): array {
-        return $this->attributeRepository->findByColumn("entity_id", $this->entity->id)->fetchAssoc($path);
+    public function getEntityAttributesAssoc(string $path = DynamicAttribute::id_name): array {
+        return $this->attributeRepository->findByColumn( DynamicAttribute::entity_id, $this->entity->id)->fetchAssoc($path);
     }
 
     /**
@@ -95,10 +96,11 @@ class EAVRepository implements IRepository
      * @return array ([<row_unique> => [], <row_unique> => []])
      */
     public function findAll(): array {
-        $sql = FileSystem::read("SQL/findAll.sql");
+        $sql = FileSystem::read(__DIR__ . "/SQL/findAll.sql");
         $rows = $this->explorer->query($sql, $this->entity->id)->fetchAll();
+        $associativeArray = self::createAssociativeArray($rows);
         $result = [];
-        foreach ($rows as $row) $row[$row->row_unique] = self::createAssociativeArray($rows)[$this->entity->id];
+        foreach ($rows as $row) $row[$row->row_unique] = $associativeArray[$this->entity->id];
         return $result;
     }
 

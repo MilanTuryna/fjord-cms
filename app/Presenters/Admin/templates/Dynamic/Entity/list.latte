@@ -1,0 +1,35 @@
+{block title}
+{$entityName}
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [
+":Admin:Overview:home" => "Administrace aplikace",
+"" => "Správa obsahu",
+"this" => $entityName,
+]}
+{/block}
+{block content}
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">{$entityName} <small>(celkem: {count($rows)})</small></h5>
+        <table class="table table-bordered table-striped table-sm">
+            <thead>
+            <tr>
+                <th scope="col" n:foreach="$attributes as $attribute">{$attribute->title}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr n:foreach="$rows as $row">
+                <td n:foreach="$k_attr as $v">{$v}</td>
+            </tr>
+            <tr n:if="count($rows) === 0">
+                <td colspan="8" class="text-center p-3 text-muted">
+                    Žádné záznamy nebyly nalezeny.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<a class="btn btn-success w-100 text-white" n:href=":Admin:Dynamic:Entity:new $entityName">Přidat nový záznam</a>
+{/block}

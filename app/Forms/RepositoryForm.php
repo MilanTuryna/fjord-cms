@@ -18,14 +18,14 @@ use Nette\Forms\Controls\TextInput;
 
 class RepositoryForm extends \App\Forms\Form
 {
-    protected Repository $repository;
+    protected IRepository $repository;
 
     /**
      * RepositoryForm constructor.
      * @param Presenter $presenter
      * @param Repository $repository
      */
-    #[Pure] public function __construct(protected Presenter $presenter, Repository $repository)
+    #[Pure] public function __construct(protected Presenter $presenter, IRepository $repository)
     {
         parent::__construct($this->presenter);
 
@@ -34,12 +34,12 @@ class RepositoryForm extends \App\Forms\Form
 
     /**
      * @param Form $form
-     * @param ActiveRow $activeRow
+     * @param mixed $activeRow
      * @param string $submitCaption
      * @param array $exceptions For inputs that's not same as columns in database
      * @return Form
      */
-    public static function createEditForm(Form $form, ActiveRow $activeRow, string $submitCaption = "Aktualizovat změny", array $exceptions = []): Form
+    public static function createEditForm(Form $form, mixed $activeRow, string $submitCaption = "Aktualizovat změny", array $exceptions = []): Form
     {
         /**
          * @var $controls TextInput[]
@@ -49,7 +49,13 @@ class RepositoryForm extends \App\Forms\Form
         foreach ($controls as $input) {
             $inputName = $input->getName();
             if(!in_array($inputName, $exceptions) && $inputName !== "submit") {
-                if($activeRow->offsetExists($inputName)) {
+                $condition = false;
+                if($activeRow instanceof ActiveRow) {
+                    $condition = $activeRow->offsetExists($inputName);
+                } else {
+                    $condition = isset($activeRow[$inputName]);
+                }
+                if($condition) {
                     $form[$inputName]->setDefaultValue($activeRow->{$inputName});
                 }
             }

@@ -87,7 +87,7 @@
                     <div class="list-group classic-shadow">
                         {foreach $dynamicEntities as $entityR}
                         <a n:href=":Admin:Dynamic:Entity:list $entityR->name" n:class="$currentEntity === $entityR->name ? aktivni, 'list-group-item', 'list-group-item-action'" {if isset($title[3])}target="_blank"{/if}>
-                        Správa App\Presenters\TemplateUtils::toDeclension($entityR->declension)[2]
+                        {$entityR->menu_item_name ? $entityR->menu_item_name : $entityR->name}
                         </a>
                         {/foreach}
                         {if !$dynamicEntities}

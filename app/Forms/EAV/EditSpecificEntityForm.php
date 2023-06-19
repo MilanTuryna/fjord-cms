@@ -2,7 +2,6 @@
 
 namespace App\Forms\EAV;
 
-use App\Forms\EAV\Data\SpecificEntityFormData;
 use App\Forms\FormMessage;
 use App\Forms\FormRedirect;
 use App\Model\Database\EAV\EAVRepository;
@@ -40,7 +39,7 @@ class EditSpecificEntityForm extends SpecificEntityForm
      * @throws InvalidLinkException
      * @throws AbortException
      */
-    public function success(Form $form, SpecificEntityFormData $data): void {
-        $this->successTemplate($form, $this->entityData, new FormMessage("Entita " . $this->EAVRepository->entityName . " byla úspěšně aktualizována.", "Entita " . $this->EAVRepository->entityName . " nemohla být z neznámého důvodu aktualizována."), null, $this->rowUnique);
+    public function success(Form $form, array $data): void {
+        $this->successTemplate($form, $data, new FormMessage("Entita " . $this->EAVRepository->entityName . " byla úspěšně aktualizována.", "Entita " . $this->EAVRepository->entityName . " nemohla být z neznámého důvodu aktualizována."), null, $this->rowUnique);
     }
 }

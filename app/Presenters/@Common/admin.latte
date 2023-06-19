@@ -3,7 +3,7 @@
 {varType array $links}
 {foreach $links as $link => $name}
 {var $link = App\Presenters\TemplateUtils::stringRedirect($link)}
-<li {if !$iterator->isLast()}
+<li n:if="$link[0]" {if !$iterator->isLast()}
     {if $link[1]}
     href="{$presenter->link($link[0], $link[1])}"
     {else}
@@ -18,6 +18,9 @@
     <a class="black-href" n:href="$link[0]" n:if="!$iterator->isLast()">{$name|trim}</a>
     {/if}
     {if $iterator->isLast()}{$name}{/if}
+</li>
+<li n:if="!$link[0]" class="breadcrumb-item text-muted">
+    {$name}
 </li>
 {/foreach}
 {/define}
