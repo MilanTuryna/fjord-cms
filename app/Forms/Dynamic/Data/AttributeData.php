@@ -4,10 +4,15 @@
 namespace App\Forms\Dynamic\Data;
 
 
+use App\Forms\Dynamic\Enum\InputType;
 use App\Model\Database\EAV\DataType;
 use App\Model\Database\EAV\Translations\TranslatedValue;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicAttribute;
 
+/**
+ * Class AttributeData
+ * @package App\Forms\Dynamic\Data
+ */
 class AttributeData extends DynamicAttribute
 {
     const DATA_TYPES = [
@@ -19,8 +24,13 @@ class AttributeData extends DynamicAttribute
         DataType::BOOL => "ANO/NE"
     ];
 
+    const INPUT_TYPES = [
+        InputType::CLASSIC_INPUT => "Bežný input (vstup)",
+        InputType::TEXTAREA => "Input jako textarea"
+    ];
+
     const GENERATED_VALUES = [
-        "created" => "Datum vytvořeřní",
+        "created" => "Datum vytvoření",
         "edited" => "Datum poslední změny",
         "created_admin" => "Vytvořil/a",
         "edited_admin" => "Naposledy upravil/a"

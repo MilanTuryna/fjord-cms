@@ -22,6 +22,7 @@ class EntityFormData extends Entity
 
     public string $entity_name;
     public string $entity_description;
+    public string $menu_item_name;
     /**
      * @var array|DynamicAttribute[]
      */
@@ -37,6 +38,7 @@ class EntityFormData extends Entity
         $entityRow = $entityRepository->findById($entity_id);
         $fullEntity->entity_name = $entityRow->name;
         $fullEntity->entity_description = $entityRow->description;
+        $fullEntity->menu_item_name = $entityRow->menu_item_name;
         $attributes = $attributeRepository->findByColumn("entity_id", $entity_id)->select("*")->fetchAll();
         $fullEntity->attributes = [];
         foreach ($attributes as $attribute) {

@@ -43,7 +43,9 @@ class SettingsPresenter extends AdminBasePresenter
 
         $comparisonList = [];
         foreach (SettingsForm::INPUTS_LABELS as $input => $label) {
-            $comparisonList[] = new InputComparison($label, [$settingsRow->{$input}, $this->settings->{$input}]);
+           $inputComparison = new InputComparison($label[0], [$settingsRow->{$input}, $this->settings->{$input}]);
+           if(isset($label[1])) $inputComparison->inputType = $label[1];
+           $comparisonList[] = $inputComparison;
         }
         $comparisonList[] = new InputComparison("Zveřejnil/a", [
             $this->accountRepository->findById($settingsRow->admin_id)->username,

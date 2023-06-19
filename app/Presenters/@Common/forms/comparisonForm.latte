@@ -1,0 +1,26 @@
+<form>
+    {foreach $list as $inputComparison}
+    <div class="form-group row">
+        <label class="col-sm-3 col-form-label">{$inputComparison->label}</label>
+        <div class="col-9">
+            <div class="row">
+                {var $column = 12/count($inputComparison->values)}
+                {foreach $inputComparison->values as $value}
+                <div class="col-{$column}">
+                    <input readonly value="{$value}" spellcheck="false" type="text" class="form-control" n:if="$inputComparison->isString()">
+                    {if $inputComparison->isList()}
+                    {foreach explode(',',$value) as $value}
+                    <label class="text-muted">
+                        <input type="checkbox" disabled readonly checked value="">
+                        {App\Model\Constants\Countries::LANGUAGES[$value]}
+                    </label>
+                    <br>
+                    {/foreach}
+                    {/if}
+                </div>
+                {/foreach}
+            </div>
+        </div>
+    </div>
+    {/foreach}
+</form>

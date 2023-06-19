@@ -9,6 +9,8 @@ use App\Forms\FormOption;
 use App\Forms\FormRedirect;
 use App\Forms\RepositoryForm;
 use App\Forms\Settings\Data\SettingsFormData;
+use App\Forms\Universal\Comparison\InputComparison;
+use App\Model\Constants\Countries;
 use App\Model\Database\DataRegulation;
 use App\Model\Database\Repository;
 use JetBrains\PhpStorm\Pure;
@@ -16,6 +18,7 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Nette\Utils\DateTime;
 
 /**
  * Class SettingsForm
@@ -24,10 +27,11 @@ use Nette\Application\UI\Presenter;
 class SettingsForm extends RepositoryForm
 {
     // for comparison purposes
-    const INPUTS_LABELS = [
-        "app_name" => "Název aplikace",
-        "app_author" => "Vlastníci webu",
-        "app_keywords" => "Klíčová slova",
+    const INPUTS_LABELS = [ // ["title", "input_type|InputComparison::TYPE_INPUT|InputComparison::TYPE_ARRAY"]
+        "app_name" => ["Název aplikace"],
+        "app_author" => ["Vlastníci webu"],
+        "app_keywords" => ["Klíčová slova"],
+        "languages" => ["Jazyky překladu", InputComparison::TYPE_ARRAY],
     ];
 
     private Repository\Settings\GlobalSettingsRepository $settingsRepository;
@@ -39,7 +43,7 @@ class SettingsForm extends RepositoryForm
      * @param FormRedirect $formRedirect
      * @param int $admin_id
      */
-    public function __construct(protected Presenter $presenter, Repository\Settings\GlobalSettingsRepository $repository, private FormRedirect $formRedirect, private int $admin_id)
+    #[Pure] public function __construct(protected Presenter $presenter, Repository\Settings\GlobalSettingsRepository $repository, private FormRedirect $formRedirect, private int $admin_id)
     {
         parent::__construct($this->presenter, $repository);
 
@@ -61,6 +65,11 @@ class SettingsForm extends RepositoryForm
             ->setOption(FormOption::OPTION_NOTE, "Bez diakritiky, ve formátu: music, play, split, sound")
             ->setMaxLength(DataRegulation::DESCRIPTION)
             ->setDefaultValue($actualSettings->app_keywords ?? "")->setRequired(true);
+        $form->addCheckboxList("_languages", "Jazyky webu", Countries::LANGUAGES)
+            ->setOption(FormOption::OPTION_NOTE, "Zvolte všechny jazyky do kterých chcete překládat obsah webu.")->setRequired("Je nutné, aby alespoň jeden jazyk byl označen jako základní.");
+        if($actualSettings && $actualSettings->languages) {
+            $form["_languages"]->setDefaultValue(explode(",", $actualSettings->languages));
+        }
         $form->addSubmit("submit", "Aktualizovat změny");
         return $form;
     }
@@ -73,7 +82,10 @@ class SettingsForm extends RepositoryForm
      */
     public function success(Form $form, SettingsFormData $data): void {
         $data->admin_id = $this->admin_id;
-        $this->successTemplate($form, $data, new FormMessage(
+        $data->created = new DateTime();
+        if(count($data->_languages) < 1) $form->addError("Je nutné, aby alespoň jeden jazyk byl označen jako základní.");
+        $data->languages = implode(",", $data->_languages);
+        $this->successTemplate($form, $data->iterable(), new FormMessage(
             "Nastavení bylo úspěšně aktualizováno a ve všech službách aplikováno.",
             "Vyskytla se neznámá chyba v databázi a nebylo možné aktualizovat nastavení."));
     }

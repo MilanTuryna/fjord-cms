@@ -30,9 +30,9 @@ Nastavení webu
             <tbody>
             {foreach $changeList as $row}
             <tr>
-                <td><a n:href=":Admin:Application:Administrator:view $row->admin_id">{$administratorMap[$row->admin_id]}</a></td>
+                <td><a n:href=":Admin:Administrator:Account:view $row->admin_id">{$administratorMap[$row->admin_id]->username}</a></td>
                 <td>{$row->created|date:'d.m.Y H:i'}</td>
-                <td class="text-center"><a n:href=":Admin:Application:Settings:view, $row->id">Zobrazit nastavení</a></td>
+                <td class="text-center"><a n:href=":Admin:Settings:history, $row->id">Zobrazit nastavení</a></td>
             </tr>
             {/foreach}
             <tr n:if="count($changeList) === 0">

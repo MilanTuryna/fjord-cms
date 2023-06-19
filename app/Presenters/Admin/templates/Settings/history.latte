@@ -1,0 +1,26 @@
+{block title}
+{$settingsRow->created|date:'d.m.Y H:i'}: Záznam nastavení
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [
+":Admin:Overview:home" => "Administrace aplikace",
+":Admin:Settings:overview" => "Globální nastavení aplikace",
+"this" => "Záznam nastavení: " . ($settingsRow->created|date:'d.m.Y H:i')
+]}
+{/block}
+{block content}
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <a n:href=":Admin:Settings:overview" class="small">Vrátit zpět</a>
+        <h5 class="card-title">Záznam nastavení: {$settingsRow->created|date:'d.m.Y H:i'} <div class="float-right">Aktuální nastavení</div></h5>
+        <div class="row">
+            <div class="col-12">
+                {include TEMPLATE_COMMON . "/forms/comparisonForm.latte", list: $comparisonList}
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block end_body}
+<script src="https://nette.github.io/resources/js/3/netteForms.min.js" type="text/javascript"></script>
+{/block}

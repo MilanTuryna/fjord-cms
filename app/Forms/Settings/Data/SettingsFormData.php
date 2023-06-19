@@ -12,5 +12,5 @@ use App\Model\Database\Repository\Settings\Entity\GlobalSettings;
  */
 class SettingsFormData extends GlobalSettings
 {
-
+    public array $_languages;
 }

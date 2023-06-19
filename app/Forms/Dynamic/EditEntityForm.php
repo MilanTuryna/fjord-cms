@@ -56,8 +56,6 @@ class EditEntityForm extends EntityForm
      */
     #[NoReturn] public function success(Form $form, EntityFormData $data): void {
         $data->attributes = $form->getHttpData()["attributes"];
-        bdump($this->oldEntityFormData);
-        bdump($data);
         $entityRow = $this->buildEntity($data);
         $updatedEntity = $this->entityRepository->updateById($this->entityId, $entityRow->iterable());
         $changedAttribute = false;
