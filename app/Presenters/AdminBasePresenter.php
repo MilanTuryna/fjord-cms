@@ -67,7 +67,7 @@ class AdminBasePresenter extends BasePresenter
         $this->settings = $this->settingsRepository->getActualSettings();
 
         if(!$this->adminAuthenticator->getId()) {
-            $this->flashMessage("Před vstupem do dispečerské zóny, se musíš přihlásit.", FlashMessages::ERROR);
+            $this->flashMessage("Před vstupem do administrace systému se musíš přihlásit.", FlashMessages::ERROR);
             $this->redirect(":Admin:Auth:login");
         }
         $this->admin = $this->adminAuthenticator->getUser();

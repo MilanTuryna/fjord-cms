@@ -17,7 +17,7 @@ use Nette\Application\UI\Presenter;
  */
 class CreateSpecificEntityForm extends SpecificEntityForm
 {
-    #[Pure] public function __construct(protected Presenter $presenter,EAVRepository $EAVRepository, private FormRedirect $formRedirect)
+    #[Pure] public function __construct(protected Presenter $presenter,protected EAVRepository $EAVRepository, private FormRedirect $formRedirect)
     {
         parent::__construct($this->presenter, $this->EAVRepository);
     }
@@ -26,7 +26,7 @@ class CreateSpecificEntityForm extends SpecificEntityForm
      * @throws InvalidLinkException
      * @throws AbortException
      */
-    public function success(Form $form, array $data) {
-        $this->successTemplate($form, $data, new FormMessage("Záznam byl úspěšně vytvořen.", "Záznam nemohl být z neznámého důvodu vytvořen."), $this->formRedirect);
+    public function success(Form $form, array $data): void {
+        $this->successTemplate($form, $data, new FormMessage("Záznam byl úspěšně vytvořen.", "Záznam nemohl být z neznámého důvodu vytvořen."), $this->formRedirect, null, [], true);
     }
 }

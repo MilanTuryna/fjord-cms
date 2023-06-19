@@ -5,13 +5,13 @@
 {include f_breadcrumb, [
 ":Admin:Overview:home" => "Administrace aplikace",
 "" => "Správa obsahu",
-"this" => $entityName,
+"this" => $entity->menu_item_name,
 ]}
 {/block}
 {block content}
 <div class="card classic-shadow default-margin-bot">
     <div class="card-body">
-        <h5 class="title">{$entityName} <small>(celkem: {count($rows)})</small></h5>
+        <h5 class="title">Seznam záznamů ({$entityName}) <small>(celkem: {count($rows)})</small></h5>
         <table class="table table-bordered table-striped table-sm">
             <thead>
             <tr>

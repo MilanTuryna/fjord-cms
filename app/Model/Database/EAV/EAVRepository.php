@@ -99,6 +99,8 @@ class EAVRepository implements IRepository
         $sql = FileSystem::read(__DIR__ . "/SQL/findAll.sql");
         $rows = $this->explorer->query($sql, $this->entity->id)->fetchAll();
         $associativeArray = self::createAssociativeArray($rows);
+        bdump($associativeArray);
+        bdump($rows);
         $result = [];
         foreach ($rows as $row) $row[$row->row_unique] = $associativeArray[$this->entity->id];
         return $result;
@@ -118,17 +120,22 @@ class EAVRepository implements IRepository
             DynamicId::entity_id => $this->entity->id,
             DynamicId::created => new \DateTime(),
         ]);
-        foreach ($data as $attr => $v) {
-            if(!isset($attributes[$attr])) {
-                throw new InvalidAttributeException("Attribute '" . $attr . "' passed in insert data doesn't exist.");
+        try {
+            foreach ($data as $attr => $v) {
+                if(!isset($attributes[$attr])) {
+                    throw new InvalidAttributeException("Attribute '" . $attr . "' passed in insert data doesn't exist.");
+                }
+                $attrId = $attributes[$attr]['id'];
+                $sqlQuery = $this->valueRepository->insert([
+                    DynamicValue::entity_id  => $this->entity->id,
+                    DynamicValue::attribute_id => $attrId,
+                    DynamicValue::row_id => $newDynamicID->{'id'}
+                ]);
+                $result[$attr] = $sqlQuery;
             }
-            $attrId = $attributes[$attr]->id;
-            $sqlQuery = $this->valueRepository->insert([
-                DynamicValue::entity_id  => $this->entity->id,
-                DynamicValue::attribute_id => $attrId,
-                DynamicValue::row_id => $newDynamicID->{'id'}
-            ]);
-            $result[$attr] = $sqlQuery;
+        } catch (Exception $exception) {
+            if($newDynamicID) $this->idRepository->deleteById($newDynamicID->{'id'}); // delete id if it was bad
+            throw $exception;
         }
         return $result;
     }

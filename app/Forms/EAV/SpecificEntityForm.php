@@ -43,16 +43,16 @@ class SpecificEntityForm extends RepositoryForm
             $attribute = $attribute_o;
             if($attribute->generate_value) continue;
             $input = match ($attribute->data_type) {
-                DataType::INTEGER => $form->addInteger($attribute->id_name, $attribute->title),
+                DataType::INTEGER => $form->addInteger($attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required),
                 DataType::TRANSLATED_VALUE => match ($attribute->input_type) {
-                    default => $form->addText($attribute->id_name, $attribute->title),
-                    InputType::TEXTAREA => $form->addTextArea($attribute->id_name, $attribute->title)->setRequired(false), //setRequired for TinyMCE or any wysiwyg editor bugs
+                    default => $form->addText($attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required)->setOption(FormOption::IS_TRANSLATED_VALUE, 1),
+                    InputType::TEXTAREA => $form->addTextArea($attribute->id_name, $attribute->title)->setRequired(false)->setOption(FormOption::IS_TRANSLATED_VALUE,1), //setRequired for TinyMCE or any wysiwyg editor bugs
                 },
-                DataType::FLOAT => $form->addText($attribute->id_name, $attribute->title)->addRule(\Nette\Forms\Form::Float, `{$attribute->id_name} ({$attribute->title}) musí být číslo.`),
-                DataType::BOOL => $form->addCheckbox($attribute->id_name, $attribute->title),
+                DataType::FLOAT => $form->addText($attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required)->addRule(\Nette\Forms\Form::Float, `{$attribute->id_name} ({$attribute->title}) musí být číslo.`),
+                DataType::BOOL => $form->addCheckbox($attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required),
                 DataType::STRING, DataType::ARBITRARY => match ($attribute->input_type) {
-                    default => $form->addText($attribute->id_name, $attribute->title), // use default for back compability when not set
-                    InputType::TEXTAREA => $form->addTextArea($attribute->id_name, $attribute->title) //setRequired for TinyMCE or any wysiwyg editor bugs
+                    default => $form->addText($attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required)->setOption(FormOption::IS_TRANSLATED_VALUE,1), // use default for back compability when not set
+                    InputType::TEXTAREA => $form->addTextArea($attribute->id_name, $attribute->title)->setOption(FormOption::IS_TRANSLATED_VALUE,1) //setRequired for TinyMCE or any wysiwyg editor bugs
                 }
             };
             if($attribute->placeholder) $input->setHtmlAttribute("placeholder", $attribute->placeholder);

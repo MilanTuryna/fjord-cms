@@ -27,4 +27,6 @@ interface FormOption
     const FULL_WIDTH = "___full_width___";
 
     const MULTIPLIER_PARENT = "___multiplier_parent___";
+
+    const IS_TRANSLATED_VALUE = "___is_translated_value___";
 }

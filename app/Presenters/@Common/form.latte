@@ -1,3 +1,7 @@
+{block endScripts}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+    <script src="{$basePath}/js/admin/translatedInputs.js"></script>
+{/block}
 {define multiplierRecursion, $form, $inputComponent, $counter = 0}
 <div class="row" n:if="$inputComponent instanceof App\Model\Extensions\FormMultiplier\Multiplier">
     <div n:if="!$inputComponent->getOption(App\Forms\FormOption::FULL_WIDTH)" class="col-sm-2 text-black-50 small"></div>
@@ -42,7 +46,7 @@
 </div>
 
 {/define}
-<form n:name=$form>
+<form n:name=$form id="translateForm">
     {varType Nette\Application\UI\Form $form}
     {foreach (array)$form->getComponents() as $inputComponent}
     {var $input = $form[$inputComponent->getName()]}
@@ -71,7 +75,34 @@
                                         {$input->getOption(App\Forms\FormOption::OPTION_NOTE)|noescape}
                                     </span>
                     <br n:if="$input instanceof Nette\Forms\Controls\CheckboxList">
-                    {input $input, class: 'form-control'}
+                    {if !$input->getOption(App\Forms\FormOption::IS_TRANSLATED_VALUE)}
+                        {input $input, class: 'form-control'}
+                    {else}
+                        {input $input, class: 'form-control d-none', data-translate-id: $input->getName()}
+                    <ul class="nav nav-tabs" id="tabs-{$input->getName()}" role="tablist">
+                        {foreach explode(",",$settings->languages) as $language_code}
+                            <li class="nav-item" role="presentation">
+                                <button n:class="$iterator->isFirst() ? 'active' : '', 'nav-link'" id="{$input->getName()}-{$language_code}-tab" data-bs-toggle="tab" data-bs-target="#tabs-{$input->getName()}-{$language_code}" type="button" role="tab"
+                                        aria-controls="#tabs-{$input->getName()}-home" aria-selected="{$iterator->isFirst() ? 'true' : 'false'}" title="{App\Model\Constants\Countries::LANGUAGES[$language_code]}" style="text-transform: uppercase">
+                                    {$language_code}
+                                </button>
+                            </li>
+                        {/foreach}
+                    </ul>
+                    <div class="tab-content" id="tabContent-{$input->getName()}">
+                        {foreach explode(",", $settings->languages) as $language_code}
+                            <div n:class="'tab-pane fade', $iterator->isFirst() ? 'show active' : ''" id="tabs-{$input->getName()}-{$language_code}" role="tabpanel" aria-labelledby="{$input->getName()}-{$language_code}-tab">
+                                {if $input instanceof Nette\Forms\Controls\TextArea}
+                                <textarea id="textarea-{$input->getName()}-{$language_code}" class="form-control" data-translate-for="{$input->getName()}" data-translate-code="{$language_code}">
+
+                                </textarea>
+                                {else}
+                                <input id="input-{$input->getName()}-{$language_code}" class="form-control" data-translate-for="{$input->getName()}" data-translate-code="{$language_code}">
+                                {/if}
+                            </div>
+                        {/foreach}
+                    </div>
+                    {/if}
                     <span class='text-danger' n:ifcontent>{inputError $input}</span>
                 </div>
             </div>
@@ -113,7 +144,8 @@
                     {var $deleteRoute = $form['submit']->getOption(App\Forms\FormOption::DELETE_LINK)}
                     <a n:if="$deleteRoute" n:href="$deleteRoute->route, implode(',', $deleteRoute->args)" class="text-danger delete-href">Odstranit tento záznam</a>
                 </div>
-                <button type="submit" n:name="submit" n:class="'btn', ($form['submit']->getOption(App\Forms\FormOption::BUTTON_DANGER) ? 'btn-danger' : 'btn-success')">{$form['submit']->getCaption()}</button>
+                <button type="submit" n:name="submit" n:class="'btn', ($form['submit']->getOption(App\Forms\FormOption::BUTTON_DANGER) ? 'btn-danger' : 'btn-success')"
+                        onclick="translatedInputs(event, document.getElementById('translateForm'))">{$form['submit']->getCaption()}</button>
             </div>
         </div>
     </div>

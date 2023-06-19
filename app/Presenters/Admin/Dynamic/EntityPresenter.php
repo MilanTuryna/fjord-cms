@@ -6,6 +6,7 @@ namespace App\Presenters\Admin\Dynamic;
 
 use App\Forms\Dynamic\CreateEntityForm;
 use App\Forms\Dynamic\EditEntityForm;
+use App\Forms\EAV\CreateSpecificEntityForm;
 use App\Forms\EAV\SpecificEntityForm;
 use App\Forms\FormMessage;
 use App\Forms\FormRedirect;
@@ -21,6 +22,7 @@ use App\Presenters\AdminBasePresenter;
 use JetBrains\PhpStorm\NoReturn;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
+use Nette\Application\UI\Multiplier;
 
 /**
  * Class EntityPresenter
@@ -77,12 +79,14 @@ class EntityPresenter extends AdminBasePresenter
     }
 
     /**
-     * @return \Nette\Application\UI\Multiplier
+     * @return Multiplier
      */
-    public function createComponentCreateSpecificEntityForm(): \Nette\Application\UI\Multiplier
+    public function createComponentCreateSpecificEntityForm(): Multiplier
     {
-        return new \Nette\Application\UI\Multiplier(function ($entityId) {
-            return (new SpecificEntityForm($this, $this->dynamicEntityFactory->getEntityRepositoryById($entityId)))->create();
+        return new Multiplier(function ($entityId) {
+            $entityRepository = $this->dynamicEntityFactory->getEntityRepositoryById($entityId);
+            return (new CreateSpecificEntityForm($this, $this->dynamicEntityFactory->getEntityRepositoryById($entityId), new FormRedirect("list",
+                [$entityRepository->entityName])))->create();
         });
     }
 }
