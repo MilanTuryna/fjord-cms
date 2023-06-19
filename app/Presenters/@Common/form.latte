@@ -70,6 +70,7 @@
                     <span class="text-muted small" n:if="$input->getOption(App\Forms\FormOption::OPTION_NOTE)">
                                         {$input->getOption(App\Forms\FormOption::OPTION_NOTE)|noescape}
                                     </span>
+                    <br n:if="$input instanceof Nette\Forms\Controls\CheckboxList">
                     {input $input, class: 'form-control'}
                     <span class='text-danger' n:ifcontent>{inputError $input}</span>
                 </div>
