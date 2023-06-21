@@ -13,6 +13,8 @@ use App\Model\Database\Repository\Gallery\Entity\Gallery;
 use App\Model\Database\Repository\Gallery\Entity\GalleryItem;
 use App\Model\Database\Repository\Gallery\GalleryRepository;
 use App\Model\Database\Repository\Gallery\ItemsRepository;
+use App\Model\FileSystem\Gallery\Exceptions\ImageNotExistException;
+use App\Model\FileSystem\Gallery\GalleryFacadeFactory;
 use App\Model\Security\Auth\AdminAuthenticator;
 use App\Presenters\AdminBasePresenter;
 use JetBrains\PhpStorm\NoReturn;
@@ -33,22 +35,26 @@ class MainPresenter extends AdminBasePresenter
      * @param GalleryRepository $galleryRepository
      * @param string $permissionNode
      */
-    public function __construct(AdminAuthenticator $adminAuthenticator, protected ItemsRepository $itemsRepository, protected GalleryRepository $galleryRepository, string $permissionNode = AdminPermissions::GALLERY_EDIT)
+    public function __construct(AdminAuthenticator $adminAuthenticator, protected ItemsRepository $itemsRepository, protected GalleryRepository $galleryRepository, protected GalleryFacadeFactory $galleryFacadeFactory, string $permissionNode = AdminPermissions::GALLERY_EDIT)
     {
         parent::__construct($adminAuthenticator, $permissionNode);
     }
 
+    /**
+     * @throws \ReflectionException
+     * @throws ImageNotExistException
+     */
     public function renderOverview() {
         $galleries = $this->galleryRepository->findAll()->fetchAll();
+        $galleries = $this->template->galleries = $galleries;
         $lastItems = [];
-        /**
-         * @var $item GalleryItem
-         */
         foreach ($galleries as $gallery) {
-             $lastItems[$gallery->id] = $gallery->related($this->itemsRepository->getTable() . ".gallery_id")->fetch();
+            $galleryFacade = $this->galleryFacadeFactory->getGalleryFacade($gallery->id);
+            $items = $galleryFacade->getItems(1);
+            $lastItems[$gallery->id] = $items[0] ?? null;
         }
         $this->template->lastItems = $lastItems;
-        $this->template->galleries = $galleries;
+        bdump($galleries);
     }
 
     /**
