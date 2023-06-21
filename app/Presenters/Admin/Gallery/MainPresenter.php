@@ -13,12 +13,14 @@ use App\Model\Database\Repository\Gallery\Entity\Gallery;
 use App\Model\Database\Repository\Gallery\Entity\GalleryItem;
 use App\Model\Database\Repository\Gallery\GalleryRepository;
 use App\Model\Database\Repository\Gallery\ItemsRepository;
+use App\Model\FileSystem\Gallery\GalleryFacadeFactory;
 use App\Model\Security\Auth\AdminAuthenticator;
 use App\Presenters\AdminBasePresenter;
 use JetBrains\PhpStorm\NoReturn;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Multiplier;
+use ReflectionException;
 
 /**
  * Class MainPresenter
@@ -31,13 +33,17 @@ class MainPresenter extends AdminBasePresenter
      * @param AdminAuthenticator $adminAuthenticator
      * @param ItemsRepository $itemsRepository
      * @param GalleryRepository $galleryRepository
+     * @param GalleryFacadeFactory $galleryFacadeFactory
      * @param string $permissionNode
      */
-    public function __construct(AdminAuthenticator $adminAuthenticator, protected ItemsRepository $itemsRepository, protected GalleryRepository $galleryRepository, string $permissionNode = AdminPermissions::GALLERY_EDIT)
+    public function __construct(AdminAuthenticator $adminAuthenticator, protected ItemsRepository $itemsRepository, protected GalleryRepository $galleryRepository, protected GalleryFacadeFactory $galleryFacadeFactory, string $permissionNode = AdminPermissions::GALLERY_EDIT)
     {
         parent::__construct($adminAuthenticator, $permissionNode);
     }
 
+    /**
+     * @throws ReflectionException
+     */
     public function renderOverview() {
         $galleries = $this->galleryRepository->findAll()->fetchAll();
         $lastItems = [];
@@ -45,7 +51,7 @@ class MainPresenter extends AdminBasePresenter
          * @var $item GalleryItem
          */
         foreach ($galleries as $gallery) {
-             $lastItems[$gallery->id] = $gallery->related($this->itemsRepository->getTable() . ".gallery_id")->fetch();
+             $lastItems[$gallery->id] = $this->galleryFacadeFactory->getGalleryFacade($gallery->id)->getItems();
         }
         $this->template->lastItems = $lastItems;
         $this->template->galleries = $galleries;
@@ -56,7 +62,7 @@ class MainPresenter extends AdminBasePresenter
      */
     public function renderView(int $galleryId) {
         $this->template->gallery = $this->galleryRepository->findById($galleryId);
-        $this->template->items = $this->itemsRepository->findByColumn(GalleryItem::gallery_id, $galleryId);
+        $this->template->items = $this->itemsRepository->findByColumn(GalleryItem::gallery_id, $galleryId)->fetchAll();
     }
 
     /**
