@@ -17,4 +17,4 @@ extensions:
 
 services:
     router: App\Router\RouterFactory::createRouter
-    galleryDataProvider: App\Model\FileSystem\Gallery\GalleryDataProvider(%gallery.basePath%, %gallery.baseUrl%)
+    galleryDataProvider: App\Model\FileSystem\Gallery\GalleryDataProvider(%gallery.outsidePath%, %gallery.localPath%)
