@@ -35,6 +35,15 @@ class UploadManager
     }
 
     /**
+     * @param string $fileName
+     * @return bool
+     */
+    public function isFileExist(string $fileName): bool
+    {
+        return file_exists($this->path . DIRECTORY_SEPARATOR . $fileName);
+    }
+
+    /**
      * @return Finder
      */
     public function getUploads(): Finder

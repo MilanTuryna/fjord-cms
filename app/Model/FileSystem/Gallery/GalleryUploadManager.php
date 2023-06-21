@@ -2,6 +2,7 @@
 
 namespace App\Model\FileSystem;
 
+use App\Model\FileSystem\Gallery\GalleryDataProvider;
 use App\Model\FileSystem\Gallery\Objects\GalleryFileInfo;
 
 class GalleryUploadManager extends UploadManager
@@ -9,11 +10,12 @@ class GalleryUploadManager extends UploadManager
     const ALLOWED_EXTENSIONS = ["jpg", "png", "gif", "webp", "jpeg", "bmp"];
 
     /**
+     * @param GalleryDataProvider $galleryDataProvider
      * @param string $galleryId
      */
-    public function __construct(string $galleryId)
+    public function __construct(GalleryDataProvider $galleryDataProvider, string $galleryId)
     {
-        parent::__construct("/galleries/" . $galleryId . "/", self::ALLOWED_EXTENSIONS);
+        parent::__construct($galleryDataProvider->getFullUrl(), self::ALLOWED_EXTENSIONS);
     }
 
     /**
@@ -21,7 +23,7 @@ class GalleryUploadManager extends UploadManager
      */
     public function getGalleryFileInfo(): GalleryFileInfo {
         $galleryFileInfo = new GalleryFileInfo();
-        $glob = glob($this->path . "*.{" . implode(",", self::ALLOWED_EXTENSIONS) . "}");
+        $glob = glob($this->path . DIRECTORY_SEPARATOR . "*.{" . implode(",", self::ALLOWED_EXTENSIONS) . "}");
         $globalFileSize = 0;
         foreach ($glob as $fileName) {
             $globalFileSize += filesize($fileName);

@@ -12,9 +12,10 @@ class GalleryFacadeFactory
 {
     /**
      * @param ItemsRepository $itemsRepository
+     * @param GalleryDataProvider $galleryDataProvider
      * @param GalleryRepository $galleryRepository
      */
-    public function __construct(private ItemsRepository $itemsRepository, private GalleryRepository $galleryRepository)
+    public function __construct(private ItemsRepository $itemsRepository, private GalleryDataProvider $galleryDataProvider, private GalleryRepository $galleryRepository)
     {
     }
 
@@ -24,6 +25,6 @@ class GalleryFacadeFactory
      */
     public function getGalleryFacade(int $galleryId): GalleryFacade
     {
-        return new GalleryFacade($this->galleryRepository, $this->itemsRepository, $galleryId);
+        return new GalleryFacade($this->galleryRepository, $this->galleryDataProvider, $this->itemsRepository, $galleryId);
     }
 }
