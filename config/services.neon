@@ -13,7 +13,8 @@ search:
 	        - *Authenticator
 
 extensions:
-	form-multipier: App\Model\Extensions\FormMultiplier\DI\MultiplierExtension
+	form-multiplier: App\Model\Extensions\FormMultiplier\DI\MultiplierExtension
 
 services:
     router: App\Router\RouterFactory::createRouter
+    galleryDataProvider: App\Model\FileSystem\Gallery\GalleryDataProvider(%gallery.basePath%, %gallery.baseUrl%)

@@ -1,0 +1,9 @@
+parameters:
+    gallery:
+        basePath: %wwwDir%/gallery
+        baseUrl:
+
+database:
+	dsn:
+	user:
+	password:
