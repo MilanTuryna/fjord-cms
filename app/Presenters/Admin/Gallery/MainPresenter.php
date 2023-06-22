@@ -64,10 +64,16 @@ class MainPresenter extends AdminBasePresenter
 
     /**
      * @param int $galleryId
+     * @throws ImageNotExistException
+     * @throws ReflectionException
      */
     public function renderView(int $galleryId) {
         $this->template->gallery = $this->galleryRepository->findById($galleryId);
-        $this->template->items = $this->itemsRepository->findByColumn(GalleryItem::gallery_id, $galleryId)->fetchAll();
+        $items = $this->template->items = $this->galleryFacadeFactory->getGalleryFacade($galleryId)->getItems();
+    }
+
+    public function renderViewImage(int $galleryId, int $imageId) {
+        
     }
 
 
@@ -75,7 +81,7 @@ class MainPresenter extends AdminBasePresenter
      * @throws AbortException
      */
     #[NoReturn] public function actionRemove(int $galleryId) {
-        $this->itemsRepository->findByColumn(ItemFormData::gallery_id, $galleryId)->delete();
+        $this->itemsRepository->findByColumn(GalleryItem::gallery_id, $galleryId)->delete();
         $this->prepareActionRemove($this->galleryRepository, $galleryId, new FormMessage("Galerie byla úspěšně odstraněna i se všemi fotky.", "Galerie nebyla z neznámého důvodu odstraněna."), "list");
     }
 

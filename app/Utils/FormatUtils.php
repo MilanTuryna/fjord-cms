@@ -9,9 +9,9 @@ class FormatUtils
     /**
      * @param $bytes
      * @param int $precision
-     * @return int
+     * @return string
      */
-    public static function formatBytes($bytes, int $precision = 0): int {
+    public static function formatBytes($bytes, int $precision = 0): string {
         $units = array('B', 'KB', 'MB', 'GB', 'TB');
 
         $bytes = max($bytes, 0);

@@ -33,7 +33,7 @@ class GalleryFacade
      */
     private function generateGalleryItemFile(ActiveRow $item, string $fileUrl): GalleryItemFile {
         $galleryItemFile = new GalleryItemFile();
-        $galleryItemFile->createFrom($item);
+        $galleryItemFile->createFrom((object)$item->toArray(), false, true);
         $galleryItemFile->file_url = $fileUrl;
         return $galleryItemFile;
     }
@@ -45,17 +45,18 @@ class GalleryFacade
     public function getItems(?int $limit = null): array {
         $items = $this->itemsRepository->findByColumn(GalleryItem::gallery_id, $this->galleryId);
         if($limit) $items = $items->limit($limit);
+        $items = $items->fetchAll();
         /**
          * @var $gallery Gallery
          */
         $gallery = $this->galleryRepository->findById($this->galleryId);
         $result = [];
         /**
-         * @var $items GalleryItem[]|ActiveRow
+         * @var $items GalleryItem[]|ActiveRow[]
          */
         foreach ($items as $item) {
             try {
-                $result[] = $this->generateGalleryItemFile($item, $this->galleryDataProvider->getUrlToImage($gallery->name, $item->compressed_file));
+                $result[] = $this->generateGalleryItemFile($item, $this->galleryDataProvider->getUrlToImage($gallery->id, $item->compressed_file));
             } catch (ImageNotExistException $imageNotExistException) {
                 $this->itemsRepository->deleteById($item->id);
                 if(Debugger::$productionMode === false) {

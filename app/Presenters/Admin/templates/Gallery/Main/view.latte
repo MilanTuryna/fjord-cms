@@ -17,10 +17,10 @@ Vytvořit novou galerii
     <div class="card-body">
         <h5 class="title">Nahrané obrázky:</h5>
         <hr>
-        <div class="px-3">
-            <div class="row">
-                <a href="" class="col-2 d-block bg-secondary" n:foreach="$items as $item">
-                    <img src="{$item->file_url}"><br>
+        <div class="px-3 d-flex justify-content-center">
+            <div class="row" style="margin-left: 20px; column-gap:10px; row-gap: 10px">
+                <a n:href=":Admin:Gallery:Main:viewImage $item->gallery_id, $item->id" class="col-2 d-block bg-light border py-3" n:foreach="$items as $item">
+                    <img src="//{$item->file_url}" style="width: 100%"><br>
                     {$item->compressed_file}, {App\Utils\FormatUtils::formatBytes($item->size_bytes)}
                 </a>
             </div>

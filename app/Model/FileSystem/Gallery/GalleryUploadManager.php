@@ -13,11 +13,12 @@ class GalleryUploadManager extends UploadManager
 {
     const ALLOWED_EXTENSIONS = ["jpg", "png", "gif", "webp", "jpeg", "bmp"];
 
+
     /**
      * @param GalleryDataProvider $galleryDataProvider
      * @param string $galleryDirectory
      */
-    public function __construct(private GalleryDataProvider $galleryDataProvider, string $galleryDirectory)
+    public function __construct(private GalleryDataProvider $galleryDataProvider, private string $galleryDirectory)
     {
         parent::__construct($galleryDataProvider->localPath . DIRECTORY_SEPARATOR . $galleryDirectory, self::ALLOWED_EXTENSIONS);
     }
@@ -25,7 +26,7 @@ class GalleryUploadManager extends UploadManager
     /**
      * @return GalleryFileInfo
      */
-    #[Pure] public function getGalleryFileInfo(): GalleryFileInfo {
+    public function getGalleryFileInfo(): GalleryFileInfo {
         $galleryFileInfo = new GalleryFileInfo();
         $glob = glob($this->path . DIRECTORY_SEPARATOR . "*.{" . implode(",", self::ALLOWED_EXTENSIONS) . "}");
         $globalFileSize = 0;
@@ -35,6 +36,10 @@ class GalleryUploadManager extends UploadManager
         $galleryFileInfo->file_count = count($glob);
         $galleryFileInfo->raw_size = $globalFileSize;
         return $galleryFileInfo;
+    }
+
+    public function getDirectoryName(): string {
+        return $this->galleryDirectory;
     }
 
     /**

@@ -89,6 +89,7 @@ class GalleryForm extends RepositoryForm
                 $imageResolution = $itemUpload->getImageSize();
                 $item->resolution_x = $imageResolution[0];
                 $item->resolution_y = $imageResolution[1];
+                $item->gallery_id = $galleryUploadManager->getDirectoryName();
                 $galleryUploadManager->add($itemUpload, $item->compressed_file);
                 if($this->itemsRepository->insert($item->iterable(true))) {
                     $iExpression = $i + 1;
@@ -98,7 +99,7 @@ class GalleryForm extends RepositoryForm
                 }
             } else {
                 if(!$itemUpload->isImage()) {
-                    $form->addError($errorMessage($i) . sprin"Špatný formát souboru (povolené jsou: %s).", GalleryItem::);
+                    $form->addError($errorMessage($i) . sprintf("Špatný formát souboru (povolené jsou: %s).", implode(", ",GalleryUploadManager::ALLOWED_EXTENSIONS)));
                 } else {
                     $form->addError($errorMessage($i));
                 }
