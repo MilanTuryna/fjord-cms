@@ -7,12 +7,15 @@ namespace App\Presenters\Admin\Gallery;
 use App\Forms\FormMessage;
 use App\Forms\FormRedirect;
 use App\Forms\Gallery\CreateGalleryForm;
+use App\Forms\Gallery\Data\ItemFormData;
 use App\Forms\Gallery\EditGalleryForm;
 use App\Model\Admin\Permissions\Specific\AdminPermissions;
 use App\Model\Database\Repository\Gallery\Entity\Gallery;
 use App\Model\Database\Repository\Gallery\Entity\GalleryItem;
 use App\Model\Database\Repository\Gallery\GalleryRepository;
 use App\Model\Database\Repository\Gallery\ItemsRepository;
+use App\Model\FileSystem\Gallery\Exceptions\ImageNotExistException;
+use App\Model\FileSystem\Gallery\GalleryDataProvider;
 use App\Model\FileSystem\Gallery\GalleryFacadeFactory;
 use App\Model\Security\Auth\AdminAuthenticator;
 use App\Presenters\AdminBasePresenter;
@@ -33,16 +36,18 @@ class MainPresenter extends AdminBasePresenter
      * @param AdminAuthenticator $adminAuthenticator
      * @param ItemsRepository $itemsRepository
      * @param GalleryRepository $galleryRepository
+     * @param GalleryDataProvider $galleryDataProvider
      * @param GalleryFacadeFactory $galleryFacadeFactory
      * @param string $permissionNode
      */
-    public function __construct(AdminAuthenticator $adminAuthenticator, protected ItemsRepository $itemsRepository, protected GalleryRepository $galleryRepository, protected GalleryFacadeFactory $galleryFacadeFactory, string $permissionNode = AdminPermissions::GALLERY_EDIT)
+    public function __construct(AdminAuthenticator $adminAuthenticator, protected ItemsRepository $itemsRepository, protected GalleryRepository $galleryRepository, protected GalleryDataProvider $galleryDataProvider, protected GalleryFacadeFactory $galleryFacadeFactory, string $permissionNode = AdminPermissions::GALLERY_EDIT)
     {
         parent::__construct($adminAuthenticator, $permissionNode);
     }
 
     /**
      * @throws ReflectionException
+     * @throws ImageNotExistException
      */
     public function renderOverview() {
         $galleries = $this->galleryRepository->findAll()->fetchAll();
@@ -65,31 +70,40 @@ class MainPresenter extends AdminBasePresenter
         $this->template->items = $this->itemsRepository->findByColumn(GalleryItem::gallery_id, $galleryId)->fetchAll();
     }
 
+
     /**
      * @throws AbortException
      */
     #[NoReturn] public function actionRemove(int $galleryId) {
-        $this->prepareActionRemove($this->itemsRepository, $galleryId, new FormMessage("Galerie byla úspěšně odstraněna i se všemi fotky.", "Galerie nebyla z neznámého důvodu odstraněna."), "list");
+        $this->itemsRepository->findByColumn(ItemFormData::gallery_id, $galleryId)->delete();
+        $this->prepareActionRemove($this->galleryRepository, $galleryId, new FormMessage("Galerie byla úspěšně odstraněna i se všemi fotky.", "Galerie nebyla z neznámého důvodu odstraněna."), "list");
     }
 
     /**
      * @throws AbortException
      */
-    #[NoReturn] public function actionRemoveImage(int $galleryId, int $imageId) {
-        //$galleryId only for SEO purposes and backlink
-        $this->prepareActionRemove($this->itemsRepository, $imageId, new FormMessage("Obrázek byl ze zadané galerie úspěšně odstraněn", "Obrázek nemohl být z neznámého důvodu odstraněn."), new FormRedirect(":Admin:Gallery:Main:view", [$galleryId]));
+    #[NoReturn] public function actionRemoveImage(int $galleryId, int $image_id) {
+        /**
+         * @var $item ItemFormData
+         */
+        $item = $this->itemsRepository->findById($image_id);
+        $this->prepareActionRemove($this->itemsRepository, $image_id,
+            new FormMessage("Obrázek " . $item->original_file . " (" . $item->compressed_file . ") nemohl být z neznámého důvodu odstraněn.",
+                "Obrázek " . $item->original_file . " (" . $item->compressed_file . ") nemohl být z neznámého důvodu odstraněn."), new FormRedirect("view", [$galleryId]));
+        die("TODO test");
     }
+
 
     /**
      * @return Form
      */
     public function createComponentCreateGalleryForm(): Form {
-        return (new CreateGalleryForm($this, $this->galleryRepository, $this->itemsRepository, $this->admin->id, new FormRedirect("view", [FormRedirect::LAST_INSERT_ID])))->create();
+        return (new CreateGalleryForm($this, $this->galleryRepository, $this->itemsRepository, $this->galleryDataProvider, $this->admin->id, new FormRedirect("view", [FormRedirect::LAST_INSERT_ID])))->create();
     }
 
     public function createComponentEditGalleryForm(): Multiplier {
         return new Multiplier(function ($id) {
-            return (new EditGalleryForm($this, $this->galleryRepository, $this->itemsRepository, $this->admin->id, (int)$id))->create();
+            return (new EditGalleryForm($this, $this->galleryRepository, $this->itemsRepository, $this->galleryDataProvider, $this->admin->id, (int)$id))->create();
         });
     }
 }

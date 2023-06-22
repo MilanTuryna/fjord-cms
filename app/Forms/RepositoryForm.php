@@ -15,6 +15,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\TextInput;
+use Tracy\Debugger;
 
 class RepositoryForm extends \App\Forms\Form
 {
@@ -49,14 +50,8 @@ class RepositoryForm extends \App\Forms\Form
         foreach ($controls as $input) {
             $inputName = $input->getName();
             if(!in_array($inputName, $exceptions) && $inputName !== "submit") {
-                $condition = false;
-                if($activeRow instanceof ActiveRow) {
-                    $condition = $activeRow->offsetExists($inputName);
-                } else {
-                    $condition = isset($activeRow[$inputName]);
-                }
-                if($condition) {
-                    $form[$inputName]->setDefaultValue($activeRow->{$inputName});
+                if(array_key_exists($inputName, $activeRow)) {
+                    $form[$inputName]->setDefaultValue($activeRow[$inputName]);
                 }
             }
         }
@@ -80,7 +75,6 @@ class RepositoryForm extends \App\Forms\Form
      */
     public function successTemplate(Form $form, iterable $entity, FormMessage $message, ?FormRedirect $formRedirect = null, ?int $rowId = null, array $dataExceptions = [], bool $throwExceptions = false, bool $deletePrivateVars = true, ?callable $afterInsert = null): bool
     {
-        if(!$formRedirect) $formRedirect = new FormRedirect("this");
         $error = false;
         try {
             // delete "form private" vars
@@ -91,18 +85,20 @@ class RepositoryForm extends \App\Forms\Form
             $updatedRow = $rowId ? $this->repository->updateById($rowId, $entity) : $this->repository->insert($entity);
             if($updatedRow) {
                 $this->presenter->flashMessage($message->success, FlashMessages::SUCCESS);
-                foreach ($formRedirect->args as $i => $v) { // replacing FormRedirect special argument constants as real value
-                    if($v === FormRedirect::LAST_INSERT_ID) $formRedirect->args[$i] = is_int($updatedRow) ? $updatedRow : $updatedRow->{'id'};
-                }
                 if($afterInsert) $afterInsert($updatedRow->{'id'});
-                $this->presenter->redirect($formRedirect->route, $formRedirect->args);
+                if($formRedirect) {
+                    foreach ($formRedirect->args as $i => $v) { // replacing FormRedirect special argument constants as real value
+                        if($v === FormRedirect::LAST_INSERT_ID) $formRedirect->args[$i] = is_int($updatedRow) ? $updatedRow : $updatedRow->{'id'};
+                    }
+                    $this->presenter->redirect($formRedirect->route, $formRedirect->args);
+                }
             } else {
                 $form->addError($message->error);
                 $error = true;
             }
         } catch (Exception $exception) {
             // throw only redirect exception or if $throwExceptions will be true
-            if($throwExceptions || $exception instanceof AbortException || $exception instanceof InvalidLinkException) throw $exception;
+            if($throwExceptions || !Debugger::$productionMode || $exception instanceof AbortException || $exception instanceof InvalidLinkException) throw $exception;
             $exceptionClass = get_class($exception);
             $form->addError($message->catchMessages[$exceptionClass] ?? $message->error);
             $error = true;

@@ -4,8 +4,7 @@ namespace App\Model\FileSystem\Gallery;
 
 use App\Model\Database\Repository\Gallery\GalleryRepository;
 use App\Model\Database\Repository\Gallery\ItemsRepository;
-use App\Model\Facade\GalleryFacade;
-use App\Model\FileSystem\GalleryUploadManager;
+use App\Model\FileSystem\Gallery\GalleryFacade;
 
 
 class GalleryFacadeFactory

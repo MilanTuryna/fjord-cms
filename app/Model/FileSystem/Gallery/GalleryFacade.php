@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Model\Facade;
+namespace App\Model\FileSystem\Gallery;
 
 use App\Model\Database\Repository\Gallery\Entity\Gallery;
 use App\Model\Database\Repository\Gallery\Entity\GalleryItem;
 use App\Model\Database\Repository\Gallery\GalleryRepository;
 use App\Model\Database\Repository\Gallery\ItemsRepository;
 use App\Model\FileSystem\Gallery\Exceptions\ImageNotExistException;
-use App\Model\FileSystem\Gallery\GalleryDataProvider;
 use App\Model\FileSystem\Gallery\Objects\GalleryFileInfo;
 use App\Model\FileSystem\Gallery\Objects\GalleryItemFile;
-use App\Model\FileSystem\GalleryUploadManager;
+use JetBrains\PhpStorm\Pure;
 use Nette\Database\Table\ActiveRow;
 use ReflectionException;
 use Tracy\Debugger;
@@ -80,9 +79,16 @@ class GalleryFacade
     }
 
     /**
+     * @return GalleryUploadManager
+     */
+    public function getGalleryUploadManager(): GalleryUploadManager {
+        return $this->galleryUploadManager;
+    }
+
+    /**
      * @return GalleryFileInfo
      */
-    public function getGalleryFileInfo(): GalleryFileInfo {
+    #[Pure] public function getGalleryFileInfo(): GalleryFileInfo {
         return $this->galleryUploadManager->getGalleryFileInfo();
     }
 }

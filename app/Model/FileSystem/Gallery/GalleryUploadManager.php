@@ -1,9 +1,13 @@
 <?php
 
-namespace App\Model\FileSystem;
+namespace App\Model\FileSystem\Gallery;
 
+use App\Model\FileSystem\Gallery\Exceptions\GalleryUniqueException;
+use App\Model\FileSystem\Gallery\Exceptions\RenameGalleryFailedException;
 use App\Model\FileSystem\Gallery\GalleryDataProvider;
 use App\Model\FileSystem\Gallery\Objects\GalleryFileInfo;
+use App\Model\FileSystem\UploadManager;
+use JetBrains\PhpStorm\Pure;
 
 class GalleryUploadManager extends UploadManager
 {
@@ -11,17 +15,17 @@ class GalleryUploadManager extends UploadManager
 
     /**
      * @param GalleryDataProvider $galleryDataProvider
-     * @param string $galleryId
+     * @param string $galleryDirectory
      */
-    public function __construct(GalleryDataProvider $galleryDataProvider, string $galleryId)
+    public function __construct(private GalleryDataProvider $galleryDataProvider, string $galleryDirectory)
     {
-        parent::__construct($galleryDataProvider->getFullUrl(), self::ALLOWED_EXTENSIONS);
+        parent::__construct($galleryDataProvider->localPath . DIRECTORY_SEPARATOR . $galleryDirectory, self::ALLOWED_EXTENSIONS);
     }
 
     /**
      * @return GalleryFileInfo
      */
-    public function getGalleryFileInfo(): GalleryFileInfo {
+    #[Pure] public function getGalleryFileInfo(): GalleryFileInfo {
         $galleryFileInfo = new GalleryFileInfo();
         $glob = glob($this->path . DIRECTORY_SEPARATOR . "*.{" . implode(",", self::ALLOWED_EXTENSIONS) . "}");
         $globalFileSize = 0;
@@ -31,5 +35,17 @@ class GalleryUploadManager extends UploadManager
         $galleryFileInfo->file_count = count($glob);
         $galleryFileInfo->raw_size = $globalFileSize;
         return $galleryFileInfo;
+    }
+
+    /**
+     * @throws GalleryUniqueException
+     * @throws RenameGalleryFailedException
+     * non used but for future prepare (now we are using ids)
+     */
+    public function renameGallery($galleryDirectoryFrom, $galleryDirectoryTo): void {
+        $from = $this->galleryDataProvider->localPath . DIRECTORY_SEPARATOR . $galleryDirectoryFrom;
+        $to = $this->galleryDataProvider->localPath . DIRECTORY_SEPARATOR . $galleryDirectoryTo;
+        if(file_exists($to)) throw new GalleryUniqueException();
+        if(!rename($from, $to)) throw new RenameGalleryFailedException();
     }
 }

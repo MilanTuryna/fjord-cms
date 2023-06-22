@@ -8,18 +8,25 @@ Seznam galerií
 ]}
 {/block}
 {block content}
-<div class="row row-cols-1 row-cols-md-3 g-4">
+<div class="row row-cols-1 row-cols-md-3 g-4 pl-2">
     <div class="col-6 pb-4 px-2" n:foreach="$galleries as $gallery">
-        <div class="card h-100">
-            <img n:if="$lastItems[$gallery->id]" src="{$lastItems[$gallery->id]}" class="card-img-top" alt="Obrázek {$gallery->name}">
-            <div class="card-body">
-                <h5 class="card-title">{$gallery->name}</h5>
-                <p class="card-text">{$gallery->description}</p>
+        <a n:href=":Admin:Gallery:Main:view $gallery->id" class="non-underline text-black">
+            <div class="card h-100 classic-shadow">
+                <img n:ifset="$lastItems[$gallery->id][0]" src="{$lastItems[$gallery->id][0]}" class="card-img-top" alt="Obrázek v {$gallery->name}">
+                <div class="card-body">
+                    <h5 class="card-title">{$gallery->name}</h5>
+                    <p class="card-text">{$gallery->description}</p>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <small class="text-body-secondary">{$gallery->edited|date:'d.m.Y H:i'}</small>
+                        <div>
+                            <button class="btn btn-sm btn-secondary border">Zobrazit</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-footer">
-                <small class="text-body-secondary">Poslední změna {$gallery->edited|date:'d.m.Y H:i'}</small>
-            </div>
-        </div>
+        </a>
     </div>
 </div>
 <div class="text-center bg-light text-muted default-margin-bot p-4 card" n:if="count($galleries) == 0">

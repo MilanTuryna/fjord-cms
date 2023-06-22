@@ -27,6 +27,6 @@ class ItemFormData extends GalleryItem
      * @return string
      */
     public static function encodeName(string $filename, string $extension): string {
-        return substr(md5($filename), 0, self::COMPRESSED_NAME_LENGTH - 4) . substr(md5(time()), 0, 4) . "." . $extension;
+        return substr(md5(sha1(md5($filename), time())), 0, self::COMPRESSED_NAME_LENGTH - 4) . substr(md5(time()), 0, 4) . "." . $extension;
     }
 }

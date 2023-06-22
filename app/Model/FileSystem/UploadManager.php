@@ -28,7 +28,8 @@ class UploadManager
     public function add(FileUpload $upload, string $fileName): void
     {
         if($upload->hasFile() && $upload->isOk()) {
-            $upload->move($this->path . $fileName);
+            $upload->move($this->path . DIRECTORY_SEPARATOR . $fileName);
+            bdump($this->path . DIRECTORY_SEPARATOR . $fileName);
         } else {
             throw new UploadNotValidException();
         }

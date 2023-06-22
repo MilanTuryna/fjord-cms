@@ -84,20 +84,22 @@ class AdminBasePresenter extends BasePresenter
      * @param Repository $repository
      * @param int $id
      * @param FormMessage $formMessage
-     * @param string $route
+     * @param string|FormRedirect $route
      * @throws AbortException
      */
-    #[NoReturn] public function prepareActionRemove(IRepository $repository, int $id, FormMessage $formMessage, string|FormRedirect $route) {
+    #[NoReturn] public function prepareActionRemove(IRepository $repository, int $id, FormMessage $formMessage, string|FormRedirect|null $route) {
         $deleted = $repository->deleteById($id);
         if($deleted) {
             $this->flashMessage($formMessage->success, FlashMessages::SUCCESS);
         } else {
             $this->flashMessage($formMessage->error, FlashMessages::ERROR);
         }
-        if($route instanceof FormRedirect) {
-            $this->redirect($route->route, $route->args);
+        if($route) {
+            if($route instanceof FormRedirect) {
+                $this->redirect($route->route, $route->args);
+            }
+            $this->redirect($route);
         }
-        $this->redirect($route);
     }
 
     public function beforeRender()

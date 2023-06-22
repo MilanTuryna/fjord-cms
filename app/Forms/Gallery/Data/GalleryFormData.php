@@ -13,9 +13,5 @@ use App\Model\Database\Repository\Gallery\Entity\GalleryItem;
  */
 class GalleryFormData extends Gallery
 {
-    /**
-     * @var array|ItemFormData[]
-     */
-    public ?array $_items;
     public ?array $_global_upload;
 }

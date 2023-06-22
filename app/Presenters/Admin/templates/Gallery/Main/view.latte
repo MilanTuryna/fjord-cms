@@ -13,4 +13,18 @@ Vytvořit novou galerii
         {include TEMPLATE_COMMON . "/form.latte", form: "editGalleryForm-$gallery->id"}
     </div>
 </div>
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Nahrané obrázky:</h5>
+        <hr>
+        <div class="px-3">
+            <div class="row">
+                <a href="" class="col-2 d-block bg-secondary" n:foreach="$items as $item">
+                    <img src="{$item->file_url}"><br>
+                    {$item->compressed_file}, {App\Utils\FormatUtils::formatBytes($item->size_bytes)}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 {/block}
