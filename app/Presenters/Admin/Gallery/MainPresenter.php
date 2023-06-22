@@ -24,6 +24,7 @@ use JetBrains\PhpStorm\NoReturn;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Multiplier;
+use Nette\FileNotFoundException;
 use ReflectionException;
 
 /**
@@ -73,6 +74,10 @@ class MainPresenter extends AdminBasePresenter
         $items = $this->template->items = $this->galleryFacadeFactory->getGalleryFacade($galleryId)->getItems();
     }
 
+    /**
+     * @throws ReflectionException
+     * @throws ImageNotExistException
+     */
     public function renderViewImage(int $galleryId, int $imageId) {
         $gallery = $this->template->gallery = $this->galleryRepository->findById($galleryId);
         $galleryFacade = $this->galleryFacadeFactory->getGalleryFacade($galleryId);
@@ -100,13 +105,18 @@ class MainPresenter extends AdminBasePresenter
          * @var $item ItemFormData
          */
         $facade = $this->galleryFacadeFactory->getGalleryFacade($galleryId);
-        try {
-            $facade->getGalleryUploadManager()->deleteUpload($galleryId);
-            $this->prepareActionRemove($this->itemsRepository, $imageId, new FormMessage("Obrázek byl úspěšně odstraněn.", "Obrázek nemohl být z neznámého důvodu odstraněn."), new FormRedirect("view", [$galleryId]));
-        } catch (ImageNotExistException $imageNotExistException) {
-            $this->flashMessage("Obrázek nebyl odstraněn.", FlashMessages::ERROR);
-            $this->redirect("view", $galleryId);
+        /**
+         * @var $image GalleryItem
+         */
+        $image = $this->itemsRepository->findById($imageId);
+        if($image) {
+            $this->itemsRepository->deleteById($imageId);
+            $facade->getGalleryUploadManager()->deleteUpload($image->compressed_file);
+            $this->flashMessage("Daný obrázek byl odstraněn úspěšně.", FlashMessages::SUCCESS);
+        } else {
+            $this->flashMessage("Daný obrázek nebyl odstraněn, protože neexistuje. Někde možná nastala chyba.", FlashMessages::ERROR);
         }
+        $this->redirect("view", $galleryId);
     }
 
     /**
@@ -114,7 +124,7 @@ class MainPresenter extends AdminBasePresenter
      */
     #[NoReturn] public function actionRemoveImages(int $galleryId): void {
         $this->itemsRepository->findByColumn(GalleryItem::gallery_id, $galleryId)->delete();
-        $this->flashMessage("", FlashMessages::SUCCESS);
+        $this->flashMessage("Všechny obrázky v galerii byly úspěšně odstraněny.", FlashMessages::SUCCESS);
         $this->redirect("view", $galleryId);
     }
 

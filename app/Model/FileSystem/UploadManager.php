@@ -58,8 +58,9 @@ class UploadManager
      */
     public function deleteUpload($fileName): void
     {
-        if (file_exists($this->path . $fileName)) {
-            FileSystem::delete($this->path . $fileName);
+        bdump($this->path . DIRECTORY_SEPARATOR . $fileName);
+        if (file_exists($this->path . DIRECTORY_SEPARATOR . $fileName)) {
+            FileSystem::delete($this->path . DIRECTORY_SEPARATOR . $fileName);
         } else {
             throw new FileNotFoundException();
         }

@@ -84,7 +84,7 @@ class AdminBasePresenter extends BasePresenter
      * @param Repository $repository
      * @param int $id
      * @param FormMessage $formMessage
-     * @param string|FormRedirect $route
+     * @param string|FormRedirect|null $route
      * @throws AbortException
      */
     #[NoReturn] public function prepareActionRemove(IRepository $repository, int $id, FormMessage $formMessage, string|FormRedirect|null $route) {

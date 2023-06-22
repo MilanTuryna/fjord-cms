@@ -40,7 +40,7 @@ class GalleryFacade
 
     /**
      * @return GalleryItemFile[]
-     * @throws ReflectionException|ImageNotExistException
+     * @throws ReflectionException
      */
     public function getItems(?int $limit = null): array {
         $items = $this->itemsRepository->findByColumn(GalleryItem::gallery_id, $this->galleryId);
@@ -55,13 +55,10 @@ class GalleryFacade
          * @var $items GalleryItem[]|ActiveRow[]
          */
         foreach ($items as $item) {
-            try {
+            if($this->galleryUploadManager->isFileExist($item->compressed_file)) {
                 $result[] = $this->generateGalleryItemFile($item, $this->galleryDataProvider->getUrlToImage($gallery->id, $item->compressed_file));
-            } catch (ImageNotExistException $imageNotExistException) {
+            } else {
                 $this->itemsRepository->deleteById($item->id);
-                if(Debugger::$productionMode === false) {
-                    throw $imageNotExistException;
-                }
             }
         }
         return $result;
