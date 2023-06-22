@@ -89,17 +89,24 @@ class MainPresenter extends AdminBasePresenter
     }
 
     /**
+     * @param int $galleryId
+     * @param int $imageId
+     * @return void
      * @throws AbortException
      */
-    #[NoReturn] public function actionRemoveImage(int $galleryId, int $imageId) {
+    #[NoReturn] public function actionRemoveImage(int $galleryId, int $imageId): void
+    {
         /**
          * @var $item ItemFormData
          */
-        $item = $this->itemsRepository->findById($imageId);
-        $this->prepareActionRemove($this->itemsRepository, $imageId,
-            new FormMessage("Obrázek " . $item->original_file . " (" . $item->compressed_file . ") nemohl být z neznámého důvodu odstraněn.",
-                "Obrázek " . $item->original_file . " (" . $item->compressed_file . ") nemohl být z neznámého důvodu odstraněn."), new FormRedirect("view", [$galleryId]));
-        die("TODO test");
+        $facade = $this->galleryFacadeFactory->getGalleryFacade($galleryId);
+        try {
+            $facade->getGalleryUploadManager()->deleteUpload($galleryId);
+            $this->prepareActionRemove($this->itemsRepository, $imageId, new FormMessage("Obrázek byl úspěšně odstraněn.", "Obrázek nemohl být z neznámého důvodu odstraněn."), new FormRedirect("view", [$galleryId]));
+        } catch (ImageNotExistException $imageNotExistException) {
+            $this->flashMessage("Obrázek nebyl odstraněn.", FlashMessages::ERROR);
+            $this->redirect("view", $galleryId);
+        }
     }
 
     /**
