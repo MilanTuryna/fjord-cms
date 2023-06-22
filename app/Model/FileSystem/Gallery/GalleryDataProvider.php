@@ -19,7 +19,6 @@ class GalleryDataProvider
      * @return string
      */
     public function getUrlToImage(string $galleryDirectory, string $filename): string {
-        bdump($this->outsidePath);
         return $this->outsidePath . self::URL_SEPARATOR . $galleryDirectory . self::URL_SEPARATOR . $filename;
     }
 }
