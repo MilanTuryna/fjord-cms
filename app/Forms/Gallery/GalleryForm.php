@@ -90,6 +90,7 @@ class GalleryForm extends RepositoryForm
                 $item->resolution_x = $imageResolution[0];
                 $item->resolution_y = $imageResolution[1];
                 $item->gallery_id = $galleryUploadManager->getDirectoryName();
+                $item->created = new DateTime();
                 $galleryUploadManager->add($itemUpload, $item->compressed_file);
                 if($this->itemsRepository->insert($item->iterable(true))) {
                     $iExpression = $i + 1;

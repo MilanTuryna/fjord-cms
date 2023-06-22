@@ -71,12 +71,11 @@ class GalleryFacade
      * @throws ReflectionException|ImageNotExistException
      */
     public function getGalleryItemFile(int $id): GalleryItemFile {
-        $gallery = $this->galleryRepository->findById($this->galleryId);
         $item = $this->itemsRepository->findById($id);
         if(!$this->galleryUploadManager->isFileExist($item->compressed_file)) {
             throw new ImageNotExistException();
         }
-        return $this->generateGalleryItemFile($item,  $this->galleryDataProvider->getUrlToImage($gallery->name, $item->compressed_file));
+        return $this->generateGalleryItemFile($item,  $this->galleryDataProvider->getUrlToImage($this->galleryId, $item->compressed_file));
     }
 
     /**

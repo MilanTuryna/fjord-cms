@@ -1,0 +1,32 @@
+{block title}
+Vytvořit novou galerii
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [":Admin:Auth:login" => "Administrace aplikace",
+":Admin:Gallery:Main:overview" => "Seznam galerií",
+":Admin:Gallery:Main:new" => $gallery->name],
+"this" => "Obrázek " . $item->compressed_file,
+}
+{/block}
+{block content}
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Obrázek {$item->compressed_file}</h5>
+        <div class="card-text">
+            {include TEMPLATE_COMMON . "/utils/uiList.latte", arr: [
+                "Název souboru" => $item->compressed_file,
+                "Původní název souboru" => $item->original_file,
+                "Velikost souboru" => App\Utils\FormatUtils::formatBytes($item->size_bytes) . " (" . $item->size_bytes . "b)",
+                "Rozlišení obrázku (px)" => $item->resolution_x . "x" . $item->resolution_y,
+                "Přidán/a" => $item->created,
+            ]}
+        </div>
+        <a n:href=":Admin:Gallery:Main:removeImage $gallery->id, $item->id" class="btn btn-danger btn-sm float-right">Odstranit obrázek</a>
+    </div>
+</div>
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <img src="//{$item->file_url}" style="width: 100%">
+    </div>
+</div>
+{/block}

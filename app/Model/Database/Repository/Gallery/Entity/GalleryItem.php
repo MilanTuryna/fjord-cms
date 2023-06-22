@@ -31,5 +31,6 @@ class GalleryItem extends Entity
     public string $image_description;
     public int $gallery_id;
     public int $admin_id;
+    public string $created;
     public int $id;
 }

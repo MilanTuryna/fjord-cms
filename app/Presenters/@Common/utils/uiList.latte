@@ -6,7 +6,11 @@
                     {$k}: {include ulList, $arr[$k]}
                 </li>
             {else}
-                <li>{$k}: <b>{$v}</b></li>
+                {if $v instanceof Nette\Utils\DateTime || !$v}
+                    <li n:if="$v">{$k}: <b>{$v|date:'d.m.Y H:i'}</b></li>
+                {else}
+                    <li>{$k}: <b>{$v|noescape}</b></li>
+                {/if}
             {/if}
         {/foreach}
     </ul>

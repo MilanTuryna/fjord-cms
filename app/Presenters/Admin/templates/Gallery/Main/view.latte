@@ -14,17 +14,24 @@ Vytvořit novou galerii
     </div>
 </div>
 <div class="card classic-shadow default-margin-bot">
-    <div class="card-body">
+    <div class="card-body w-100">
         <h5 class="title">Nahrané obrázky:</h5>
         <hr>
-        <div class="px-3 d-flex justify-content-center">
-            <div class="row" style="margin-left: 20px; column-gap:8px; row-gap: 8px">
-                <a n:href=":Admin:Gallery:Main:viewImage $item->gallery_id, $item->id" class="col-2 d-block bg-light border py-3" title="{$item->original_file}" n:foreach="$items as $item">
-                    <img src="//{$item->file_url}" style="width: 100%" class="mb-1"><br>
-                    <small>{$item->compressed_file}, {App\Utils\FormatUtils::formatBytes($item->size_bytes)}</small>
-                </a>
+        <div class="row mx-1" style="row-gap: 10px">
+            <div class="col-sm-3 px-2" n:foreach="$items as $item">
+                <div class="bg-light border">
+                    <div class="px-3 pt-3 pb-2">
+                        <a n:href=":Admin:Gallery:Main:viewImage $gallery->id, $item->id" title="{$item->original_file}">
+                            <img src="//{$item->file_url}" class="pb-1" style="width: 100%" alt="{$item->original_file}">
+                            <span class="text-muted small non-underline">{$item->compressed_file}, <span>{App\Utils\FormatUtils::formatBytes($item->size_bytes)}</span></span>
+                        </a>
+                    </div>
+                    <a n:href=":Admin:Gallery:Main:removeImage $gallery->id, $item->id" style="zoom:90%" class="btn btn-sm btn-danger delete-href br-0 w-100">Odstranit</a>
+                </div>
             </div>
         </div>
+        <hr>
+        <a n:href=":Admin:Gallery:Main:removeImages $gallery->id" class="text-danger delete-href small float-right">Vymazat všechny fotky</a>
     </div>
 </div>
 {/block}

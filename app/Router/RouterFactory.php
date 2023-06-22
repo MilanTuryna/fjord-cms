@@ -54,6 +54,7 @@ final class RouterFactory
             ->addRoute("/admin/gallery/view/<galleryId>/image/view/<imageId>", "Gallery:Main:viewImage")
             ->addRoute("/admin/gallery/view/<galleryId>/image/remove/<imageId>", "Gallery:Main:removeImage")
             ->addRoute("/admin/gallery/remove/<galleryId>", "Gallery:Main:remove")
+            ->addRoute("/admin/gallery/remove-images/<galleryId>", "Gallery:Main:removeImages")
 
             ->addRoute("/admin/account/list", "Administrator:Account:list")
             ->addRoute("/admin/account/new", "Administrator:Account:new")

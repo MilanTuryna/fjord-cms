@@ -4,6 +4,7 @@
 namespace App\Presenters\Admin\Gallery;
 
 
+use App\Forms\FlashMessages;
 use App\Forms\FormMessage;
 use App\Forms\FormRedirect;
 use App\Forms\Gallery\CreateGalleryForm;
@@ -73,7 +74,9 @@ class MainPresenter extends AdminBasePresenter
     }
 
     public function renderViewImage(int $galleryId, int $imageId) {
-        
+        $gallery = $this->template->gallery = $this->galleryRepository->findById($galleryId);
+        $galleryFacade = $this->galleryFacadeFactory->getGalleryFacade($galleryId);
+        $this->template->item = $galleryFacade->getGalleryItemFile($imageId);
     }
 
 
@@ -88,16 +91,26 @@ class MainPresenter extends AdminBasePresenter
     /**
      * @throws AbortException
      */
-    #[NoReturn] public function actionRemoveImage(int $galleryId, int $image_id) {
+    #[NoReturn] public function actionRemoveImage(int $galleryId, int $imageId) {
         /**
          * @var $item ItemFormData
          */
-        $item = $this->itemsRepository->findById($image_id);
-        $this->prepareActionRemove($this->itemsRepository, $image_id,
+        $item = $this->itemsRepository->findById($imageId);
+        $this->prepareActionRemove($this->itemsRepository, $imageId,
             new FormMessage("Obrázek " . $item->original_file . " (" . $item->compressed_file . ") nemohl být z neznámého důvodu odstraněn.",
                 "Obrázek " . $item->original_file . " (" . $item->compressed_file . ") nemohl být z neznámého důvodu odstraněn."), new FormRedirect("view", [$galleryId]));
         die("TODO test");
     }
+
+    /**
+     * @throws AbortException
+     */
+    #[NoReturn] public function actionRemoveImages(int $galleryId): void {
+        $this->itemsRepository->findByColumn(GalleryItem::gallery_id, $galleryId)->delete();
+        $this->flashMessage("", FlashMessages::SUCCESS);
+        $this->redirect("view", $galleryId);
+    }
+
 
 
     /**
