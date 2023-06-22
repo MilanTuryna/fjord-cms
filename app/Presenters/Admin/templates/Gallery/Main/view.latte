@@ -20,15 +20,15 @@ Vytvořit novou galerii
         <div n:if="$items">
             <div class="row mx-1" style="row-gap: 10px">
                 <div class="col-sm-3 px-2" n:foreach="$items as $item">
-                    <div class="bg-light border">
-                        <div class="px-3 pt-3 pb-2">
+                    <div class="bg-light border h-100">
+                        <div class="px-3 pt-3">
                             <a n:href=":Admin:Gallery:Main:viewImage $gallery->id, $item->id" title="{$item->original_file}">
                                 <img src="//{$item->file_url}" class="pb-1" style="width: 100%" alt="{$item->original_file}">
                                 <span class="text-muted small non-underline">{$item->compressed_file}, <span>{App\Utils\FormatUtils::formatBytes($item->size_bytes)}</span></span>
                             </a>
                         </div>
-                        <a n:href=":Admin:Gallery:Main:removeImage $gallery->id, $item->id" style="zoom:90%" class="btn btn-sm btn-danger delete-href br-0 w-100">Odstranit</a>
                     </div>
+                    <a n:href=":Admin:Gallery:Main:removeImage $gallery->id, $item->id" style="zoom:90%;" class="btn btn-sm btn-danger delete-href br-0 w-100">Odstranit</a>
                 </div>
             </div>
             <hr>

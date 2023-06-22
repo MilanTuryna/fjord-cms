@@ -5,10 +5,13 @@ namespace App\Model\FileSystem;
 use App\Model\Cryptography;
 use App\Model\FileSystem\Exceptions\UploadNotValidException;
 use Exception;
+use FilesystemIterator;
 use Nette\FileNotFoundException;
 use Nette\Http\FileUpload;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Finder;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class UploadManager
 {
@@ -51,6 +54,12 @@ class UploadManager
     {
         if (!is_dir($this->path) || !file_exists($this->path)) mkdir($this->path);
         return Finder::findFiles("*")->from($this->path);
+    }
+
+    public function deleteUploads() {
+        $di = new RecursiveDirectoryIterator($this->path, FilesystemIterator::SKIP_DOTS);
+        $ri = new RecursiveIteratorIterator($di, RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ( $ri as $file ) if(!$file->isDir()) unlink($file);
     }
 
     /**

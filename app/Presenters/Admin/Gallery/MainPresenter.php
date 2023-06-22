@@ -124,6 +124,7 @@ class MainPresenter extends AdminBasePresenter
      */
     #[NoReturn] public function actionRemoveImages(int $galleryId): void {
         $this->itemsRepository->findByColumn(GalleryItem::gallery_id, $galleryId)->delete();
+        $this->galleryFacadeFactory->getGalleryFacade($galleryId)->getGalleryUploadManager()->deleteUploads();
         $this->flashMessage("Všechny obrázky v galerii byly úspěšně odstraněny.", FlashMessages::SUCCESS);
         $this->redirect("view", $galleryId);
     }
