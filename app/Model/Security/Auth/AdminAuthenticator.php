@@ -11,6 +11,7 @@ use App\Model\Security\Auth\Exceptions\LoggedOutException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Http\Session;
 use Nette\Security\Passwords;
+use Nette\Utils\DateTime;
 
 /**
  * Class AdminAuthenticator
@@ -60,7 +61,8 @@ class AdminAuthenticator implements IAuthenticator
             $accessLog = [
                 AccessLog::admin_id => $admin->id,
                 AccessLog::device => $_SERVER["HTTP_USER_AGENT"],
-                AccessLog::ip => $_SERVER["REMOTE_ADDR"]
+                AccessLog::ip => $_SERVER["REMOTE_ADDR"],
+                AccessLog::created => new DateTime(),
             ];
             $this->logRepository->insert($accessLog);
             $section['id'] = $admin->id;
