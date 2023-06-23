@@ -13,6 +13,7 @@ use App\Model\Database\Repository\Gallery\ItemsRepository;
 use App\Model\FileSystem\Gallery\GalleryDataProvider;
 use App\Model\FileSystem\Gallery\GalleryUploadManager;
 use Exception;
+use JetBrains\PhpStorm\NoReturn;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
@@ -41,12 +42,12 @@ class EditGalleryForm extends GalleryForm
      * @throws AbortException
      * @throws Exception
      */
-    public function success(Form $form, GalleryFormData &$data) {
+    #[NoReturn] public function success(Form $form, GalleryFormData &$data) {
         parent::success($form, $data);
-        bdump($data);
         $this->successTemplate($form, $data->iterable(true), new FormMessage("Galerie byla úspěšně aktualizována", "Galerie nemohla být z neznámého důvodu aktualizována."), null, $this->gallery_id);
         $fetch = $this->galleryRepository->findByColumn(Gallery::uri, $data->uri)->fetch();
         $galleryUploadManager = new GalleryUploadManager($this->galleryDataProvider,$fetch->id);
         $this->uploadImages($form, $data, $galleryUploadManager);
+        $this->presenter->redirect("this");
     }
 }

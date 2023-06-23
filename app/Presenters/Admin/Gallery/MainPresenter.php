@@ -20,6 +20,7 @@ use App\Model\FileSystem\Gallery\GalleryDataProvider;
 use App\Model\FileSystem\Gallery\GalleryFacadeFactory;
 use App\Model\Security\Auth\AdminAuthenticator;
 use App\Presenters\AdminBasePresenter;
+use App\Utils\ArrayUtils;
 use JetBrains\PhpStorm\NoReturn;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
@@ -49,7 +50,6 @@ class MainPresenter extends AdminBasePresenter
 
     /**
      * @throws ReflectionException
-     * @throws ImageNotExistException
      */
     public function renderOverview() {
         $galleries = $this->galleryRepository->findAll()->fetchAll();
@@ -66,12 +66,13 @@ class MainPresenter extends AdminBasePresenter
 
     /**
      * @param int $galleryId
-     * @throws ImageNotExistException
      * @throws ReflectionException
      */
     public function renderView(int $galleryId) {
         $this->template->gallery = $this->galleryRepository->findById($galleryId);
-        $items = $this->template->items = $this->galleryFacadeFactory->getGalleryFacade($galleryId)->getItems();
+        $facade = $this->galleryFacadeFactory->getGalleryFacade($galleryId);
+        $items = $this->template->items = $facade->getItems();
+        $this->template->galleryFileInfo = $facade->getGalleryFileInfo();
     }
 
     /**

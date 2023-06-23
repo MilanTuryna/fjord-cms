@@ -49,11 +49,12 @@ class CreateGalleryForm extends GalleryForm
         parent::success($form, $data);
         $data->admin_id = $this->admin_id;
         $data->created = new DateTime();
-        $success = $this->successTemplate($form, $data->iterable(true), new FormMessage("Galerie byla úspěšně vytvořena", "Galerie nemohla být z neznámého důvodu vytvořena."), $this->formRedirect);
+        $success = $this->successTemplate($form, $data->iterable(true), new FormMessage("Galerie byla úspěšně vytvořena", "Galerie nemohla být z neznámého důvodu vytvořena."));
         if($success) {
             $fetch = $this->galleryRepository->findByColumn(Gallery::uri, $data->uri)->fetch();
             $galleryUploadManager = new GalleryUploadManager($this->galleryDataProvider, $fetch->id);
             $this->uploadImages($form, $data, $galleryUploadManager);
+            $this->presenter->redirect($this->formRedirect->route, $this->formRedirect->args);
         }
     }
 }

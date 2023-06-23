@@ -43,7 +43,9 @@
 <div class="container-fluid wrapper" style="margin-top:16px;">
     <div class="row">
         <div class="col-md-12 mb-3">
-            <div n:foreach="$flashes as $flash" n:class="alert, 'alert alert-' . $flash->type">{$flash->message}</div>
+            {foreach $flashes as $flash}
+                <div n:if="!($flash instanceof App\Model\UI\SpecialFlashMessage)" n:class="alert, 'alert alert-' . $flash->type">{$flash->message}</div>
+            {/foreach}
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     {include breadcrumb}

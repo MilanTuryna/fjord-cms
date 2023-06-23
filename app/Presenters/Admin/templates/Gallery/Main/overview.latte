@@ -12,7 +12,15 @@ Seznam galerií
     <div class="col-6 pb-4 px-2" n:foreach="$galleries as $gallery">
         <a n:href=":Admin:Gallery:Main:view $gallery->id" class="non-underline text-black">
             <div class="card h-100 classic-shadow">
-                <img n:ifset="$lastItems[$gallery->id][0]" src="//{$lastItems[$gallery->id][0]->file_url}" class="card-img-top" alt="Obrázek v {$gallery->name}">
+                {ifset $lastItems[$gallery->id][0]}
+                <img src="//{$lastItems[$gallery->id][0]->file_url}" style="max-height: 250px; object-fit: cover" class="card-img-top" alt="Obrázek v {$gallery->name}">
+                {else}
+                <div style="height:250px; background-color: lightgray" class="text-muted">
+                    <div class="d-flex justify-content-center align-items-center h-100">
+                        <h6 class="font-weight-bold">0 obrázků</h6>
+                    </div>
+                </div>
+                {/ifset}
                 <div class="card-body">
                     <h5 class="card-title">{$gallery->name}</h5>
                     <p class="card-text">{$gallery->description}</p>

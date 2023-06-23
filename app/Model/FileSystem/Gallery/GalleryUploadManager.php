@@ -7,6 +7,7 @@ use App\Model\FileSystem\Gallery\Exceptions\RenameGalleryFailedException;
 use App\Model\FileSystem\Gallery\GalleryDataProvider;
 use App\Model\FileSystem\Gallery\Objects\GalleryFileInfo;
 use App\Model\FileSystem\UploadManager;
+use FilesystemIterator;
 use JetBrains\PhpStorm\Pure;
 
 class GalleryUploadManager extends UploadManager
@@ -18,7 +19,7 @@ class GalleryUploadManager extends UploadManager
      * @param GalleryDataProvider $galleryDataProvider
      * @param string $galleryDirectory
      */
-    public function __construct(private GalleryDataProvider $galleryDataProvider, private string $galleryDirectory)
+    #[Pure] public function __construct(private GalleryDataProvider $galleryDataProvider, private string $galleryDirectory)
     {
         parent::__construct($galleryDataProvider->localPath . DIRECTORY_SEPARATOR . $galleryDirectory, self::ALLOWED_EXTENSIONS);
     }
@@ -28,12 +29,13 @@ class GalleryUploadManager extends UploadManager
      */
     public function getGalleryFileInfo(): GalleryFileInfo {
         $galleryFileInfo = new GalleryFileInfo();
-        $glob = glob($this->path . DIRECTORY_SEPARATOR . "*.{" . implode(",", self::ALLOWED_EXTENSIONS) . "}");
+        $path = $this->path . DIRECTORY_SEPARATOR;
+        $fi = new FilesystemIterator($path, FilesystemIterator::SKIP_DOTS);
         $globalFileSize = 0;
-        foreach ($glob as $fileName) {
-            $globalFileSize += filesize($fileName);
+        foreach ($fi as $file) {
+            $globalFileSize += $file->getSize();
         }
-        $galleryFileInfo->file_count = count($glob);
+        $galleryFileInfo->file_count = iterator_count($fi);
         $galleryFileInfo->raw_size = $globalFileSize;
         return $galleryFileInfo;
     }

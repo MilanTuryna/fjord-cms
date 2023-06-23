@@ -16,6 +16,7 @@ use App\Model\Database\Repository\Gallery\GalleryRepository;
 use App\Model\Database\Repository\Gallery\ItemsRepository;
 use App\Model\FileSystem\Gallery\GalleryUploadManager;
 use App\Model\FileSystem\Gallery\Objects\GalleryItemFile;
+use App\Model\UI\FlashMessages\AddedGalleryItems;
 use Exception;
 use JetBrains\PhpStorm\Pure;
 use Nette\Application\UI\Presenter;
@@ -74,6 +75,7 @@ class GalleryForm extends RepositoryForm
         $errorMessage = function (int $key) {
             return "Obrázek č. " . $key+1 . " nebyl z neznámého důvodu nahrán.";
         };
+        $validItems = []; // compressed_file []
         foreach ($data->_global_upload as $i => $item) {
             if($item instanceof FileUpload) {
                 $itemUpload = $item;
@@ -93,18 +95,20 @@ class GalleryForm extends RepositoryForm
                 $item->created = new DateTime();
                 $galleryUploadManager->add($itemUpload, $item->compressed_file);
                 if($this->itemsRepository->insert($item->iterable(true))) {
+                    $validItems[] = $item->compressed_file;
                     $iExpression = $i + 1;
-                    $this->presenter->flashMessage("Obrázek č. " . $iExpression .  " byl úspěšně nahrán!", FlashMessages::SUCCESS);
+                    $this->presenter->flashMessage("Obrázek č. " . $iExpression .  " (" . $item->original_file . ") byl úspěšně nahrán!", FlashMessages::SUCCESS);
                 } else {
                     $form->addError($errorMessage($i));
                 }
             } else {
                 if(!$itemUpload->isImage()) {
-                    $form->addError($errorMessage($i) . sprintf("Špatný formát souboru (povolené jsou: %s).", implode(", ",GalleryUploadManager::ALLOWED_EXTENSIONS)));
+                    $this->presenter->flashMessage($errorMessage($i) . sprintf(" Špatný formát souboru (povolené jsou: %s).", implode(", ",GalleryUploadManager::ALLOWED_EXTENSIONS)), FlashMessages::ERROR);
                 } else {
                     $form->addError($errorMessage($i));
                 }
             }
         }
+        $this->presenter->flashMessage(new AddedGalleryItems($validItems));
     }
 }

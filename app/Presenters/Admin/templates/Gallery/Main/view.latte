@@ -15,12 +15,28 @@ Vytvořit novou galerii
 </div>
 <div class="card classic-shadow default-margin-bot">
     <div class="card-body w-100">
+        <h5 class="title">Úložiště galerie</h5>
+        <hr>
+        {include TEMPLATE_COMMON . "/utils/uiList.latte", arr: [
+            "Počet obrázků" => $galleryFileInfo->file_count,
+            "Využití úložiště" => App\Utils\FormatUtils::formatBytes($galleryFileInfo->raw_size)
+        ]}
+    </div>
+</div>
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body w-100">
         <h5 class="title">Nahrané obrázky:</h5>
         <hr>
         <div n:if="$items">
             <div class="row mx-1" style="row-gap: 10px">
-                <div class="col-sm-3 px-2" n:foreach="$items as $item">
-                    <div class="bg-light border h-100">
+                {var $addedGalleryItems = null}
+                {foreach $flashes as $flash}
+                    {if $flash instanceof App\Model\UI\FlashMessages\AddedGalleryItems}
+                        {var $addedGalleryItems = $flash}
+                    {/if}
+                {/foreach}
+                <div class="col-sm-3 px-2" style="margin-bottom: 35px;" n:foreach="$items as $item">
+                    <div n:class="($addedGalleryItems && in_array($item->compressed_file, $addedGalleryItems->addedItems) ? 'alert-success' : 'bg-light'), 'border h-100'">
                         <div class="px-3 pt-3">
                             <a n:href=":Admin:Gallery:Main:viewImage $gallery->id, $item->id" title="{$item->original_file}">
                                 <img src="//{$item->file_url}" class="pb-1" style="width: 100%" alt="{$item->original_file}">
