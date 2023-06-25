@@ -3,6 +3,7 @@
 namespace App\Forms\EAV;
 
 use App\Forms\Dynamic\Data\AttributeData;
+use App\Forms\Dynamic\Data\GeneratedValues;
 use App\Forms\Dynamic\Enum\InputType;
 use App\Forms\Form;
 use App\Forms\FormOption;
@@ -10,8 +11,10 @@ use App\Forms\RepositoryForm;
 use App\Model\Database\EAV\DataType;
 use App\Model\Database\EAV\EAVRepository;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicAttribute;
+use App\Model\Database\Repository\Dynamic\Entity\DynamicValue;
 use JetBrains\PhpStorm\Pure;
 use Nette\Application\UI\Presenter;
+use Nette\Utils\DateTime;
 use ReflectionException;
 
 class SpecificEntityForm extends RepositoryForm
@@ -19,8 +22,9 @@ class SpecificEntityForm extends RepositoryForm
     /**
      * @param Presenter $presenter
      * @param EAVRepository $EAVRepository
+     * @param int $admin_id
      */
-    #[Pure] public function __construct(protected Presenter $presenter, protected EAVRepository $EAVRepository)
+    #[Pure] public function __construct(protected Presenter $presenter, protected EAVRepository $EAVRepository, protected int $admin_id)
     {
         parent::__construct($presenter, $EAVRepository);
     }
@@ -46,15 +50,18 @@ class SpecificEntityForm extends RepositoryForm
                 DataType::INTEGER => $form->addInteger($attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required),
                 DataType::TRANSLATED_VALUE => match ($attribute->input_type) {
                     default => $form->addText($attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required)->setOption(FormOption::IS_TRANSLATED_VALUE, 1),
-                    InputType::TEXTAREA => $form->addTextArea($attribute->id_name, $attribute->title)->setRequired(false)->setOption(FormOption::IS_TRANSLATED_VALUE,1), //setRequired for TinyMCE or any wysiwyg editor bugs
+                    InputType::TEXTAREA => $form->addTextArea($attribute->id_name, $attribute->title)->setRequired(false)
+                        ->setOption(FormOption::IS_TRANSLATED_VALUE,1), //setRequired for TinyMCE or any wysiwyg editor bugs
                 },
                 DataType::FLOAT => $form->addText($attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required)->addRule(\Nette\Forms\Form::Float, `{$attribute->id_name} ({$attribute->title}) musí být číslo.`),
                 DataType::BOOL => $form->addCheckbox($attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required),
                 DataType::STRING, DataType::ARBITRARY => match ($attribute->input_type) {
                     default => $form->addText($attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required)->setOption(FormOption::IS_TRANSLATED_VALUE,1), // use default for back compability when not set
                     InputType::TEXTAREA => $form->addTextArea($attribute->id_name, $attribute->title)->setOption(FormOption::IS_TRANSLATED_VALUE,1) //setRequired for TinyMCE or any wysiwyg editor bugs
-                }
+                },
+                DataType::DATE_TIME => $this::createDateTime($form, $attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required)->setOption(FormOption::IS_DATE_TIME, 1)
             };
+            if($attribute->enabled_wysiwyg) $input->setOption(FormOption::ACTIVE_WYSIWYG, true);
             if($attribute->placeholder) $input->setHtmlAttribute("placeholder", $attribute->placeholder);
             if($attribute->required) $input->setRequired();
             if($attribute->description) $input->setOption(FormOption::OPTION_NOTE, $attribute->description);
@@ -62,5 +69,8 @@ class SpecificEntityForm extends RepositoryForm
         }
         $form->addSubmit("submit", "Vytvořit " . $this->EAVRepository->entityName);
         return $form;
+    }
+
+    public function success(\Nette\Application\UI\Form $form, array &$data) {
     }
 }

@@ -109,11 +109,11 @@ abstract class Repository implements IRepository
     }
 
     /**
-     * @param int $id
+     * @param int|string $id
      * @param iterable $data
      * @return array
      */
-    public function updateById(int $id, iterable $data): array
+    public function updateById(int|string $id, iterable $data): array
     {
         return [$this->explorer->table($this->table)->wherePrimary($id)->update($data)];
     }

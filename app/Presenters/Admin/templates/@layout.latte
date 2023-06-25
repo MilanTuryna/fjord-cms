@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="{$basePath}/styles/admin/bootstrap-addon.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    {if $activeWysiwyg}
+    <script src="https://cdn.tiny.cloud/1/l1b9y5442wllf9rgpnkfkmrhk14s68h1po4gyb1cxo5xbmlw/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    {/if}
     {ifset #head}
     {include head}
     {/ifset}
@@ -110,7 +113,18 @@
         </div>
     </div>
 </div>
-<script src="{$basePath}/js/admin.js"></script>
+{if $activeWysiwyg}
+<script>
+    tinymce.init({
+        add_form_submit_trigger: false,
+        selector: '.active-wysiwyg',
+        plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+    });
+</script>
+{/if}
+<script src="{$basePath}/js/admin/translatedInputs.js"></script>
+<script src="{$basePath}/styles/admin/script.js"></script>
 <script src="{$basePath}/styles/admin/jquery.min.js"></script>
 <script src="{$basePath}/styles/admin/bootstrap.min.js"></script>
 <script>

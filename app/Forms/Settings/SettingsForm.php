@@ -32,6 +32,7 @@ class SettingsForm extends RepositoryForm
         "app_author" => ["Vlastníci webu"],
         "app_keywords" => ["Klíčová slova"],
         "languages" => ["Jazyky překladu", InputComparison::TYPE_ARRAY],
+        "default_language" => ["Hlavní jazyk"],
     ];
 
     private Repository\Settings\GlobalSettingsRepository $settingsRepository;
@@ -66,7 +67,8 @@ class SettingsForm extends RepositoryForm
             ->setMaxLength(DataRegulation::DESCRIPTION)
             ->setDefaultValue($actualSettings->app_keywords ?? "")->setRequired(true);
         $form->addCheckboxList("_languages", "Jazyky webu", Countries::LANGUAGES)
-            ->setOption(FormOption::OPTION_NOTE, "Zvolte všechny jazyky do kterých chcete překládat obsah webu.")->setRequired("Je nutné, aby alespoň jeden jazyk byl označen jako základní.");
+            ->setOption(FormOption::OPTION_NOTE, "Zvolte všechny jazyky, ve kterých chcete překládat obsah webu.")->setRequired("Je nutné, aby alespoň jeden jazyk byl označen jako základní.");
+        $form->addSelect("default_language", "Hlavní jazyk", Countries::LANGUAGES)->setOption(FormOption::OPTION_NOTE, "Vybraný jazyk bude použit jako hlavní.")->setRequired("Hlavní jazyk musí být vybrán.");
         if($actualSettings && $actualSettings->languages) {
             $form["_languages"]->setDefaultValue(explode(",", $actualSettings->languages));
         }
@@ -87,6 +89,6 @@ class SettingsForm extends RepositoryForm
         $data->languages = implode(",", $data->_languages);
         $this->successTemplate($form, $data->iterable(), new FormMessage(
             "Nastavení bylo úspěšně aktualizováno a ve všech službách aplikováno.",
-            "Vyskytla se neznámá chyba v databázi a nebylo možné aktualizovat nastavení."));
+            "Vyskytla se neznámá chyba v databázi a nebylo možné aktualizovat nastavení."), new FormRedirect("this"));
     }
 }

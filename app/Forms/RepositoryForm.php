@@ -50,7 +50,7 @@ class RepositoryForm extends \App\Forms\Form
         foreach ($controls as $input) {
             $inputName = $input->getName();
             if(!in_array($inputName, $exceptions) && $inputName !== "submit") {
-                if(array_key_exists($inputName, $activeRow)) {
+                if(array_key_exists($inputName,  $activeRow instanceof ActiveRow ? $activeRow->toArray() : (array)$activeRow)) {
                     $form[$inputName]->setDefaultValue($activeRow[$inputName]);
                 }
             }
@@ -64,7 +64,7 @@ class RepositoryForm extends \App\Forms\Form
      * @param iterable $entity
      * @param FormMessage $message
      * @param ?FormRedirect $formRedirect
-     * @param int|null $rowId
+     * @param int|string|null $rowId
      * @param array $dataExceptions
      * @param bool $throwExceptions
      * @param bool $deletePrivateVars
@@ -73,7 +73,7 @@ class RepositoryForm extends \App\Forms\Form
      * @throws AbortException
      * @throws InvalidLinkException
      */
-    public function successTemplate(Form $form, iterable $entity, FormMessage $message, ?FormRedirect $formRedirect = null, ?int $rowId = null, array $dataExceptions = [], bool $throwExceptions = false, bool $deletePrivateVars = true, ?callable $afterInsert = null): bool
+    public function successTemplate(Form $form, iterable $entity, FormMessage $message, ?FormRedirect $formRedirect = null, int|string|null $rowId = null, array $dataExceptions = [], bool $throwExceptions = false, bool $deletePrivateVars = true, ?callable $afterInsert = null): bool
     {
         $error = false;
         try {

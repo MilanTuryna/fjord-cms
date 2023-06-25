@@ -4,10 +4,15 @@
 namespace App\Model\Database\EAV;
 
 
+use App\Forms\Dynamic\Data\AttributeData;
+use App\Forms\Dynamic\Data\GeneratedValues;
+use App\Forms\Dynamic\Enum\InputType;
 use App\Model\Cryptography;
 use App\Model\Database\EAV\Exceptions\EntityNotFoundException;
 use App\Model\Database\EAV\Exceptions\InvalidAttributeException;
+use App\Model\Database\EAV\Translations\TranslatedValue;
 use App\Model\Database\IRepository;
+use App\Model\Database\Repository\Admin\Entity\Account;
 use App\Model\Database\Repository\Dynamic\AttributeRepository;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicAttribute;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicEntity;
@@ -19,7 +24,10 @@ use App\Model\Database\Repository\Dynamic\ValueRepository;
 use Exception;
 use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
+use Nette\Utils\ArrayHash;
+use Nette\Utils\DateTime;
 use Nette\Utils\FileSystem;
+use Nette\Utils\JsonException;
 
 class EAVRepository implements IRepository
 {
@@ -27,6 +35,7 @@ class EAVRepository implements IRepository
      * @var ActiveRow|DynamicEntity|null
      */
     private ActiveRow|DynamicEntity|null $entity;
+    private int|null $admin_id;
 
     /**
      * @throws EntityNotFoundException
@@ -52,7 +61,7 @@ class EAVRepository implements IRepository
      */
     public function createAssociativeArray(array $rows): array {
         $result = [];
-        foreach ($rows as $row) $result[$row->attribute] = $row->value;
+        foreach ($rows as $row) $result[$row->attribute] = is_array($row->value) ? ArrayHash::from($row->value) : $row->value;
         return $result;
     }
 
@@ -63,46 +72,73 @@ class EAVRepository implements IRepository
      */
     public function findByColumn(string $column, mixed $data): mixed
     {
-        $sql = FileSystem::read("SQL/findByColumn.sql");
-        $rows = $this->explorer->query($sql, $this->entity->id, $column, $data)->fetchAll();
-        return self::createAssociativeArray($rows)[$this->entity->id];
+        $sql = FileSystem::read(__DIR__ . "/SQL/findByColumn.sql");
+        $sql = sprintf($sql, $column); // SQL injection vulnerable
+        $rows = $this->explorer->query($sql, $this->entity->id, $data)->fetchAll();
+        $result = [];
+        foreach ($rows as $row) {
+            $result[$row["row_unique"]][$row->attribute] = $row->value;
+            $result[$row["row_unique"]]["row_unique"] = $row->row_unique;
+        }
+        return ArrayHash::from($result);
     }
 
     /**
      * @param string $uniqueId
-     * @return array (associative: [attr => value])
+     * @return ArrayHash (associative: [attr => value])
      */
-    public function findByUnique(string $uniqueId): array {
-        return $this->findByColumn(DynamicId::row_unique, $uniqueId);
+    public function findByUnique(string $uniqueId): ArrayHash {
+        return $this->findByColumn(DynamicId::row_unique, $uniqueId)[$uniqueId];
     }
 
     /**
-     * @param int $id
+     * @param int|string $id
      * @param array $data
      * @return array (info about updated rows [attr => bool(updated)])
      * TODO: check problem with updating value that isn't inserted
      */
-    public function updateById(int $id, iterable $data): array
+    public function updateById(int|string $id, iterable $data): array
     {
-        $sql = FileSystem::read("SQL/updateByUnique.sql");
+        $sql = FileSystem::read(__DIR__ . "/SQL/updateByUnique.sql");
         $result = [];
         foreach ($data as $k => $v) {
-            $result[$k] = (bool)$this->explorer->query($sql, $v, $k)->getRowCount();
+            $result[$k] = (bool)$this->explorer->query($sql, $v, $k, $id)->getRowCount();
         }
         return $result;
     }
 
     /**
      * @return array ([<row_unique> => [], <row_unique> => []])
+     * @throws JsonException
      */
     public function findAll(): array {
         $sql = FileSystem::read(__DIR__ . "/SQL/findAll.sql");
         $rows = $this->explorer->query($sql, $this->entity->id)->fetchAll();
-        $associativeArray = self::createAssociativeArray($rows);
-        bdump($associativeArray);
-        bdump($rows);
+        $attributeAssoc = $this->getEntityAttributesAssoc();
         $result = [];
-        foreach ($rows as $row) $row[$row->row_unique] = $associativeArray[$this->entity->id];
+        foreach ($rows as $row) {
+            bdump($row);
+            $attribute = $attributeAssoc[$row->attribute];
+            $translation = ($attribute[DynamicAttribute::allowed_translation] || $attribute[DynamicAttribute::data_type] === TranslatedValue::class)
+                && !$attribute[DynamicAttribute::generate_value];
+            $dateTime = in_array($attribute[DynamicAttribute::generate_value], [GeneratedValues::CREATED, GeneratedValues::EDITED])
+                || $attribute[DynamicAttribute::data_type] === DateTime::class || $attribute[DynamicAttribute::input_type] === InputType::DATE_INPUT;
+            if($translation) {
+                $translatedValue = new TranslatedValue([]);
+                $translatedValue->importJson($row->value);
+                $result[$row->row_unique][$row->attribute] = $translatedValue;
+            } elseif($dateTime) {
+                try {
+                    $result[$row->row_unique][$row->attribute] = DateTime::from($row->value);
+                } catch (Exception $e) {
+                    continue;
+                }
+            } else {
+                $result[$row->row_unique][$row->attribute] = $row->value;
+            }
+            $result[$row->row_unique]["row_unique"] = $row->row_unique;
+        }
+        bdump($result);
         return $result;
     }
 
@@ -113,12 +149,13 @@ class EAVRepository implements IRepository
      * @throws Exception
      */
     public function insert(iterable $data): array {
+        bdump($data);
         $attributes = $this->getEntityAttributesAssoc();
         $result = [];
         $newDynamicID = $this->idRepository->insert([
             DynamicId::row_unique => Cryptography::createUnique(),
             DynamicId::entity_id => $this->entity->id,
-            DynamicId::created => new \DateTime(),
+            DynamicId::created  => new \DateTime(),
         ]);
         try {
             foreach ($data as $attr => $v) {
@@ -126,11 +163,13 @@ class EAVRepository implements IRepository
                     throw new InvalidAttributeException("Attribute '" . $attr . "' passed in insert data doesn't exist.");
                 }
                 $attrId = $attributes[$attr]['id'];
-                $sqlQuery = $this->valueRepository->insert([
+                $insertData = [
                     DynamicValue::entity_id  => $this->entity->id,
                     DynamicValue::attribute_id => $attrId,
-                    DynamicValue::row_id => $newDynamicID->{'id'}
-                ]);
+                    DynamicValue::row_id => $newDynamicID->{'id'},
+                    DynamicValue::value => $v
+                ];
+                $sqlQuery = $this->valueRepository->insert($insertData);
                 $result[$attr] = $sqlQuery;
             }
         } catch (Exception $exception) {

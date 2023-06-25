@@ -16,11 +16,29 @@
             <thead>
             <tr>
                 <th scope="col" n:foreach="$attributes as $attribute">{$attribute->title}</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
             <tr n:foreach="$rows as $row">
-                <td n:foreach="$k_attr as $v">{$v}</td>
+                    <td n:foreach="$attributes as $attribute">
+                        {ifset $row[$attribute->id_name]}
+                            {if $row[$attribute->id_name] instanceof App\Model\Database\EAV\Translations\TranslatedValue}
+                                 <span title="Překlad ({App\Model\Constants\Countries::LANGUAGES[$settings->default_language]})">
+                                     {$row[$attribute->id_name]->getLanguage($settings->default_language)|stripHtml|slice:0,20}
+                                     {if strlen($row[$attribute->id_name]->getLanguage($settings->default_language)) > 20}...{/if}
+                                 </span>
+                            {elseif $row[$attribute->id_name] instanceof Nette\Utils\DateTime}
+                                {$row[$attribute->id_name]|date:'d.m.Y H:i'}
+                            {elseif in_array($attribute->generate_value, [App\Forms\Dynamic\Data\GeneratedValues::EDITED_ADMIN, App\Forms\Dynamic\Data\GeneratedValues::CREATED_ADMIN])}
+                                <a n:href=":Admin:Administrator:Account:view $row[$attribute->id_name]">{$administrators[$row[$attribute->id_name]]->username}</a>
+                            {else}
+                                {$row[$attribute->id_name]|stripHtml|slice:0,20}
+
+                            {/if}
+                        {/ifset}
+                    </td>
+                <td class="p-0"><a n:href=":Admin:Dynamic:Entity:view, $entityName, $row['row_unique']" class="btn btn-primary br-0 w-100">Zobrazit</a></td>
             </tr>
             <tr n:if="count($rows) === 0">
                 <td colspan="8" class="text-center p-3 text-muted">

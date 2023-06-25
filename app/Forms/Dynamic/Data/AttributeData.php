@@ -30,9 +30,9 @@ class AttributeData extends DynamicAttribute
     ];
 
     const GENERATED_VALUES = [
-        "created" => "Datum vytvoření",
-        "edited" => "Datum poslední změny",
-        "created_admin" => "Vytvořil/a",
-        "edited_admin" => "Naposledy upravil/a"
+        GeneratedValues::CREATED => "Datum vytvoření",
+        GeneratedValues::EDITED => "Datum poslední změny",
+        GeneratedValues::CREATED_ADMIN => "Vytvořil/a",
+        GeneratedValues::EDITED_ADMIN => "Naposledy upravil/a"
     ];
 }

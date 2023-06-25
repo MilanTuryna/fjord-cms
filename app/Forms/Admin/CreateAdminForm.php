@@ -49,7 +49,7 @@ class CreateAdminForm extends AdminForm
      */
     public function success(Form $form, AdminFormData $data) {
         $data->permissions = Utils::arrayToUnparsedList($data->permissions_array);
-        $this->successTemplate($form, $data, new FormMessage("Administrátorský účet byl úspěšně vytvořen.", "Admniistrátorský účet nemohl být z nějakého důvodu vytvořen"),
+        $this->successTemplate($form, $data->iterable(true), new FormMessage("Administrátorský účet byl úspěšně vytvořen.", "Admniistrátorský účet nemohl být z nějakého důvodu vytvořen"),
             $this->formRedirect);
     }
 }

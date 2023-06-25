@@ -34,7 +34,10 @@ class AdminBasePresenter extends BasePresenter
      */
     public Repository\Dynamic\EntityRepository $entityRepository;
 
-    protected ?ActiveRow $admin;
+    /**
+     * @var ActiveRow|null|Repository\Admin\Entity\Account
+     */
+    protected ActiveRow|Repository\Admin\Entity\Account|null $admin;
 
 
     protected ActiveRow|Repository\Settings\Entity\GlobalSettings|null $settings;
@@ -107,6 +110,7 @@ class AdminBasePresenter extends BasePresenter
         $this->setIfCurrentEntity(null);
         $this->template->settings = $this->settings;
         $this->template->dynamicEntities = $this->entityRepository->findAll()->fetchAll();
+        $this->template->activeWysiwyg = false;
     }
 
     /**

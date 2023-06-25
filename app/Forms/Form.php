@@ -4,6 +4,7 @@
 namespace App\Forms;
 
 
+use Contributte\Forms\Controls\DateTime\DateTimeInput;
 use Nette\Application\UI\Presenter;
 
 abstract class Form
@@ -11,8 +12,18 @@ abstract class Form
     public function __construct(protected Presenter $presenter) {
     }
 
-    public static function passNested(Form $form, object $data) {
-        
+    /**
+     * @param \Nette\Application\UI\Form $form
+     * @param string $name
+     * @param string|null $label
+     * @return DateTimeInput
+     */
+    public static function createDateTime(\Nette\Application\UI\Form &$form, string $name, ?string $label = null): DateTimeInput
+    {
+        $control = new DateTimeInput($label);
+        $form->addComponent($control, $name);
+        // TODO: test
+        return $control;
     }
 
     /**

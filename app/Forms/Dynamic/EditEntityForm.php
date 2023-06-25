@@ -59,7 +59,9 @@ class EditEntityForm extends EntityForm
         $entityRow = $this->buildEntity($data);
         $updatedEntity = $this->entityRepository->updateById($this->entityId, $entityRow->iterable());
         $changedAttribute = false;
+        bdump($data->attributes);
         foreach ($data->attributes as $attr_id => $attribute) {
+            $attribute[DynamicAttribute::enabled_wysiwyg] = isset($attribute[DynamicAttribute::enabled_wysiwyg]);
             if(str_starts_with($attr_id, EntityFormData::ROW_KEY_CHAR)) {
                 $action = $this->attributeRepository->updateById((int)ltrim($attr_id, EntityFormData::ROW_KEY_CHAR), $attribute);
             } else {

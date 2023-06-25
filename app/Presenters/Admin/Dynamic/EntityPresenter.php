@@ -4,16 +4,14 @@
 namespace App\Presenters\Admin\Dynamic;
 
 
-use App\Forms\Dynamic\CreateEntityForm;
-use App\Forms\Dynamic\EditEntityForm;
 use App\Forms\EAV\CreateSpecificEntityForm;
-use App\Forms\EAV\SpecificEntityForm;
+use App\Forms\EAV\EditSpecificEntityForm;
 use App\Forms\FormMessage;
 use App\Forms\FormRedirect;
 use App\Model\Admin\Permissions\Specific\AdminPermissions;
 use App\Model\Database\EAV\DynamicEntityFactory;
-use App\Model\Database\EAV\EAVRepository;
 use App\Model\Database\EAV\Exceptions\EntityNotFoundException;
+use App\Model\Database\Entity;
 use App\Model\Database\Repository\Dynamic\AttributeRepository;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicAttribute;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicEntity;
@@ -21,8 +19,8 @@ use App\Model\Security\Auth\AdminAuthenticator;
 use App\Presenters\AdminBasePresenter;
 use JetBrains\PhpStorm\NoReturn;
 use Nette\Application\AbortException;
-use Nette\Application\UI\Form;
 use Nette\Application\UI\Multiplier;
+use Nette\Utils\JsonException;
 
 /**
  * Class EntityPresenter
@@ -40,8 +38,14 @@ class EntityPresenter extends AdminBasePresenter
         parent::__construct($adminAuthenticator, AdminPermissions::DYNAMIC_ENTITY_ADMIN);
     }
 
+    public function beforeRender()
+    {
+        parent::beforeRender();
+        $this->template->activeWysiwyg = true;
+    }
+
     /**
-     * @throws EntityNotFoundException
+     * @throws EntityNotFoundException|JsonException
      */
     public function renderList(string $entityName) {
         $this->setIfCurrentEntity($entityName);
@@ -50,6 +54,7 @@ class EntityPresenter extends AdminBasePresenter
         $entity = $this->template->entity = $this->entityRepository->findByColumn(DynamicEntity::name, $entityName)->fetch();
         $this->template->attributes = $this->attributeRepository->findByColumn(DynamicAttribute::entity_id, $entity->id)->fetchAll();
         $this->template->rows = $EAVRepository->findAll();
+        $this->template->administrators = $this->accountRepository->findAll()->fetchPairs("id");
     }
 
     /**
@@ -61,6 +66,7 @@ class EntityPresenter extends AdminBasePresenter
         $this->template->entityName = $entityName;
         $this->template->rowUnique = $rowUnique;
         $this->template->row = $EAVRepository->findByUnique($rowUnique);
+        $this->template->entity = $this->entityRepository->findByColumn(DynamicEntity::name, $entityName)->fetch();
     }
 
     /**
@@ -85,8 +91,20 @@ class EntityPresenter extends AdminBasePresenter
     {
         return new Multiplier(function ($entityId) {
             $entityRepository = $this->dynamicEntityFactory->getEntityRepositoryById($entityId);
-            return (new CreateSpecificEntityForm($this, $this->dynamicEntityFactory->getEntityRepositoryById($entityId), new FormRedirect("list",
-                [$entityRepository->entityName])))->create();
+            return (new CreateSpecificEntityForm($this, $entityRepository, new FormRedirect("list",
+                [$entityRepository->entityName]), $this->admin->id))->create();
+        });
+    }
+
+    /**
+     * @return Multiplier
+     */
+    public function createComponentEditSpecificEntityForm(): Multiplier {
+        return new Multiplier(function ($entityId) {
+            return new Multiplier(function ($rowUnique) use($entityId) {
+                $entityRepository = $this->dynamicEntityFactory->getEntityRepositoryById($entityId);
+                return (new EditSpecificEntityForm($this, $entityRepository, $rowUnique, $this->admin->id, $this->accountRepository))->create();
+            });
         });
     }
 }

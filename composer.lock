@@ -4,8 +4,91 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "05505ff3d76dd08c40754671a2dc9ada",
+    "content-hash": "19fdbd245281b730f2438ec07feb1b1d",
     "packages": [
+        {
+            "name": "contributte/forms",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/contributte/forms.git",
+                "reference": "c7ac26b456ff2958ea207c43be6515ad1154dcea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/contributte/forms/zipball/c7ac26b456ff2958ea207c43be6515ad1154dcea",
+                "reference": "c7ac26b456ff2958ea207c43be6515ad1154dcea",
+                "shasum": ""
+            },
+            "require": {
+                "nette/forms": "^3.0.0",
+                "php": ">=7.2"
+            },
+            "conflict": {
+                "nette/di": "<3.0.0"
+            },
+            "require-dev": {
+                "nette/application": "^3.0.0",
+                "nette/di": "^3.1.0",
+                "ninjify/nunjuck": "^0.4",
+                "ninjify/qa": "^0.12",
+                "phpstan/phpstan": "^1.0",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-nette": "^1.0",
+                "phpstan/phpstan-strict-rules": "^1.1"
+            },
+            "suggest": {
+                "nette/di": "to use FormFactoryExtension[CompilerExtension]"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.6.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Contributte\\Forms\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Milan Felix Šulc",
+                    "homepage": "https://f3l1x.io"
+                }
+            ],
+            "description": "Extra contrib to nette/forms",
+            "homepage": "https://github.com/contributte/forms",
+            "keywords": [
+                "Forms",
+                "checkbox",
+                "inputs",
+                "nette",
+                "renderers",
+                "rules",
+                "validation"
+            ],
+            "support": {
+                "issues": "https://github.com/contributte/forms/issues",
+                "source": "https://github.com/contributte/forms/tree/v0.5.1"
+            },
+            "funding": [
+                {
+                    "url": "https://contributte.org/partners.html",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/f3l1x",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-11-13T17:22:04+00:00"
+        },
         {
             "name": "latte/latte",
             "version": "v3.0.6",
@@ -1522,7 +1605,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "contributte/forms": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

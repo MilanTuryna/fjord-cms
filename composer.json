@@ -19,7 +19,7 @@
 		"nette/utils": "^4.0",
 		"latte/latte": "^3.0",
 		"tracy/tracy": "^2.9",
-      "ext-zip": "*"
+		"contributte/forms": "0.6.x-dev"
     },
 	"require-dev": {
 		"nette/tester": "^2.4",

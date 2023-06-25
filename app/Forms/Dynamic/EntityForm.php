@@ -36,13 +36,16 @@ class EntityForm extends Form
             $container->addText(AttributeData::title, "Název atributu")->setOption(FormOption::OPTION_NOTE, "Uživatelsky přívětivý název atributu (např. 'Název článku')")->setOption(FormOption::MULTIPLIER_PARENT, "attributes")->setRequired(true);
             $container->addSelect(AttributeData::data_type, "Datový typ", AttributeData::DATA_TYPES)->setOption(FormOption::MULTIPLIER_PARENT, "attributes")->setRequired(true);
             $container->addSelect(AttributeData::input_type, "Typ vstupu (inputu)", AttributeData::INPUT_TYPES)->setOption(FormOption::MULTIPLIER_PARENT, "attributes")->setRequired(true);
+            $container->addCheckbox(AttributeData::enabled_wysiwyg, "Povolit pokročilý editor")
+                ->setOption(FormOption::OPTION_NOTE, "WYSIWYG editor umožňujicí práci s textem, odsazování, nadpisy atd. Bude použito jen v případě vhodné kombinace s typem inputu.")
+                ->setOption(FormOption::MULTIPLIER_PARENT, "attributes");
             $container->addText(AttributeData::description, "Popis atributu")->setOption(FormOption::MULTIPLIER_PARENT, "attributes");
             $container->addText(AttributeData::placeholder, "HTML Placeholder")->setOption(FormOption::OPTION_NOTE, "Vyjadřuje náhledový text před rozkliknutím inputu")->setOption(FormOption::MULTIPLIER_PARENT, "attributes");
             // If AttributeData::generate_value and ::preset_val then use prese_val;
             $container->addSelect(AttributeData::generate_value, "Vygenerované hodnoty",
                 AttributeData::GENERATED_VALUES)->setRequired(false)->setOption(FormOption::MULTIPLIER_PARENT, "attributes")->setPrompt("Vyber generovanou hodnotu");
             $container->addTextarea(AttributeData::preset_value, "Přednastavení hodnoty")->setOption(FormOption::OPTION_NOTE, "V případě využití přednastavené hodnoty v kombinaci s datovým typem překladu, využijte prosím JSON dle struktrury uvedené v dokumentaci FjordCMS.")->setOption(FormOption::MULTIPLIER_PARENT, "attributes")->setRequired(false);
-            $container->addCheckbox(AttributeData::required, "Je atribut povinný?")->setOption(FormOption::MULTIPLIER_PARENT, "attributes")->setRequired(false);
+            $container->addCheckbox(AttributeData::required, "Je atribut povinný?")->setHtmlAttribute("value", true)->setOption(FormOption::MULTIPLIER_PARENT, "attributes")->setRequired(false);
             $attrMultiplier->addRemoveButton("Odebrat atribut")->addClass('btn btn-danger');
         }, $minCopies, $maxAttributes);
         $attrMultiplier->addCreateButton("Přidat krok")->addClass('btn btn-dark w-100');

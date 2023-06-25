@@ -1,0 +1,19 @@
+{block title}
+Úprava záznamu (id. {$row->row_unique})
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [
+":Admin:Overview:home" => "Administrace",
+"" => "Správa obsahu",
+":Admin:Dynamic:Entity:list, $entityName" => "Seznam záznamů (" . $entityName . ")",
+"this" => "Záznam (id. " . $row->row_unique . ")"
+]}
+{/block}
+{block content}
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Úprava záznamu (id. {$row->row_unique})</h5>
+        {include TEMPLATE_COMMON . "/form.latte", form: "editSpecificEntityForm-$entity->id-$row->row_unique"}
+    </div>
+</div>
+{/block}
