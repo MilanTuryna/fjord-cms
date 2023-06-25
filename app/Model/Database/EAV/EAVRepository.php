@@ -117,7 +117,6 @@ class EAVRepository implements IRepository
         $attributeAssoc = $this->getEntityAttributesAssoc();
         $result = [];
         foreach ($rows as $row) {
-            bdump($row);
             $attribute = $attributeAssoc[$row->attribute];
             $translation = ($attribute[DynamicAttribute::allowed_translation] || $attribute[DynamicAttribute::data_type] === TranslatedValue::class)
                 && !$attribute[DynamicAttribute::generate_value];
@@ -138,7 +137,6 @@ class EAVRepository implements IRepository
             }
             $result[$row->row_unique]["row_unique"] = $row->row_unique;
         }
-        bdump($result);
         return $result;
     }
 
@@ -149,7 +147,6 @@ class EAVRepository implements IRepository
      * @throws Exception
      */
     public function insert(iterable $data): array {
-        bdump($data);
         $attributes = $this->getEntityAttributesAssoc();
         $result = [];
         $newDynamicID = $this->idRepository->insert([

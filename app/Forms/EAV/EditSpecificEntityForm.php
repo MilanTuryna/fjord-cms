@@ -59,8 +59,6 @@ class EditSpecificEntityForm extends SpecificEntityForm
                 }
             }
         }
-        bdump($this->entityData);
-
         $form->setDefaults($defaultValues);
         return self::createEditForm($form, (object)$this->entityData, "Aktualizovat změny");
     }
