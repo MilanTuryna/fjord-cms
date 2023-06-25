@@ -85,13 +85,21 @@ class MainPresenter extends AdminBasePresenter
         $this->template->item = $galleryFacade->getGalleryItemFile($imageId);
     }
 
+    /**
+     * @param int $galleryId
+     */
+    private function removeImages(int $galleryId): void {
+        $this->itemsRepository->findByColumn(GalleryItem::gallery_id, $galleryId)->delete();
+        $this->galleryFacadeFactory->getGalleryFacade($galleryId)->getGalleryUploadManager()->deleteUploads(true);
+    }
 
     /**
      * @throws AbortException
      */
     #[NoReturn] public function actionRemove(int $galleryId) {
-        $this->itemsRepository->findByColumn(GalleryItem::gallery_id, $galleryId)->delete();
-        $this->prepareActionRemove($this->galleryRepository, $galleryId, new FormMessage("Galerie byla úspěšně odstraněna i se všemi fotky.", "Galerie nebyla z neznámého důvodu odstraněna."), "list");
+        $this->removeImages($galleryId);
+        $this->prepareActionRemove($this->galleryRepository, $galleryId, new FormMessage("Galerie byla úspěšně odstraněna i se všemi fotky.", "Galerie nebyla z neznámého důvodu odstraněna."),
+            "overview");
     }
 
     /**
@@ -124,8 +132,7 @@ class MainPresenter extends AdminBasePresenter
      * @throws AbortException
      */
     #[NoReturn] public function actionRemoveImages(int $galleryId): void {
-        $this->itemsRepository->findByColumn(GalleryItem::gallery_id, $galleryId)->delete();
-        $this->galleryFacadeFactory->getGalleryFacade($galleryId)->getGalleryUploadManager()->deleteUploads();
+        $this->removeImages($galleryId);
         $this->flashMessage("Všechny obrázky v galerii byly úspěšně odstraněny.", FlashMessages::SUCCESS);
         $this->redirect("view", $galleryId);
     }

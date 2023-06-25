@@ -32,7 +32,6 @@ class UploadManager
     {
         if($upload->hasFile() && $upload->isOk()) {
             $upload->move($this->path . DIRECTORY_SEPARATOR . $fileName);
-            bdump($this->path . DIRECTORY_SEPARATOR . $fileName);
         } else {
             throw new UploadNotValidException();
         }
@@ -64,10 +63,14 @@ class UploadManager
         FileSystem::rename($from, $to);
     }
 
-    public function deleteUploads() {
+    /**
+     * @param bool $withFolder
+     */
+    public function deleteUploads(bool $withFolder = false) {
         $di = new RecursiveDirectoryIterator($this->path, FilesystemIterator::SKIP_DOTS);
         $ri = new RecursiveIteratorIterator($di, RecursiveIteratorIterator::CHILD_FIRST);
         foreach ( $ri as $file ) if(!$file->isDir()) unlink($file);
+        if($withFolder) rmdir($this->path);
     }
 
     /**
@@ -75,7 +78,6 @@ class UploadManager
      */
     public function deleteUpload($fileName): void
     {
-        bdump($this->path . DIRECTORY_SEPARATOR . $fileName);
         if (file_exists($this->path . DIRECTORY_SEPARATOR . $fileName)) {
             FileSystem::delete($this->path . DIRECTORY_SEPARATOR . $fileName);
         } else {

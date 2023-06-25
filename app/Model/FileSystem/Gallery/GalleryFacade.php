@@ -82,6 +82,7 @@ class GalleryFacade
         return $this->galleryUploadManager;
     }
 
+
     /**
      * @return GalleryFileInfo
      */

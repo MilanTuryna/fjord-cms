@@ -54,6 +54,9 @@ class CreateGalleryForm extends GalleryForm
             $fetch = $this->galleryRepository->findByColumn(Gallery::uri, $data->uri)->fetch();
             $galleryUploadManager = new GalleryUploadManager($this->galleryDataProvider, $fetch->id);
             $this->uploadImages($form, $data, $galleryUploadManager);
+            foreach ($this->formRedirect->args as $i => $v) { // replacing FormRedirect special argument constants as real value
+                if($v === FormRedirect::LAST_INSERT_ID) $this->formRedirect->args[$i] = $fetch->id;
+            }
             $this->presenter->redirect($this->formRedirect->route, $this->formRedirect->args);
         }
     }

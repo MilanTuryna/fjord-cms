@@ -30,6 +30,7 @@ class GalleryUploadManager extends UploadManager
     public function getGalleryFileInfo(): GalleryFileInfo {
         $galleryFileInfo = new GalleryFileInfo();
         $path = $this->path . DIRECTORY_SEPARATOR;
+        if(!is_dir($path)) mkdir($path);
         $fi = new FilesystemIterator($path, FilesystemIterator::SKIP_DOTS);
         $globalFileSize = 0;
         foreach ($fi as $file) {
