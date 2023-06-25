@@ -20,6 +20,10 @@ Vytvořit novou galerii
                 "Rozlišení obrázku (px)" => $item->resolution_x . "x" . $item->resolution_y,
                 "Přidán/a" => $item->created,
             ]}
+            <hr>
+            <ul>
+                <li>Nahrál: <a n:href=":Admin:Administrator:Account:view $item->admin_id">{$administrators[$item->admin_id]->username}</a></li>
+            </ul>
         </div>
         <a n:href=":Admin:Gallery:Main:removeImage $gallery->id, $item->id" class="btn btn-danger btn-sm float-right">Odstranit obrázek</a>
     </div>

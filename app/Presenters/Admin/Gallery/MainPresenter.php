@@ -83,6 +83,7 @@ class MainPresenter extends AdminBasePresenter
         $gallery = $this->template->gallery = $this->galleryRepository->findById($galleryId);
         $galleryFacade = $this->galleryFacadeFactory->getGalleryFacade($galleryId);
         $this->template->item = $galleryFacade->getGalleryItemFile($imageId);
+        $this->template->administrators = $this->accountRepository->findAll()->fetchPairs("id");
     }
 
     /**
