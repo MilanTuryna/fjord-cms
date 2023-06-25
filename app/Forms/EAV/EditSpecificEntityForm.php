@@ -5,6 +5,7 @@ namespace App\Forms\EAV;
 use App\Forms\Dynamic\Data\AttributeData;
 use App\Forms\Dynamic\Data\GeneratedValues;
 use App\Forms\FormMessage;
+use App\Forms\FormOption;
 use App\Forms\FormRedirect;
 use App\Model\Database\EAV\EAVRepository;
 use App\Model\Database\Repository\Admin\AccountRepository;
@@ -30,8 +31,9 @@ class EditSpecificEntityForm extends SpecificEntityForm
      * @param string $rowUnique
      * @param int $admin_id
      * @param AccountRepository $accountRepository
+     * @param FormRedirect $deleteRoute
      */
-    public function __construct(protected Presenter $presenter, protected EAVRepository $EAVRepository, private string $rowUnique, int $admin_id, private AccountRepository $accountRepository)
+    public function __construct(protected Presenter $presenter, protected EAVRepository $EAVRepository, private string $rowUnique, int $admin_id, private AccountRepository $accountRepository, private FormRedirect $deleteRoute)
     {
         parent::__construct($this->presenter, $this->EAVRepository, $admin_id);
 
@@ -60,6 +62,7 @@ class EditSpecificEntityForm extends SpecificEntityForm
             }
         }
         $form->setDefaults($defaultValues);
+        $form['submit']->setOption(FormOption::DELETE_LINK, $this->deleteRoute);
         return self::createEditForm($form, (object)$this->entityData, "Aktualizovat změny");
     }
 

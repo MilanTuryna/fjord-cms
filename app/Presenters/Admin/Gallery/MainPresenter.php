@@ -141,7 +141,7 @@ class MainPresenter extends AdminBasePresenter
 
     public function createComponentEditGalleryForm(): Multiplier {
         return new Multiplier(function ($id) {
-            return (new EditGalleryForm($this, $this->galleryRepository, $this->itemsRepository, $this->galleryDataProvider, $this->admin->id, (int)$id))->create();
+            return (new EditGalleryForm($this, $this->galleryRepository, $this->itemsRepository, $this->galleryDataProvider, $this->admin->id, (int)$id, new FormRedirect("remove", [$id])))->create();
         });
     }
 }

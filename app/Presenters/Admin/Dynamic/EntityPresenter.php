@@ -103,7 +103,7 @@ class EntityPresenter extends AdminBasePresenter
         return new Multiplier(function ($entityId) {
             return new Multiplier(function ($rowUnique) use($entityId) {
                 $entityRepository = $this->dynamicEntityFactory->getEntityRepositoryById($entityId);
-                return (new EditSpecificEntityForm($this, $entityRepository, $rowUnique, $this->admin->id, $this->accountRepository))->create();
+                return (new EditSpecificEntityForm($this, $entityRepository, $rowUnique, $this->admin->id, $this->accountRepository, new FormRedirect("remove", [$entityRepository->entityName, $rowUnique])))->create();
             });
         });
     }

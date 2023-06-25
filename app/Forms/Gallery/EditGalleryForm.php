@@ -5,6 +5,7 @@ namespace App\Forms\Gallery;
 
 
 use App\Forms\FormMessage;
+use App\Forms\FormOption;
 use App\Forms\FormRedirect;
 use App\Forms\Gallery\Data\GalleryFormData;
 use App\Model\Database\Repository\Gallery\Entity\Gallery;
@@ -24,7 +25,7 @@ class EditGalleryForm extends GalleryForm
 {
     private array $activeRowArr;
 
-    public function __construct(protected Presenter $presenter, protected GalleryRepository $galleryRepository, protected ItemsRepository $itemsRepository, private GalleryDataProvider $galleryDataProvider, protected int $admin_id, private int $gallery_id)
+    public function __construct(protected Presenter $presenter, protected GalleryRepository $galleryRepository, protected ItemsRepository $itemsRepository, private GalleryDataProvider $galleryDataProvider, protected int $admin_id, private int $gallery_id, private FormRedirect $deleteRoute)
     {
         parent::__construct($this->presenter, $this->galleryRepository, $this->itemsRepository, $this->admin_id);
 
@@ -34,6 +35,7 @@ class EditGalleryForm extends GalleryForm
     public function create(): \Nette\Application\UI\Form
     {
         $form = parent::create();
+        $form['submit']->setOption(FormOption::DELETE_LINK, $this->deleteRoute);
         return self::createEditForm($form,  $this->activeRowArr);
     }
 

@@ -6,6 +6,7 @@ namespace App\Forms\Dynamic;
 
 use App\Forms\Dynamic\Data\EntityFormData;
 use App\Forms\FlashMessages;
+use App\Forms\FormOption;
 use App\Forms\FormRedirect;
 use App\Model\Database\Repository\Dynamic\AttributeRepository;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicAttribute;
@@ -28,7 +29,7 @@ class EditEntityForm extends EntityForm
 
     /**
      */
-    public function __construct(public Presenter $presenter, private int $entityId, private EntityRepository $entityRepository, private AttributeRepository $attributeRepository)
+    public function __construct(public Presenter $presenter, private int $entityId, private EntityRepository $entityRepository, private AttributeRepository $attributeRepository, private FormRedirect $deleteRoute)
     {
         parent::__construct($this->presenter);
 
@@ -44,7 +45,7 @@ class EditEntityForm extends EntityForm
         $form = parent::create(count($this->oldEntityFormData->attributes) > 1 ? 0 : 1);
         $form["attributes"]->setValues($this->oldEntityFormData->attributes);
         $form->setDefaults($this->oldEntityFormData->iterable());
-        $form['submit']->setCaption("Aktualizovat změny");
+        $form['submit']->setCaption("Aktualizovat změny")->setOption(FormOption::DELETE_LINK, $this->deleteRoute);
         return $form;
     }
 

@@ -66,7 +66,7 @@ class EAVPresenter extends AdminBasePresenter
      */
     public function createComponentEditEntityForm(): Multiplier {
         return new Multiplier(function ($entityId) {
-            return (new EditEntityForm($this, (int)$entityId, $this->entityRepository, $this->attributeRepository))->create();
+            return (new EditEntityForm($this, (int)$entityId, $this->entityRepository, $this->attributeRepository, new FormRedirect("remove", $entityId)))->create();
         });
     }
 }
