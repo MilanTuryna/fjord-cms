@@ -8,9 +8,11 @@ use App\Forms\Dynamic\Data\EntityFormData;
 use App\Forms\FlashMessages;
 use App\Forms\FormOption;
 use App\Forms\FormRedirect;
+use App\Model\Database\EAV\Exceptions\InvalidAttributeException;
 use App\Model\Database\Repository\Dynamic\AttributeRepository;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicAttribute;
 use App\Model\Database\Repository\Dynamic\EntityRepository;
+use App\Utils\FormatUtils;
 use JetBrains\PhpStorm\NoReturn;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
@@ -60,25 +62,33 @@ class EditEntityForm extends EntityForm
         $entityRow = $this->buildEntity($data);
         $updatedEntity = $this->entityRepository->updateById($this->entityId, $entityRow->iterable());
         $changedAttribute = false;
-        bdump($data->attributes);
-        foreach ($data->attributes as $attr_id => $attribute) {
-            $attribute[DynamicAttribute::enabled_wysiwyg] = isset($attribute[DynamicAttribute::enabled_wysiwyg]);
-            if(str_starts_with($attr_id, EntityFormData::ROW_KEY_CHAR)) {
-                $action = $this->attributeRepository->updateById((int)ltrim($attr_id, EntityFormData::ROW_KEY_CHAR), $attribute);
-            } else {
-                $attributeObject = new DynamicAttribute();
-                $attributeObject->createFrom((object)$attribute);
-                $action = $this->attributeRepository->addAttribute($this->entityId, $attributeObject);
+        try {
+            foreach ($data->attributes as $attr_id => $attribute) {
+                if(!FormatUtils::validateInputName($attribute[DynamicAttribute::id_name])) {
+                    $msg = "Jmenný identifikátor u každého atributu musí být bez diakritiky, bez mezer a malými písmeny. Zkontrolujte: '" . $attribute[DynamicAttribute::id_name] . "'";
+                    throw new InvalidAttributeException($msg);
+                }
+                $attribute[DynamicAttribute::enabled_wysiwyg] = isset($attribute[DynamicAttribute::enabled_wysiwyg]);
+                $attribute[DynamicAttribute::required] = isset($attribute[DynamicAttribute::required]);
+                if(str_starts_with($attr_id, EntityFormData::ROW_KEY_CHAR)) {
+                    $action = $this->attributeRepository->updateById((int)ltrim($attr_id, EntityFormData::ROW_KEY_CHAR), $attribute);
+                } else {
+                    $attributeObject = new DynamicAttribute();
+                    $attributeObject->createFrom((object)$attribute);
+                    $action = $this->attributeRepository->addAttribute($this->entityId, $attributeObject);
+                }
+                if(!$changedAttribute) $changedAttribute = (bool)$action;
             }
-            if(!$changedAttribute) $changedAttribute = (bool)$action;
-        }
-        foreach ($this->oldEntityFormData->attributes as $attr_id => $oldAttributes) {
-            if(str_starts_with($attr_id, EntityFormData::ROW_KEY_CHAR) && !array_key_exists($attr_id, $data->attributes)) {
-                $this->attributeRepository->deleteById((int)ltrim($attr_id, EntityFormData::ROW_KEY_CHAR));
+            foreach ($this->oldEntityFormData->attributes as $attr_id => $oldAttributes) {
+                if(str_starts_with($attr_id, EntityFormData::ROW_KEY_CHAR) && !array_key_exists($attr_id, $data->attributes)) {
+                    $this->attributeRepository->deleteById((int)ltrim($attr_id, EntityFormData::ROW_KEY_CHAR));
+                }
             }
+            $this->presenter->flashMessage("Entita byla úspěšně aktualizována.", FlashMessages::SUCCESS);
+            if($changedAttribute) $this->presenter->flashMessage("Atributy entity byly též úspěšně aktualizovány.", FlashMessages::SUCCESS);
+            $this->presenter->redirect("this");
+        } catch (InvalidAttributeException $exception) {
+            $form->addError($exception->getMessage());
         }
-        $this->presenter->flashMessage("Entita byla úspěšně aktualizována.", FlashMessages::SUCCESS);
-        if($changedAttribute) $this->presenter->flashMessage("Atributy entity byly též úspěšně aktualizovány.", FlashMessages::SUCCESS);
-        $this->presenter->redirect("this");
     }
 }

@@ -20,6 +20,8 @@ use JetBrains\PhpStorm\NoReturn;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Multiplier;
+use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 
 class EAVPresenter extends AdminBasePresenter
 {
@@ -41,10 +43,27 @@ class EAVPresenter extends AdminBasePresenter
         $this->template->entities = $this->entityRepository->findAll()->fetchAll();
     }
 
+    /**
+     * @throws JsonException
+     */
     public function renderView(int $id) {
-        $this->template->dynamicEntity = $this->entityRepository->findById($id);
-        $this->template->attributes = $this->attributeRepository->findByColumn(DynamicAttribute::entity_id, $id);
+        $dynEntity = $this->template->dynamicEntity = $this->entityRepository->findById($id);
+        $dynArray = [
+          "entity_name" => $dynEntity->name,
+          "entity_description" => $dynEntity->description,
+          "entity_item_name" => $dynEntity->menu_item_name,
+        ];
+        unset($dynArray["id"]);
+        $attributes = $this->template->attributes = $this->attributeRepository->findByColumn(DynamicAttribute::entity_id, $id)->fetchAll();
+        foreach ($attributes as $attribute) {
+            if(!isset($dynArray["attributes"])) $dynArray["attributes"] = [];
+            $arr = $attribute->toArray();
+            unset($arr["id"]);
+            unset($arr["entity_id"]);
+            $dynArray["attributes"][] = $arr;
+        }
         $this->template->valuesCount = $this->valueRepository->findByColumn(DynamicAttribute::entity_id, $id)->count("id");
+        $this->template->entityJSON = stripslashes(json_encode($dynArray, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
     }
 
     /**
@@ -66,7 +85,8 @@ class EAVPresenter extends AdminBasePresenter
      */
     public function createComponentEditEntityForm(): Multiplier {
         return new Multiplier(function ($entityId) {
-            return (new EditEntityForm($this, (int)$entityId, $this->entityRepository, $this->attributeRepository, new FormRedirect("remove", $entityId)))->create();
+            return (new EditEntityForm($this, (int)$entityId, $this->entityRepository, $this->attributeRepository,
+                new FormRedirect("remove", [$entityId])))->create();
         });
     }
 }

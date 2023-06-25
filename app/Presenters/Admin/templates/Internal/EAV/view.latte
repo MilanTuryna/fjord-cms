@@ -16,4 +16,11 @@
         {include TEMPLATE_COMMON . "/form.latte", form: "editEntityForm-$dynamicEntity->id"}
     </div>
 </div>
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Vývojářské shrnutí (JSON) </h5>
+        <b>Pro instalační balíček:</b>
+        <pre class="bg-light text-secondary border p-3">{$entityJSON}</pre>
+    </div>
+</div>
 {/block}

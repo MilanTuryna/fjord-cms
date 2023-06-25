@@ -28,7 +28,7 @@ Přidat novou dynamickou entitu
             <tr>
                 <td><a n:href=":Admin:Internal:EAV:view $entityRow->id" class="blue-href">{$entityRow->id}</a></td>
                 <td>{$entityRow->name}</td>
-                <td>{$entityRow->description|slice:0,20}</td>
+                <td>{$entityRow->description|slice:0,40}{if strlen($entityRow->description) > 40}...{/if}</td>
                 <td>{$entityRow->created|date:'d.m.Y H:i'}</td>
                 <td>{$entityRow->edited|date:'d.m.Y H:i'}</td>
                 <td><a n:href=":Admin:Internal:EAV:view $entityRow->id" class="btn btn-primary br-0 w-100">Zobrazit</a></td>

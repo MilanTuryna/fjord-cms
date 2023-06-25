@@ -5,16 +5,19 @@ namespace App\Model\Database\EAV;
 
 
 use App\Model\Database\EAV\Exceptions\EntityNotFoundException;
+use App\Model\Database\EAV\Exceptions\InvalidAttributeException;
 use App\Model\Database\Repository\Dynamic\AttributeRepository;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicAttribute;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicEntity;
 use App\Model\Database\Repository\Dynamic\EntityRepository;
 use App\Model\Database\Repository\Dynamic\IdRepository;
 use App\Model\Database\Repository\Dynamic\ValueRepository;
+use App\Utils\FormatUtils;
 use InvalidArgumentException;
 use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\UniqueConstraintViolationException;
+use Nette\Schema\DynamicParameter;
 use ReflectionException;
 
 class DynamicEntityFactory
@@ -40,6 +43,7 @@ class DynamicEntityFactory
      * @return int|null
      * @throws ReflectionException
      * @throws UniqueConstraintViolationException
+     * @throws InvalidAttributeException
      */
     public function createEntity(DynamicEntity $entity, array $dynamicAttributes): ?int
     {
@@ -48,9 +52,14 @@ class DynamicEntityFactory
                 if (!($attribute instanceof DynamicAttribute || is_array($attribute))) {
                     throw new InvalidArgumentException("Zadaný atribut je špatného typu.");
                 }
+                if(!FormatUtils::validateInputName($attribute[DynamicAttribute::id_name])) {
+                    throw new InvalidAttributeException("Jmenný identifikátor u každého atributu musí být bez diakritiky, bez mezer a malými písmeny. Zkontrolujte: '" . $attribute[DynamicAttribute::id_name] . "'");
+                }
                 $attributeObject = new DynamicAttribute();
-                $attributeObject->createFrom($attribute);
-                $this->attributeRepository->addAttribute($insertedEntity->id, $attribute);
+                $attribute[DynamicAttribute::enabled_wysiwyg] = isset($attribute[DynamicAttribute::enabled_wysiwyg]);
+                $attribute[DynamicAttribute::required] = isset($attribute[DynamicAttribute::required]);
+                $attributeObject->createFrom((object)$attribute);
+                $this->attributeRepository->addAttribute($insertedEntity->id, $attributeObject);
             }
             return $insertedEntity->{'id'} ?? null;
     }
