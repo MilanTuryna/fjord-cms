@@ -56,6 +56,14 @@ class DynamicEntityFactory
     }
 
     /**
+     * @param string $name
+     * @return bool
+     */
+    public function isEntityExist(string $name): bool {
+        return (bool)$this->entityRepository->findByColumn(DynamicEntity::name, $name)->fetch();
+    }
+
+    /**
      * @throws EntityNotFoundException
      */
     public function getEntityRepository(string $entityName): EAVRepository

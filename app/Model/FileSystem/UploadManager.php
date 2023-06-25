@@ -56,6 +56,14 @@ class UploadManager
         return Finder::findFiles("*")->from($this->path);
     }
 
+    /**
+     * @param $from
+     * @param $to
+     */
+    public function renameDirectory($from, $to) {
+        FileSystem::rename($from, $to);
+    }
+
     public function deleteUploads() {
         $di = new RecursiveDirectoryIterator($this->path, FilesystemIterator::SKIP_DOTS);
         $ri = new RecursiveIteratorIterator($di, RecursiveIteratorIterator::CHILD_FIRST);

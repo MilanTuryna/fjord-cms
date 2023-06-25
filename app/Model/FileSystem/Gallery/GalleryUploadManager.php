@@ -45,14 +45,11 @@ class GalleryUploadManager extends UploadManager
     }
 
     /**
-     * @throws GalleryUniqueException
-     * @throws RenameGalleryFailedException
      * non used but for future prepare (now we are using ids)
      */
     public function renameGallery($galleryDirectoryFrom, $galleryDirectoryTo): void {
         $from = $this->galleryDataProvider->localPath . DIRECTORY_SEPARATOR . $galleryDirectoryFrom;
         $to = $this->galleryDataProvider->localPath . DIRECTORY_SEPARATOR . $galleryDirectoryTo;
-        if(file_exists($to)) throw new GalleryUniqueException();
-        if(!rename($from, $to)) throw new RenameGalleryFailedException();
+        $this->renameDirectory($from, $to);
     }
 }

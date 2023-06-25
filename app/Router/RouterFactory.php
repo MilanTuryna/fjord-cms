@@ -18,6 +18,8 @@ final class RouterFactory
 	public static function createRouter(): RouteList
 	{
 		$router = new RouteList;
+		$router->withModule("Front")->addRoute("");
+
 		$router->withModule("Admin")
             ->addRoute('/admin', 'Overview:home')
             ->addRoute("/admin/login", "Auth:login")

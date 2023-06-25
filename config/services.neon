@@ -18,3 +18,4 @@ extensions:
 services:
     router: App\Router\RouterFactory::createRouter
     galleryDataProvider: App\Model\FileSystem\Gallery\GalleryDataProvider(%gallery.outsidePath%, %gallery.localPath%)
+    templateUploadDataProvider: App\Model\FileSystem\Templating\TemplateUploadDataProvider(%templating.tempStorage%, %templating.solidStorage%)

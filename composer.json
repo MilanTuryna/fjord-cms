@@ -18,8 +18,9 @@
 		"nette/security": "^3.1",
 		"nette/utils": "^4.0",
 		"latte/latte": "^3.0",
-		"tracy/tracy": "^2.9"
-	},
+		"tracy/tracy": "^2.9",
+      "ext-zip": "*"
+    },
 	"require-dev": {
 		"nette/tester": "^2.4",
 		"symfony/thanks": "^1"

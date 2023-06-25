@@ -1,0 +1,19 @@
+{block title}
+Nainstalovat šablonu
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [
+":Admin:Overview:home" => "Administrace",
+":Admin:Internal:Main:home" => "Interní administrace",
+":Admin:Internal:Template:list" => "Seznam vlastních šablon",
+"this" => "Nainstalovat novou šablonu"
+]}
+{/block}
+{block content}
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Nainstalovat novou šablonu</h5>
+        {include TEMPLATE_COMMON . "/form.latte", form: "installTemplateForm"}
+    </div>
+</div>
+{/block}

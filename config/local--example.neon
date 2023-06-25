@@ -1,7 +1,17 @@
 parameters:
+    templating:
+        tempStorage: %wwwDir%/../data/temp #hack for getting to data
+        solidStorage: %wwwDir%/../data/solid
     gallery:
-        basePath: %wwwDir%/gallery
-        baseUrl:
+        folderName:
+        outsidePath:
+        localPath:
+    database:
+        host:
+        dbname:
+        dsn:
+        user:
+        password:
 
 database:
 	dsn:
