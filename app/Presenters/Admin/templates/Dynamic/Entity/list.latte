@@ -9,6 +9,9 @@
 ]}
 {/block}
 {block content}
+<div class="bg-light border default-margin-bot p-3 text-secondary">
+    {$entity->description}
+</div>
 <div class="card classic-shadow default-margin-bot">
     <div class="card-body">
         <h5 class="title">Seznam záznamů ({$entityName}) <small>(celkem: {count($rows)})</small></h5>
