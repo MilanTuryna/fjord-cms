@@ -161,10 +161,10 @@ abstract class Repository implements IRepository
 
     /**
      * ATTENTION: to softDelete and normal delete
-     * @param int $id
+     * @param int|string $id
      * @return int
      */
-    public function deleteById(int $id): int {
+    public function deleteById(int|string $id): int {
         if(property_exists(DataStructure::ENTITIES[$this->table], SoftDeleteObject::deleted)) {
             return $this->updateById($id, [
                 SoftDeleteObject::deleted => 1

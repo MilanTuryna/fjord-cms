@@ -176,7 +176,7 @@ class EAVRepository implements IRepository
         return $result;
     }
 
-    public function deleteById(int $id): int
+    public function deleteById(int|string $id): int
     {
         return $this->idRepository->deleteByColumn(DynamicId::row_unique, $id); // TODO: set foreign keys for delete all values for t
     }

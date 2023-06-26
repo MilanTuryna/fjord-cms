@@ -20,16 +20,16 @@ class FormRedirect
     const LAST_INSERT_ID = "___LAST_INSERT_ID___";
 
     public string $route;
-    public array $args;
+    public array $args = [];
 
     /**
      * FormRedirect constructor.
      * @param string $route
-     * @param array $args
+     * @param array|string $args
      */
-    public function __construct(string $route, array $args = []) {
+    public function __construct(string $route, array|string $args = []) {
         $this->route = $route;
-        $this->args = $args;
+        $this->args = is_string($args) ? [$args] : $args;
     }
 
     /**

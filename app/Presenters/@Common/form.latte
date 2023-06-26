@@ -147,7 +147,7 @@
             <div class="d-flex justify-content-between" style="align-content: center">
                 <div>
                     {var $deleteRoute = $form['submit']->getOption(App\Forms\FormOption::DELETE_LINK)}
-                    <a n:if="$deleteRoute" n:href="$deleteRoute->route, implode(',', $deleteRoute->args)" class="text-danger delete-href">Odstranit tento záznam</a>
+                    <a n:if="$deleteRoute" href="{$presenter->link($deleteRoute->route, $deleteRoute->args)}" class="text-danger delete-href">Odstranit tento záznam</a>
                 </div>
                 <button n:name="submit" type="submit" n:class="'btn', ($form['submit']->getOption(App\Forms\FormOption::BUTTON_DANGER) ? 'btn-danger' : 'btn-success')"
                         onclick="translatedInputs(event, document.getElementById('translateForm'))">{$form['submit']->getCaption()}</button>

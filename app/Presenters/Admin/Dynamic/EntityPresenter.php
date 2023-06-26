@@ -75,7 +75,7 @@ class EntityPresenter extends AdminBasePresenter
     #[NoReturn] public function actionRemove(string $entityName, string $rowUnique) {
         $this->setIfCurrentEntity($entityName);
         $EAVRepository = $this->dynamicEntityFactory->getEntityRepository($entityName);
-        $this->prepareActionRemove($EAVRepository, $rowUnique, new FormMessage("$entityName (ID: $rowUnique) byl úspěšně odebrán.", "$entityName (ID: $rowUnique) nebyl z neznámého důvodu odebrán."), "list");
+        $this->prepareActionRemove($EAVRepository, $rowUnique, new FormMessage("$entityName (ID: $rowUnique) byl úspěšně odebrán.", "$entityName (ID: $rowUnique) nebyl z neznámého důvodu odebrán."), new FormRedirect("list", $entityName));
     }
 
     public function renderNew(string $entityName) {
