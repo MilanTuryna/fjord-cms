@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Router;
 
+use App\Model\Database\Repository\Template\Entity\Page;
+use App\Model\Database\Repository\Template\PageRepository;
+use App\Model\Database\Repository\Template\TemplateRepository;
+use App\Presenters\Admin\Internal\TemplatePresenter;
 use Nette;
 use Nette\Application\Routers\RouteList;
 
@@ -15,10 +19,16 @@ final class RouterFactory
 {
 	use Nette\StaticClass;
 
-	public static function createRouter(): RouteList
+	public function __construct(private TemplateRepository $templateRepository, private PageRepository $pageRepository) {
+    }
+
+	public function createRouter(): RouteList
 	{
 		$router = new RouteList;
-		$router->withModule("Front")->addRoute("");
+
+
+
+		$router->withModule("front")->addRoute("'<path .+>", "Generator:");
 
 		$router->withModule("Admin")
             ->addRoute('/admin', 'Overview:home')

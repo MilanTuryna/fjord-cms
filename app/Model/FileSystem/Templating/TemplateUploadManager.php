@@ -42,4 +42,11 @@ class TemplateUploadManager extends UploadManager
     public function getFolderPath(): string {
         return $this->path;
     }
+
+    /**
+     * @return string
+     */
+    public function getPagesFolder(): string {
+        return $this->path . DIRECTORY_SEPARATOR . "pages";
+    }
 }
