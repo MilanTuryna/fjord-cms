@@ -50,16 +50,19 @@ class SpecificEntityForm extends RepositoryForm
                 DataType::INTEGER => $form->addInteger($attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required),
                 DataType::TRANSLATED_VALUE => match ($attribute->input_type) {
                     default => $form->addText($attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required)->setOption(FormOption::IS_TRANSLATED_VALUE, 1),
+                    InputType::COLOR_INPUT => $form->addText($attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required)->setHtmlType("color")->setOption(FormOption::IS_TRANSLATED_VALUE, 1),
+                    InputType::DATE_INPUT => $this::createDateTime($form, $attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required)->setOption(FormOption::IS_DATE_TIME, 1)->setOption(FormOption::IS_TRANSLATED_VALUE, 1),
                     InputType::TEXTAREA => $form->addTextArea($attribute->id_name, $attribute->title)->setRequired(false)
                         ->setOption(FormOption::IS_TRANSLATED_VALUE,1), //setRequired for TinyMCE or any wysiwyg editor bugs
                 },
                 DataType::FLOAT => $form->addText($attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required)->addRule(\Nette\Forms\Form::Float, `{$attribute->id_name} ({$attribute->title}) musí být číslo.`),
                 DataType::BOOL => $form->addCheckbox($attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required),
                 DataType::STRING, DataType::ARBITRARY => match ($attribute->input_type) {
-                    default => $form->addText($attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required)->setOption(FormOption::IS_TRANSLATED_VALUE,1), // use default for back compability when not set
-                    InputType::TEXTAREA => $form->addTextArea($attribute->id_name, $attribute->title)->setOption(FormOption::IS_TRANSLATED_VALUE,1) //setRequired for TinyMCE or any wysiwyg editor bugs
+                    default => $form->addText($attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required), // use default for back compability when not set
+                    InputType::COLOR_INPUT => $form->addText($attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required)->setHtmlType("color"),
+                    InputType::TEXTAREA => $form->addTextArea($attribute->id_name, $attribute->title) //setRequired for TinyMCE or any wysiwyg editor bugs
                 },
-                DataType::DATE_TIME => $this::createDateTime($form, $attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required)->setOption(FormOption::IS_DATE_TIME, 1)
+                DataType::DATE_TIME => $this::createDateTime($form, $attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required)->setOption(FormOption::IS_DATE_TIME, 1)->setHtmlAttribute("type", "date")
             };
             if($attribute->enabled_wysiwyg) $input->setOption(FormOption::ACTIVE_WYSIWYG, true);
             if($attribute->placeholder) $input->setHtmlAttribute("placeholder", $attribute->placeholder);

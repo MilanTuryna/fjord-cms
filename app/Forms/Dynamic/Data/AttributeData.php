@@ -21,12 +21,15 @@ class AttributeData extends DynamicAttribute
         DataType::FLOAT  => "Číslo s desetinným místem",
         DataType::STRING => "Textový řetězec",
         DataType::TRANSLATED_VALUE => "Textový řetězec s překladem",
+        DataType::DATE_TIME => "Datum",
         DataType::BOOL => "ANO/NE"
     ];
 
     const INPUT_TYPES = [
         InputType::CLASSIC_INPUT => "Bežný input (vstup)",
-        InputType::TEXTAREA => "Input jako textarea"
+        InputType::TEXTAREA => "Input jako textarea",
+        InputType::DATE_INPUT => "Datum",
+        InputType::COLOR_INPUT => "Výběr barvy (input typu color)",
     ];
 
     const GENERATED_VALUES = [

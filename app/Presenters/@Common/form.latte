@@ -76,7 +76,12 @@
                                     </span>
                     <br n:if="$input instanceof Nette\Forms\Controls\CheckboxList">
                     {if !$input->getOption(App\Forms\FormOption::IS_TRANSLATED_VALUE)}
-                        {input $input, class: 'form-control'}
+                        {if $input instanceof Nette\Forms\Controls\TextArea}
+                                <textarea n:name="$input->getName()" n:class="$input->getOption(App\Forms\FormOption::ACTIVE_WYSIWYG) ? 'active-wysiwyg' : '', 'form-control'">
+                                </textarea>
+                        {else}
+                            <input n:name="$input->getName()" n:class="($input->getOption(App\Forms\FormOption::ACTIVE_WYSIWYG) ? 'active_wysiwyg' : ''), 'form-control'">
+                        {/if}
                     {else}
                         {input $input, class: 'form-control d-none', data-translate-id: $input->getName()}
                     <ul class="nav nav-tabs" id="tabs-{$input->getName()}" role="tablist">
@@ -116,7 +121,7 @@
             <div class="row">
                 <div class="col-sm-2"></div>
                 <div class="col-sm-10">
-                    <span class="text-muted small" n:if="$input->getOption(App\Forms\FormOption::OPTION_NOTE)">{$input->getOption(App\Forms\ForOption::OPTION_NOTE)}</span>
+                    <span class="text-muted small" n:if="$input->getOption(App\Forms\FormOption::OPTION_NOTE)">{$input->getOption(App\Forms\FormOption::OPTION_NOTE)}</span>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" n:name="$input->getName()" value="1">
                         <label n:name="$input->getName()" n:class="$input->isRequired() ? 'required-label' : ''">

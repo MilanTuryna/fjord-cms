@@ -9,4 +9,5 @@ class InputType
     const CLASSIC_INPUT = "classic_input";
     const TEXTAREA = "textarea";
     const DATE_INPUT = "date_input";
+    const COLOR_INPUT = "color_input";
 }
