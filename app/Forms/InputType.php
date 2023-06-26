@@ -2,6 +2,11 @@
 
 namespace App\Forms;
 
+/**
+ * Interface InputType
+ * @package App\Forms
+ * @deprecated  (todo)
+ */
 interface InputType
 {
     const TEXT = "text";

@@ -9,7 +9,7 @@ use Nette\Utils\DateTime;
  * Interface DataType
  * @package App\Model\Database\EAV
  */
-interface DataType
+class DataType
 {
     const INTEGER = "integer";
     const FLOAT = "float";
@@ -18,4 +18,13 @@ interface DataType
     const DATE_TIME = DateTime::class;
     const ARBITRARY = "ARBITRARY";
     const BOOL = "bool";
+
+    /**
+     * @return string[]
+     */
+    public static function arr(): array {
+        return [
+            DataType::INTEGER, DataType::FLOAT, DataType::STRING, DataType::TRANSLATED_VALUE, DataType::DATE_TIME, DataType::ARBITRARY, DataType::BOOL
+        ];
+    }
 }

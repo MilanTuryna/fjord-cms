@@ -5,6 +5,8 @@ namespace App\Model\Templating\Schema;
 
 
 use App\Forms\Dynamic\Data\AttributeData;
+use App\Forms\Dynamic\Enum\InputType;
+use App\Model\Database\EAV\DataType;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
@@ -29,7 +31,8 @@ class IndexJsonSchema
             )->required(false),
             "pages" => Expect::listOf(Expect::structure(
                 [
-                    "page_title" => Expect::string(),
+                    "name" => Expect::string(),
+                    "route" => Expect::string(),
                     "description" => Expect::string()->required(false),
                     "output_content" => Expect::string(),
                     "output_type" => Expect::anyOf(["SRC", "PATH"])->required(false),
@@ -43,12 +46,16 @@ class IndexJsonSchema
                         "attributes" => Expect::listOf(
                             Expect::structure([
                                 "id_name" => Expect::string(),
-                                "data_type" => Expect::anyOf(["string", "bool", "int", "float"]),
+                                "title" => Expect::string(),
+                                "data_type" => Expect::anyOf(DataType::arr()),
+                                "input_type" => Expect::anyOf(InputType::arr()),
                                 "description" => Expect::string()->required(false),
                                 "placeholder" => Expect::string()->required(false),
+                                "allowed_translation" => Expect::bool()->required(false),
                                 "generate_value" => Expect::anyOf(array_keys(AttributeData::GENERATED_VALUES))->required(false),
                                 "preset_value" => Expect::string()->required(false),
-                                "required" => Expect::bool()
+                                "required" => Expect::bool()->required(false),
+                                "enabled_wysiwyg" => Expect::bool()->required(false),
                             ])
                         )
                     ]

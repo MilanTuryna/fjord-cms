@@ -13,6 +13,7 @@ use App\Model\Database\EAV\DynamicEntityFactory;
 use App\Model\Database\Repository\Admin\Entity\AccessLog;
 use App\Model\Database\Repository\Dynamic\EntityRepository;
 use App\Model\Database\Repository\Template\AuthorRepository;
+use App\Model\Database\Repository\Template\PageRepository;
 use App\Model\Database\Repository\Template\TemplateRepository;
 use App\Model\FileSystem\Templating\TemplateUploadDataProvider;
 use App\Model\Security\Auth\AdminAuthenticator;
@@ -29,10 +30,12 @@ class TemplatePresenter extends AdminBasePresenter
      * @param AdminAuthenticator $adminAuthenticator
      * @param TemplateRepository $templateRepository
      * @param TemplateUploadDataProvider $templateUploadDataProvider
+     * @param DynamicEntityFactory $dynamicEntityFactory
      * @param AuthorRepository $authorRepository
+     * @param PageRepository $pageRepository
      * @param string $permissionNode
      */
-    public function __construct(AdminAuthenticator $adminAuthenticator, private TemplateRepository $templateRepository, private TemplateUploadDataProvider $templateUploadDataProvider, private DynamicEntityFactory $dynamicEntityFactory, private AuthorRepository $authorRepository, string $permissionNode = AdminPermissions::DEVELOPER_SETTINGS)
+    public function __construct(AdminAuthenticator $adminAuthenticator, private TemplateRepository $templateRepository, private TemplateUploadDataProvider $templateUploadDataProvider, private DynamicEntityFactory $dynamicEntityFactory, private AuthorRepository $authorRepository, private PageRepository $pageRepository, string $permissionNode = AdminPermissions::DEVELOPER_SETTINGS)
     {
         parent::__construct($adminAuthenticator, $permissionNode);
     }
@@ -67,7 +70,7 @@ class TemplatePresenter extends AdminBasePresenter
      */
     public function createComponentInstallTemplateForm(): Form {
         return (new InstallTemplateForm($this, $this->templateRepository, $this->templateUploadDataProvider,
-            $this->dynamicEntityFactory, $this->authorRepository, new FormRedirect("view", [FormRedirect::LAST_INSERT_ID])))->create();
+            $this->dynamicEntityFactory, $this->authorRepository, $this->pageRepository, new FormRedirect("view", [FormRedirect::LAST_INSERT_ID])))->create();
     }
 
 }

@@ -16,7 +16,9 @@ use App\Model\Database\Repository\Dynamic\Entity\DynamicAttribute;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicEntity;
 use App\Model\Database\Repository\Template\AuthorRepository;
 use App\Model\Database\Repository\Template\Entity\Author;
+use App\Model\Database\Repository\Template\Entity\Page;
 use App\Model\Database\Repository\Template\Entity\Template;
+use App\Model\Database\Repository\Template\PageRepository;
 use App\Model\Database\Repository\Template\TemplateRepository;
 use App\Model\FileSystem\Templating\TemplateUploadDataProvider;
 use App\Model\FileSystem\Templating\TemplateUploadManager;
@@ -45,9 +47,10 @@ class InstallTemplateForm extends RepositoryForm
      * @param TemplateUploadDataProvider $templateUploadDataProvider
      * @param DynamicEntityFactory $dynamicEntityFactory
      * @param AuthorRepository $authorRepository
+     * @param PageRepository $pageRepository
      * @param FormRedirect $formRedirect
      */
-    #[Pure] public function __construct(Presenter $presenter, private TemplateRepository $templateRepository, private TemplateUploadDataProvider $templateUploadDataProvider, private DynamicEntityFactory $dynamicEntityFactory, private AuthorRepository $authorRepository, private FormRedirect $formRedirect)
+    #[Pure] public function __construct(Presenter $presenter, private TemplateRepository $templateRepository, private TemplateUploadDataProvider $templateUploadDataProvider, private DynamicEntityFactory $dynamicEntityFactory, private AuthorRepository $authorRepository, private PageRepository $pageRepository, private FormRedirect $formRedirect)
     {
         parent::__construct($presenter, $this->templateRepository);
 
@@ -136,12 +139,24 @@ class InstallTemplateForm extends RepositoryForm
                         $solidUploadManager = new TemplateUploadManager($this->templateUploadDataProvider, $uniqueName, TemplateUploadManager::MODE_SOLID);
                         FileSystem::rename($temporaryFolderPath, $solidUploadManager->getFolderPath());
                         $tempUploadManager->deleteUploads(); // delete temporary files
-                        $presenter = $this->presenter;
 
                         $this->successTemplate($form, $templateEntity->iterable(), new FormMessage("Daná šablona byla úspěšně nainstalovaná, nyní jí můžete nastavit.",
                             "Daná šablona nemohla být z neznámého důvodu nainstalovaná. Nastala chyba v databázi."),
-                            $this->formRedirect, null, [], false, true, function ($id) use($ulListData) {
-                            $this->presenter->flashMessage(Html::fromHtml("Byly vytvořeny následujicí vlastní entity: <br>") . HTMLUtils::createUlList($ulListData, false), FlashMessages::SUCCESS);
+                            $this->formRedirect, null, [], false, true, function ($id) use($ulListData, $parsedIndexJSON)
+                            {
+                                $this->presenter->flashMessage(Html::fromHtml("Byly vytvořeny následujicí vlastní entity: <br>")
+                                    . HTMLUtils::createUlList($ulListData, false), FlashMessages::SUCCESS);
+                                $pages = $parsedIndexJSON["pages"];
+                                foreach ($pages as $page) {
+                                    $pageEntity = new Page();
+                                    $pageEntity->name = $page["name"];
+                                    $pageEntity->route = $page["route"];
+                                    $pageEntity->description = $page["description"];
+                                    $pageEntity->output_content = $page["output_content"];
+                                    $pageEntity->output_type = $page["output_type"];
+                                    $pageEntity->template_id = $page["template_id"];
+                                    $this->pageRepository->insert($pageEntity->iterable());
+                                }
                         });
                     } else {
                         throw new ValidationException("");

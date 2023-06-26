@@ -7,7 +7,8 @@
   },
   "pages": [
     {
-      "page_title": "",
+      "name": "",
+      "route": "",
       "description": "",
       "output_content": "",
       "output_type": "enum(SRC, PATH)"
@@ -20,11 +21,14 @@
       "attributes": [{
         "id_name": "xx",
         "data_type": "string|bool|int|float",
+        "input_type": "enum(InputType::arr())",
         "description": "lorem ipsum dolor amet",
         "placeholder": "",
+        "allowed_translation": false,
         "generate_value": "created|edit|created_admin|edited_admin (AttributeData::GENERATED_VALUES)",
         "preset_value": "přednastavená hodnota",
-        "required": false
+        "required": false,
+        "enabled_wysiwyg": false
       }
       ]
     }
