@@ -24,7 +24,7 @@ class GalleryFacade
      * @param ItemsRepository $itemsRepository
      * @param int $galleryId
      */
-    public function __construct(public GalleryRepository $galleryRepository, public GalleryDataProvider $galleryDataProvider, public ItemsRepository $itemsRepository, public int $galleryId) {
+    #[Pure] public function __construct(public GalleryRepository $galleryRepository, public GalleryDataProvider $galleryDataProvider, public ItemsRepository $itemsRepository, public int $galleryId) {
         $this->galleryUploadManager = new GalleryUploadManager($this->galleryDataProvider, $this->galleryId);
     }
 
@@ -86,7 +86,14 @@ class GalleryFacade
     /**
      * @return GalleryFileInfo
      */
-    #[Pure] public function getGalleryFileInfo(): GalleryFileInfo {
+    public function getGalleryFileInfo(): GalleryFileInfo {
         return $this->galleryUploadManager->getGalleryFileInfo();
+    }
+
+    /**
+     * @return GalleryRepository
+     */
+    public function getGalleryRepository(): GalleryRepository {
+        return $this->galleryRepository;
     }
 }
