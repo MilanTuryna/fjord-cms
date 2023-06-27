@@ -14,7 +14,10 @@ use App\Model\Database\Repository\Settings\Entity\GlobalSettings;
 use App\Model\Database\Repository\SMTP\Entity\Mail;
 use App\Model\Database\Repository\SMTP\Entity\Server;
 use App\Model\Database\Repository\Template\Entity\Author;
+use App\Model\Database\Repository\Template\Entity\Page;
+use App\Model\Database\Repository\Template\Entity\PageVariable;
 use App\Model\Database\Repository\Template\Entity\Template;
+use App\Model\Templating\DataHint\FjordTemplateProviderData;
 use Exception;
 use Nette\Utils\DateTime;
 
@@ -37,6 +40,8 @@ abstract class DataStructure
         "fjord_gallery" => Gallery::class,
         "fjord_gallery_item" => GalleryItem::class,
         "fjord_template" => Template::class,
+        "fjord_template_page" => Page::class,
+        "fjord_template_page_variable" => PageVariable::class,
         "fjord_template_author" => Author::class,
         "fjord_smtp_mails" => Mail::class,
         "fjord_smtp_servers" => Server::class,
