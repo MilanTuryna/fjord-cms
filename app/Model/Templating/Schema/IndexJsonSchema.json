@@ -11,7 +11,17 @@
       "route": "",
       "description": "",
       "output_content": "",
-      "output_type": "enum(SRC, PATH)"
+      "output_type": "enum(SRC, PATH)",
+      "variables": [
+        {
+          "id_name": "",
+          "title": "",
+          "description": "",
+          "content": "",
+          "input_type": "enum(InputType::arr())",
+          "required": false
+        }
+      ]
     }
   ],
   "eav": [

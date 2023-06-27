@@ -7,6 +7,7 @@ namespace App\Model\Templating\Schema;
 use App\Forms\Dynamic\Data\AttributeData;
 use App\Forms\Dynamic\Enum\InputType;
 use App\Model\Database\EAV\DataType;
+use App\Model\Database\Repository\Template\Entity\PageVariable;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
@@ -36,6 +37,16 @@ class IndexJsonSchema
                     "description" => Expect::string()->required(false),
                     "output_content" => Expect::string(),
                     "output_type" => Expect::anyOf(["SRC", "PATH"])->required(false),
+                    "variables" => Expect::listOf(Expect::structure( // PageVariable
+                        [
+                            PageVariable::id_name => Expect::string(),
+                            PageVariable::title => Expect::string(),
+                            PageVariable::description => Expect::string()->required(false),
+                            PageVariable::content => Expect::string()->required(false),
+                            PageVariable::input_type => Expect::anyOf(InputType::arr()),
+                            PageVariable::required => Expect::bool()->required(false),
+                        ]
+                    ))->required(false)
                 ]
             )),
             "eav" => Expect::listOf(
