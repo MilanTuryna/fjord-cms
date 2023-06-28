@@ -14,6 +14,7 @@ use App\Model\Database\EAV\DynamicEntityFactory;
 use App\Model\Database\Repository\Admin\Entity\AccessLog;
 use App\Model\Database\Repository\Dynamic\EntityRepository;
 use App\Model\Database\Repository\Template\AuthorRepository;
+use App\Model\Database\Repository\Template\Entity\Template;
 use App\Model\Database\Repository\Template\PageRepository;
 use App\Model\Database\Repository\Template\PageVariableRepository;
 use App\Model\Database\Repository\Template\TemplateRepository;
@@ -58,7 +59,9 @@ class TemplatePresenter extends AdminBasePresenter
         foreach ($templates as $template) {
             $authors[$template->author_id] = $template->related("fjord_template_author.id")->fetch();
         }
+        $this->template->templates = $templates;
         $this->template->authors = $authors;
+        $this->template->usedTemplate = $this->templateRepository->findByColumn(Template::used, 1)->fetch();
     }
 
     /**

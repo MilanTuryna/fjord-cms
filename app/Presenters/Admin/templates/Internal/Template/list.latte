@@ -1,0 +1,42 @@
+{block title}
+Seznam nainstalovaných šablon
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [
+":Admin:Overview:home" => "Administrace",
+":Admin:Internal:Main:home" => "Interní administrace",
+":Admin:Internal:Template:list" => "Seznam nainstalovaných šablon",
+]}
+{/block}
+{block content}
+<div class="card classic-shadow default-margin-bot" n:if="$usedTemplate">
+    <div class="card-body">
+        <h5 class="title">Aktuálně zvolená šablona</h5>
+        <ul>
+            <li>Název šablony: {$usedTemplate->title}</li>
+            <li>Zvolená od doby: {$usedTemplate->edited|date:'d.m.Y H:i'}</li>
+            <li>Popis šablony: {$usedTemplate->description}</li>
+        </ul>
+    </div>
+</div>
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Seznam nainstalovaných šablon</h5>
+        <div class="row">
+            <div n:foreach="$templates as $template" n:class="'col-sm-3'">
+                <div n:class="($template->used ? 'alert-success' : ''), 'card classic-shadow default-margin-bot'">
+                    <div class="card-body">
+                        <h6 class="title">{$template->title} ({$template->version})</h6>
+                        <div class="card-text">
+                            {$template->description}
+                            <hr>
+                            <span class="text-muted small">Nahrán: {$template->created|date:'d.m.Y H:i'}</span>
+                            <a n:href=":Admin:Internal:Template:view $template->id" class="btn btn-primary float-right mt-4">Nastavení</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
