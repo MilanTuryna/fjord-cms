@@ -72,6 +72,28 @@ class DynamicEntityFactory
         return (bool)$this->entityRepository->findByColumn(DynamicEntity::name, $name)->fetch();
     }
 
+    public function getEntitiesSchema(): array {
+        $dynEntities = $this->entityRepository->findAll()->fetchAll();
+        $result = [];
+        foreach ($dynEntities as $entity) {
+            $insideResult =[
+                "entity_name" => $entity->name,
+                "entity_description" => $entity->description,
+                "entity_menu_item_name" => $entity->menu_item_name
+            ];
+            $attributes = $this->attributeRepository->findByColumn(DynamicAttribute::entity_id, $entity->id)->fetchAll();
+            foreach ($attributes as $attribute) {
+                if(!isset($dynArray["attributes"])) $dynArray["attributes"] = [];
+                $arr = $attribute->toArray();
+                unset($arr["id"]);
+                unset($arr["entity_id"]);
+                $insideResult["attributes"][] = $arr;
+            }
+            $result[] = $insideResult;
+        }
+        return $result;
+    }
+
     /**
      * @throws EntityNotFoundException
      */

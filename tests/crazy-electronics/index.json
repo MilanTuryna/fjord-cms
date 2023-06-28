@@ -1,0 +1,793 @@
+{
+  "title":"CrazyElectronics",
+  "description":"Šablona webu pro skupinu CrazyElectronics s obsahem jednoduché databázové správy (EAV) - akce, aktuality, atd. ",
+  "author":{
+    "name":"Milan Turyna",
+    "email":"milan@turyna.eu",
+    "website":"https://turyna.eu"
+  },
+  "pages":[
+    {
+      "name":"Hlavní stránka",
+      "route":"/",
+      "description":"Hlavní stránka (domovská stránka)",
+      "output_content":"/pages/individual/index.latte",
+      "output_type":"PATH",
+      "variables":[
+        {
+          "id_name":"headerText",
+          "title":"Úvodní hlavička",
+          "description":"",
+          "content":"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Phasellus faucibus molestie nisl. Aliquam erat volutpat. Curabitur vitae diam non enim vestibulum interdum.",
+          "input_type":"textarea"
+        },
+        {
+          "id_name":"primaryButton",
+          "title":"Primární tlačítko",
+          "description":"Primární tlačítko (vlevo)",
+          "content":"Další informace",
+          "input_type":"classic_input"
+        },
+        {
+          "id_name":"secondaryButton",
+          "title":"Sekundární tlačítko",
+          "description":"Sekundární tlačítko (napravo)",
+          "content":"Spolupráce",
+          "input_type":"classic_input"
+        }
+      ]
+    },
+    {
+      "name":"Seznam akcí",
+      "route":"/akce[/<page>]",
+      "description":"Seznam akcí",
+      "output_content":"/pages/individual/events/list.latte",
+      "output_type":"PATH"
+    },
+    {
+      "name":"Proběhlé akce",
+      "route":"/akce/probehle",
+      "description":"Seznam všech akcí, které proběhly",
+      "output_content":"/pages/individual/events/finished.latte",
+      "output_type":"PATH"
+    },
+    {
+      "name":"Zobrazit akci",
+      "route":"/akce/zobrazit/<eventId>",
+      "description":"Stránka věnovaná samostatné akci dle zadaného ID",
+      "output_content":"/pages/individual/events/view.latte",
+      "output_type":"PATH"
+    },
+    {
+      "name":"Aktuality/články",
+      "route":"/aktuality[/<page>]",
+      "description":"",
+      "output_content":"/pages/individual/news.latte",
+      "output_type":"PATH"
+    },
+    {
+      "name":"Seznam galerií",
+      "route":"/galerie",
+      "description":"Seznam galerií",
+      "output_content":"/pages/individual/galleries/list.latte",
+      "output_type":"PATH"
+    },
+    {
+      "name":"Zobrazení dané galerie",
+      "route":"/galerie/zobrazit/<galleryId>",
+      "description":"Zobrazení galerie dle daného galleryId",
+      "output_content":"/pages/individual/galleries/view.latte",
+      "output_type":"PATH"
+    },
+    {
+      "name":"Dynamická stránka",
+      "route":"/<page>",
+      "description":"Daná routa je napojena na entitu stránky a umožňuje vytvářet stránky",
+      "output_content":"/pages/individual/page.latte",
+      "output_type":"PATH"
+    }
+  ],
+  "eav":[
+    {
+      "entity_name":"Section",
+      "entity_description":"Entita reprezentující sekce na hlavní stránce webu",
+      "entity_menu_item_name":"Správa sekcí",
+      "attributes":[
+        {
+          "id_name":"title",
+          "title":"Název sekce",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"Název sekce se nezobrazuje v samotném výpisu. Nadpis je počítán v obsahu.",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":1,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"background",
+          "title":"Pozadí sekce",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"Pozadí sekce udáváno jako barva v CSS formátu. Povolené jsou i přechody.",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":1,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"text_color",
+          "title":"Barva textu",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":1,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"content",
+          "title":"Obsah sekce",
+          "data_type":"string",
+          "input_type":"textarea",
+          "description":"Obsah sekce vč. nadpisů. Možnost používání WYSIWYG editoru a HTML tagů.",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":1
+        },
+        {
+          "id_name":"anchor",
+          "title":"HTML Kotva",
+          "data_type":"ARBITRARY",
+          "input_type":"classic_input",
+          "description":"Používáno při odkazu na přesně danou část stránky. Kotvu piště malým písmenem a bez diakritiky.",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"enabled",
+          "title":"Je sekce zapnutá?",
+          "data_type":"bool",
+          "input_type":"classic_input",
+          "description":"V případě, že sekce bude vypnutá, nebude zobrazeno ve výpisu.",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"priority",
+          "title":"Priorita sekce",
+          "data_type":"integer",
+          "input_type":"classic_input",
+          "description":"Priorita sekce určuje v jakém pořadí budou sekce zobrazeny ve výpisu. Čím výš - tím výš.",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":0
+        }
+      ]
+    },
+    {
+      "entity_name":"MenuItem",
+      "entity_description":"Reprezentuje jednotlivé položky v navigaci",
+      "entity_menu_item_name":"Navigační kolonky",
+      "attributes":[
+        {
+          "id_name":"name",
+          "title":"Název kolonky",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":1,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"href",
+          "title":"Odkaz (URL)",
+          "data_type":"ARBITRARY",
+          "input_type":"classic_input",
+          "description":"Odkaz na danou stránku",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":1,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"target_blank",
+          "title":"Otevřít v novém okně",
+          "data_type":"bool",
+          "input_type":"classic_input",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"priority",
+          "title":"Priorita seřazení ",
+          "data_type":"integer",
+          "input_type":"classic_input",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":0
+        }
+      ]
+    },
+    {
+      "entity_name":"Action",
+      "entity_description":"Reprezentuje jednotlivé akce na stránce",
+      "entity_menu_item_name":"Správa akcí",
+      "attributes":[
+        {
+          "id_name":"name",
+          "title":"Název akce",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":1,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"logo",
+          "title":"Ilustrační foto (URL)",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"Zadejte odkaz k ilustračnímu fotu zobrazenému vedle akce.",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"background_color",
+          "title":"Barva na pozadí",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"V případě zvolení obrázku je obrázek před barvou upřednostněn.",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":1,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"text_color",
+          "title":"Barva textu",
+          "data_type":"string",
+          "input_type":"color_input",
+          "description":"Doporučujeme zvolit barvu textu padnoucí k barvě pozadí. Nejlépe zvolíte pomocí HEX kódu.",
+          "placeholder":"#ffffff",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"map",
+          "title":"Poloha akce",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"Adresa či místo, kde se akce uskuteční",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"description",
+          "title":"Popis akce",
+          "data_type":"string",
+          "input_type":"textarea",
+          "description":"Podrobnější popis akce je viděn až po rozkliknutí dané akce",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":1
+        },
+        {
+          "id_name":"time",
+          "title":"Uskuteční se v",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"Zadejte čas v akce (bez datumu)",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"date_from",
+          "title":"Uskuteční se dne/od",
+          "data_type":"Nette\\Utils\\DateTime",
+          "input_type":"date_input",
+          "description":"Zadejte den uskutečnění akce, případně odkdy se akce má konat.",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":1,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"date_to",
+          "title":"Do (datum)",
+          "data_type":"Nette\\Utils\\DateTime",
+          "input_type":"date_input",
+          "description":"Dokdy daná akce bude probíhat?",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"active",
+          "title":"Je akce aktuální?",
+          "data_type":"bool",
+          "input_type":"classic_input",
+          "description":"V případě vypnutí, nebude akce zobrazena mezi aktualitami ani v zadaných dobách.",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":0
+        }
+      ]
+    },
+    {
+      "entity_name":"SocialSite",
+      "entity_description":"Entita reprezentující sociální sítě a jejich odkazy k nim",
+      "entity_menu_item_name":"Sociální sítě",
+      "attributes":[
+        {
+          "id_name":"name",
+          "title":"Název sociální sítě",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"",
+          "placeholder":"Např. Facebook/Twitter",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":1,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"image_logo",
+          "title":"Obrázek/logo sociální sítě (URL)",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"Doporučujeme volit ikonu čtvercovitého charakteru  (500x500, 300x300 atd.). Zároveň ladicí s ostatními sociálními sítěmi.",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":1,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"href",
+          "title":"Odkaz na sociální síť",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":1,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"target_blank",
+          "title":"Otevírat v novém okně?",
+          "data_type":"bool",
+          "input_type":"classic_input",
+          "description":"Máme otevírat odkaz v novém okně při zakliknutí?",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":0
+        }
+      ]
+    },
+    {
+      "entity_name":"News",
+      "entity_description":"Entita reprezentující aktuality či články na webu",
+      "entity_menu_item_name":"Aktuality/články",
+      "attributes":[
+        {
+          "id_name":"name",
+          "title":"Název článku",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":1,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"active",
+          "title":"Zobrazit článek",
+          "data_type":"bool",
+          "input_type":"classic_input",
+          "description":"Má být článek veřejně zobrazen?",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"content",
+          "title":"Obsah článku",
+          "data_type":"string",
+          "input_type":"textarea",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":1
+        },
+        {
+          "id_name":"author",
+          "title":"Autor článku",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"created_admin",
+          "required":1,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"created",
+          "title":"Datum vytvoření",
+          "data_type":"Nette\\Utils\\DateTime",
+          "input_type":"date_input",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"created",
+          "required":1,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"edited",
+          "title":"Datum poslední editace",
+          "data_type":"Nette\\Utils\\DateTime",
+          "input_type":"date_input",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"edited",
+          "required":1,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"description",
+          "title":"Popis článku",
+          "data_type":"string",
+          "input_type":"textarea",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":1,
+          "enabled_wysiwyg":0
+        }
+      ]
+    },
+    {
+      "entity_name":"FooterColumn",
+      "entity_description":"Reprezentuje jednotlivé sloupce v patičce",
+      "entity_menu_item_name":"Obsah patičky",
+      "attributes":[
+        {
+          "id_name":"title",
+          "title":"Nadpis sloupce",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":1,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"text_color",
+          "title":"Barva nadpisu",
+          "data_type":"string",
+          "input_type":"color_input",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"content",
+          "title":"Obsah sloupce",
+          "data_type":"string",
+          "input_type":"textarea",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":1
+        }
+      ]
+    },
+    {
+      "entity_name":"GlobalSettings",
+      "entity_description":"Entita reprezentuje nastavení běžné nastavení ale i SEO, slouží také jako záznam historie nastavení (stejně jako běžné nastavení v CMS). Tzn. bude vždy použito nejnovější nastavení.",
+      "entity_menu_item_name":"Běžné nastavení",
+      "attributes":[
+        {
+          "id_name":"head_code",
+          "title":"Kód hlavičky",
+          "data_type":"string",
+          "input_type":"textarea",
+          "description":"Umožňuje přidávat externí kód k hlavičce a aplikovat tak skripty či služby třetí strany. Editujte pouze v případě, že jste si svojí činností jistí.",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"footer_code",
+          "title":"Kód přidaný pod patičku",
+          "data_type":"string",
+          "input_type":"textarea",
+          "description":"Stejné pravidla jako při hlavičce.",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"edited_admin",
+          "title":"Editoval/a",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"edited_admin",
+          "required":1,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"edited_time",
+          "title":"Čas editace",
+          "data_type":"Nette\\Utils\\DateTime",
+          "input_type":"date_input",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"edited",
+          "required":1,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"footer_signature",
+          "title":"Podpis patičky",
+          "data_type":"string",
+          "input_type":"textarea",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":1
+        }
+      ]
+    },
+    {
+      "entity_name":"Page",
+      "entity_description":"Reprezentuje jednotlivé stránky na webu. Ty následně mohou být zvoleny v navigačních kolonkách.",
+      "entity_menu_item_name":"Správa stránek",
+      "attributes":[
+        {
+          "id_name":"title",
+          "title":"Název stránky",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":1,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"description",
+          "title":"Popis stránky",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"content",
+          "title":"Obsah stránky",
+          "data_type":"string",
+          "input_type":"textarea",
+          "description":"Obsah stránky vč. nadpisu.",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":1
+        },
+        {
+          "id_name":"content_code",
+          "title":"Obsah stránky (HTML)",
+          "data_type":"string",
+          "input_type":"textarea",
+          "description":"V případě nastavení tohoto atributu bude původní obsah v Wysiwyg editoru nepoužit a bude přepsán tímto. Doporučujeme pouze zkušeným uživatelům.",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"edited",
+          "title":"Naposledy upravil",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"edited_admin",
+          "required":1,
+          "enabled_wysiwyg":0
+        }
+      ]
+    },
+    {
+      "entity_name":"Contact",
+      "entity_description":"Reprezentuje kontakty zmíněné na webu",
+      "entity_menu_item_name":"Kontakty",
+      "attributes":[
+        {
+          "id_name":"name",
+          "title":"Jméno (vč. přijmení)",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":1,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"email",
+          "title":"E-mailová adresa",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"telephone",
+          "title":"Telefonní číslo",
+          "data_type":"string",
+          "input_type":"classic_input",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":0
+        },
+        {
+          "id_name":"priority",
+          "title":"Priorita seřazení",
+          "data_type":"integer",
+          "input_type":"classic_input",
+          "description":"",
+          "placeholder":"",
+          "allowed_translation":0,
+          "preset_value":"",
+          "generate_value":"",
+          "required":0,
+          "enabled_wysiwyg":0
+        }
+      ]
+    }
+  ],
+  "version":"1.0"
+}

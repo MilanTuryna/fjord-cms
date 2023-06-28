@@ -14,10 +14,13 @@ use App\Model\Database\Repository\Dynamic\AttributeRepository;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicAttribute;
 use App\Model\Database\Repository\Dynamic\EntityRepository;
 use App\Model\Database\Repository\Dynamic\ValueRepository;
+use App\Model\Http\Responses\PrettyJsonResponse;
 use App\Model\Security\Auth\AdminAuthenticator;
 use App\Presenters\AdminBasePresenter;
 use JetBrains\PhpStorm\NoReturn;
 use Nette\Application\AbortException;
+use Nette\Application\Responses\JsonResponse;
+use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Multiplier;
 use Nette\Utils\Json;
@@ -44,7 +47,6 @@ class EAVPresenter extends AdminBasePresenter
     }
 
     /**
-     * @throws JsonException
      */
     public function renderView(int $id) {
         $dynEntity = $this->template->dynamicEntity = $this->entityRepository->findById($id);
@@ -53,7 +55,7 @@ class EAVPresenter extends AdminBasePresenter
           "entity_description" => $dynEntity->description,
           "entity_item_name" => $dynEntity->menu_item_name,
         ];
-        unset($dynArray["id"]);
+        unset($dynArray["id"]); // todo
         $attributes = $this->template->attributes = $this->attributeRepository->findByColumn(DynamicAttribute::entity_id, $id)->fetchAll();
         foreach ($attributes as $attribute) {
             if(!isset($dynArray["attributes"])) $dynArray["attributes"] = [];
@@ -64,6 +66,14 @@ class EAVPresenter extends AdminBasePresenter
         }
         $this->template->valuesCount = $this->valueRepository->findByColumn(DynamicAttribute::entity_id, $id)->count("id");
         $this->template->entityJSON = stripslashes(json_encode($dynArray, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+    }
+
+    /**
+     * @throws AbortException
+     */
+    #[NoReturn] public function renderEntitySchema(): void {
+        $response = new PrettyJsonResponse(   $this->dynamicEntityFactory->getEntitiesSchema(), null, true, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $this->sendResponse($response);
     }
 
     /**

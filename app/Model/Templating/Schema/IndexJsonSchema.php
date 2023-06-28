@@ -36,15 +36,15 @@ class IndexJsonSchema
                     "route" => Expect::string(),
                     "description" => Expect::string()->required(false),
                     "output_content" => Expect::string(),
-                    "output_type" => Expect::anyOf(["SRC", "PATH"])->required(false),
+                    "output_type" => Expect::anyOf("SRC", "PATH")->required(false),
                     "variables" => Expect::listOf(Expect::structure( // PageVariable
                         [
                             PageVariable::id_name => Expect::string(),
                             PageVariable::title => Expect::string(),
                             PageVariable::description => Expect::string()->required(false),
                             PageVariable::content => Expect::string()->required(false),
-                            PageVariable::input_type => Expect::anyOf(InputType::arr()),
-                            PageVariable::required => Expect::bool()->required(false),
+                            PageVariable::input_type => Expect::anyOf(...InputType::arr()),
+                            PageVariable::required => Expect::anyOf(true, false, 1, 0)->castTo('bool')->required(false),
                         ]
                     ))->required(false)
                 ]
@@ -53,20 +53,21 @@ class IndexJsonSchema
                 Expect::structure(
                     [
                         "entity_name" => Expect::string(),
+                        "entity_menu_item_name" => Expect::string(),
                         "entity_description" => Expect::string()->required(false),
                         "attributes" => Expect::listOf(
                             Expect::structure([
                                 "id_name" => Expect::string(),
                                 "title" => Expect::string(),
-                                "data_type" => Expect::anyOf(DataType::arr()),
-                                "input_type" => Expect::anyOf(InputType::arr()),
+                                "data_type" => Expect::anyOf(...DataType::arr()),
+                                "input_type" => Expect::anyOf(...InputType::arr()),
                                 "description" => Expect::string()->required(false),
                                 "placeholder" => Expect::string()->required(false),
-                                "allowed_translation" => Expect::bool()->required(false),
-                                "generate_value" => Expect::anyOf(array_keys(AttributeData::GENERATED_VALUES))->required(false),
+                                "allowed_translation" => Expect::anyOf(true, false, 1, 0)->castTo('bool')->required(false),
+                                "generate_value" => Expect::anyOf(...[...array_keys(AttributeData::GENERATED_VALUES), ""])->required(false),
                                 "preset_value" => Expect::string()->required(false),
-                                "required" => Expect::bool()->required(false),
-                                "enabled_wysiwyg" => Expect::bool()->required(false),
+                                "required" => Expect::anyOf(true, false, 1, 0)->castTo('bool')->required(false),
+                                "enabled_wysiwyg" => Expect::anyOf(true, false, 1, 0)->castTo('bool')->required(false),
                             ])
                         )
                     ]

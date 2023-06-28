@@ -9,7 +9,9 @@ interface FormOption
     const OPTION_NOTE = "option_note";
     const DELETE_LINK = "___delete_link___"; // use on submit button
 
-    const ACTIVE_WYSIWYG = "ACTIVE_WYSIWYG";
+    const ACTIVE_WYSIWYG = "___active_wysiwyg___";
+
+    const REMOVE_LABEL = "___remove_label___";
 
     const BOTTOM_LINE = "___bottom_line___";
     const UPPER_LINE = "___upper_line___";

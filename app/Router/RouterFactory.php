@@ -22,13 +22,9 @@ final class RouterFactory
 	public function __construct(private TemplateRepository $templateRepository, private PageRepository $pageRepository) {
     }
 
-	public function createRouter(): RouteList
+	public static function createRouter(): RouteList
 	{
 		$router = new RouteList;
-
-
-
-		$router->withModule("front")->addRoute("'<path .+>", "Generator:");
 
 		$router->withModule("Admin")
             ->addRoute('/admin', 'Overview:home')
@@ -44,8 +40,11 @@ final class RouterFactory
             ->addRoute("/admin/internal/eav/entity/new", "Internal:EAV:new")
             ->addRoute("/admin/internal/eav/entity/remove/<id>", "Internal:EAV:remove")
 
+            ->addRoute("/admin/internal/eav/schema", "Internal:EAV:entitySchema")
+
             ->addRoute("/admin/internal/template/list", "Internal:Template:list")
             ->addRoute("/admin/internal/template/install", "Internal:Template:install")
+            ->addRoute("/admin/internal/template/schema-generator", "Internal:Template:generateSchema") // schema
             // todo: history backups
             ->addRoute("/admin/internal/template/view/<id>", "Internal:Template:view")
             ->addRoute("/admin/internal/template/remove/<id>", "Internal:Template:remove")
@@ -79,6 +78,7 @@ final class RouterFactory
             ->addRoute("/admin/settings", "Settings:overview")
             ->addRoute("/admin/settings/history/<id>", "Settings:history")
         ;
+        $router->withModule("Front")->addRoute("<path .+>", "Generator:renderUrl");
 		return $router;
 	}
 }

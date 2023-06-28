@@ -28,6 +28,7 @@
     {
       "entity_name": "Article",
       "entity_description": "Entita pro správu článků",
+      "entity_menu_item_name": "",
       "attributes": [{
         "id_name": "xx",
         "data_type": "string|bool|int|float",

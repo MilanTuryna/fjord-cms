@@ -16,10 +16,12 @@ class FjordTemplateProviderData
     const DYNAMIC_ENTITY_FACTORY = "dynamicEntityFactory";
     const SETTINGS = "settings" ;
     const PARAMETERS = "parameters";
+    const VARIABLES = "variables";
 
     public GalleryFacadeFactory $galleryFacadeFactory;
     public DynamicEntityFactory $dynamicEntityFactory;
     public GlobalSettings|ActiveRow|null $settings;
-    public array $parameters; // associative array
+    public array $parameters; // parsed query parameters from URL in associative array (probably, untested, it's from Nette Router -> match())
     public Template|ActiveRow|null $templateInfo;
+    public array $variables; // variable settings for selected page, in associative array [PageVariable::id_name => PageVariable::content]
 }

@@ -6,6 +6,7 @@ namespace App\Presenters\Admin\Internal;
 
 use App\Forms\FormMessage;
 use App\Forms\FormRedirect;
+use App\Forms\Template\CreateJsonSchemaForm;
 use App\Forms\Template\InstallTemplateForm;
 use App\Model\Admin\Permissions\Specific\AdminPermissions;
 use App\Model\Admin\Permissions\Utils;
@@ -73,4 +74,10 @@ class TemplatePresenter extends AdminBasePresenter
             $this->dynamicEntityFactory, $this->authorRepository, $this->pageRepository, new FormRedirect("view", [FormRedirect::LAST_INSERT_ID])))->create();
     }
 
+    /**
+     * @return Form
+     */
+    public function createComponentGenerateSchemaForm(): Form {
+        return (new CreateJsonSchemaForm($this, $this->dynamicEntityFactory))->create();
+    }
 }

@@ -1,0 +1,27 @@
+{block title}
+Vygenerovat schéma pro nový balíček
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [
+":Admin:Overview:home" => "Administrace",
+":Admin:Internal:Main:home" => "Interní administrace",
+":Admin:Internal:Template:list" => "Seznam vlastních šablon",
+"this" => "Vygenerovat schéma pro nový balíček"
+]}
+{/block}
+{block content}
+{foreach $flashes as $flash}
+<div class="card classic-shadow default-margin-bot" n:if="$flash instanceof App\Model\UI\FlashMessages\GeneratedJsonSchema">
+    <div class="card-body">
+        <h5 class="title">Výsledek:</h5>
+        <textarea readonly rows="30" class="bg-light border w-100 p-4 text-secondary">{$flash->convertedText}</textarea>
+    </div>
+</div>
+{/foreach}
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Vygenerovat schéma pro nový balíček</h5>
+        {include TEMPLATE_COMMON . "/form.latte", form: "generateSchemaForm"}
+    </div>
+</div>
+{/block}

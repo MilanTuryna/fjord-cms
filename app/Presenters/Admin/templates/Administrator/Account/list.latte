@@ -25,7 +25,7 @@ Administrátoři
             <tr>
                 <td><a n:href=":Admin:Administrator:Account:view, $log->admin_id" class="blue-href">{$administrators[$log->admin_id]->username}</a></td>
                 <td>{$log->device}</td>
-                <td>{$log->time|date:'d.m.Y H:i'}</td>
+                <td>{$log->created|date:'d.m.Y H:i'}</td>
                 <td>{$log->ip}</td>
             </tr>
             {/foreach}
