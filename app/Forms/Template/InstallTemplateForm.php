@@ -17,8 +17,10 @@ use App\Model\Database\Repository\Dynamic\Entity\DynamicEntity;
 use App\Model\Database\Repository\Template\AuthorRepository;
 use App\Model\Database\Repository\Template\Entity\Author;
 use App\Model\Database\Repository\Template\Entity\Page;
+use App\Model\Database\Repository\Template\Entity\PageVariable;
 use App\Model\Database\Repository\Template\Entity\Template;
 use App\Model\Database\Repository\Template\PageRepository;
+use App\Model\Database\Repository\Template\PageVariableRepository;
 use App\Model\Database\Repository\Template\TemplateRepository;
 use App\Model\FileSystem\Templating\TemplateUploadDataProvider;
 use App\Model\FileSystem\Templating\TemplateUploadManager;
@@ -29,6 +31,7 @@ use JetBrains\PhpStorm\Pure;
 use Nette\Application\UI\Presenter;
 use Nette\Schema\Processor;
 use Nette\Schema\ValidationException;
+use Nette\Utils\DateTime;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
@@ -48,9 +51,12 @@ class InstallTemplateForm extends RepositoryForm
      * @param DynamicEntityFactory $dynamicEntityFactory
      * @param AuthorRepository $authorRepository
      * @param PageRepository $pageRepository
+     * @param PageVariableRepository $pageVariableRepository
      * @param FormRedirect $formRedirect
      */
-    #[Pure] public function __construct(Presenter $presenter, private TemplateRepository $templateRepository, private TemplateUploadDataProvider $templateUploadDataProvider, private DynamicEntityFactory $dynamicEntityFactory, private AuthorRepository $authorRepository, private PageRepository $pageRepository, private FormRedirect $formRedirect)
+    #[Pure] public function __construct(Presenter $presenter, private TemplateRepository $templateRepository, private TemplateUploadDataProvider $templateUploadDataProvider,
+                                        private DynamicEntityFactory $dynamicEntityFactory, private AuthorRepository $authorRepository, private PageRepository $pageRepository, private PageVariableRepository $pageVariableRepository,
+                                        private FormRedirect $formRedirect)
     {
         parent::__construct($presenter, $this->templateRepository);
 
@@ -77,44 +83,49 @@ class InstallTemplateForm extends RepositoryForm
             $zipArchive = new \ZipArchive();
             $compressedFile = $data->installation_zip->getTemporaryFile();
             $result = $zipArchive->open($compressedFile);
-            if($result)
-                $uniqueName = TemplateUploadManager::createUniqueName($zipName);
+            if($result) {
+                $uniqueName = TemplateUploadManager::createUniqueName(implode("", explode(".", $zipName)));
                 $tempUploadManager = new TemplateUploadManager($this->templateUploadDataProvider, $uniqueName, TemplateUploadManager::MODE_TEMP);
-                $tempUploadManager->add($data->installation_zip, $uniqueName. ".zip");
+                $tempUploadManager->add($data->installation_zip, $uniqueName . ".zip");
                 $temporaryFolderPath = $tempUploadManager->getFolderPath();
                 $zipArchive->extractTo($temporaryFolderPath);
                 $rawIndexJSON = null;
                 foreach ($tempUploadManager->getUploads() as $file) {
-                    if(str_ends_with(strtolower($file), "index.json")) {
+                    if (str_ends_with(strtolower($file), "index.json")) {
                         $rawIndexJSON = FileSystem::read($file);
                         break;
                     }
                 }
-                if(!$rawIndexJSON) $form->addError("V instalačním balíčku nebyl nalezen hlavní soubor inicializace. (index.json)");
-                $parsedIndexJSON = Json::decode($rawIndexJSON);
+                if (!$rawIndexJSON) $form->addError("V instalačním balíčku nebyl nalezen hlavní soubor inicializace. (index.json)");
+                $parsedIndexJSON = json_decode($rawIndexJSON, true);
                 $processor = new Processor();
                 try {
                     $validation = $processor->process(IndexJsonSchema::getSchema(), $parsedIndexJSON);
-                    if($validation) {
+                    if ($validation) {
                         $ulListData = [];
                         $entities = $parsedIndexJSON["eav"];
                         foreach ($entities as $entity) {
-                            if($this->dynamicEntityFactory->isEntityExist($entity["entity_name"])) {
+                            if ($this->dynamicEntityFactory->isEntityExist($entity["entity_name"])) {
                                 $form->addError("Došlo ke kolizi názvů jednotlivých EAV entit. Instalace balíčku nemůže pokračovat.");
                             }
                             $entityEntity = new DynamicEntity();
                             $entityEntity->name = $entity["entity_name"];
-                            $entityEntity->description = $entity["entity_description"];
+                            if($entity["entity_description"]) $entityEntity->description = $entity["entity_description"];
+                            $entityEntity->created = new DateTime();
+                            $entityEntity->edited = new DateTime();
+                            $entityEntity->generated_by = $uniqueName;
                             $entityEntity->menu_item_name = $entity["entity_menu_item_name"];
                             $attributeEntities = [];
                             foreach ($entity["attributes"] as $attribute) {
                                 $attributeEntity = new DynamicAttribute();
                                 $attributeEntity->id_name = $attribute["id_name"];
-                                $attributeEntity->data_type = $attribute["data_name"];
-                                if(isset($attribute["description"])) $attributeEntity->description = $attribute["description"];
-                                if(isset($attribute["placeholder"])) $attributeEntity->placeholder = $attribute["placeholder"];
-                                if(isset($attribute["generate_value"])) $attributeEntity->placeholder = $attribute["placeholder"];
-                                if(isset($attribute["preset_value"])) $attributeEntity->placeholder = $attribute["placeholder"];
+                                $attributeEntity->data_type = $attribute["data_type"];
+                                $attributeEntity->input_type = $attribute["input_type"];
+                                if (isset($attribute["description"])) $attributeEntity->description = $attribute["description"];
+                                if (isset($attribute["placeholder"])) $attributeEntity->placeholder = $attribute["placeholder"];
+                                if (isset($attribute["generate_value"])) $attributeEntity->placeholder = $attribute["placeholder"];
+                                if (isset($attribute["preset_value"])) $attributeEntity->placeholder = $attribute["placeholder"];
+                                if(isset($attribute["enabled_wysiwyg"])) $attributeEntity->enabled_wysiwyg = $attribute["enabled_wysiwyg"];
                                 $attributeEntity->required = $attribute["required"];
                                 $attributeEntities[] = $attributeEntity;
                             }
@@ -124,17 +135,18 @@ class InstallTemplateForm extends RepositoryForm
 
                         // create author entity
                         $authorEntity = new Author();
-                        $authorEntity->name = $parsedIndexJSON["name"];
-                        $authorEntity->website = $parsedIndexJSON["website"];
-                        $authorEntity->email = $parsedIndexJSON["email"];
+                        $authorEntity->name = $parsedIndexJSON["author"]["name"];
+                        if($parsedIndexJSON["author"]["website"]) $authorEntity->website = $parsedIndexJSON["author"]["website"];
+                        if($parsedIndexJSON["author"]["email"]) $authorEntity->email = $parsedIndexJSON["author"]["email"];
                         $authorId = $this->authorRepository->insert($authorEntity->iterable())->id;
 
                         //create template entity
                         $templateEntity = new Template();
-                        $templateEntity->created = new \DateTime();
-                        $templateEntity->edited = new \DateTime();
+                        $templateEntity->created = new DateTime();
+                        $templateEntity->edited = new DateTime();
+                        $templateEntity->author_id = $authorId;
                         $templateEntity->title = $parsedIndexJSON["title"];
-                        if(isset($parsedIndexJSON["description"])) $templateEntity->description = $parsedIndexJSON["json"];
+                        if (isset($parsedIndexJSON["description"])) $templateEntity->description = $parsedIndexJSON["description"];
                         $templateEntity->version = $parsedIndexJSON["version"];
                         $templateEntity->used = 0;
                         $solidUploadManager = new TemplateUploadManager($this->templateUploadDataProvider, $uniqueName, TemplateUploadManager::MODE_SOLID);
@@ -143,8 +155,7 @@ class InstallTemplateForm extends RepositoryForm
 
                         $this->successTemplate($form, $templateEntity->iterable(), new FormMessage("Daná šablona byla úspěšně nainstalovaná, nyní jí můžete nastavit.",
                             "Daná šablona nemohla být z neznámého důvodu nainstalovaná. Nastala chyba v databázi."),
-                            $this->formRedirect, null, [], false, true, function ($id) use($ulListData, $parsedIndexJSON)
-                            {
+                            $this->formRedirect, null, [], false, true, function ($id) use ($ulListData, $parsedIndexJSON) {
                                 $this->presenter->flashMessage(Html::fromHtml("Byly vytvořeny následujicí vlastní entity: <br>")
                                     . HTMLUtils::createUlList($ulListData, false), FlashMessages::SUCCESS);
                                 $pages = $parsedIndexJSON["pages"];
@@ -155,18 +166,33 @@ class InstallTemplateForm extends RepositoryForm
                                     $pageEntity->description = $page["description"];
                                     $pageEntity->output_content = $page["output_content"];
                                     $pageEntity->output_type = $page["output_type"];
-                                    $pageEntity->template_id = $page["template_id"];
-                                    $this->pageRepository->insert($pageEntity->iterable());
+                                    $pageEntity->template_id = $id;
+                                    $insertedPage = $this->pageRepository->insert($pageEntity->iterable());
+                                    if (isset($page["variables"])) {
+                                        $pageVars = $page["variables"];
+                                        foreach ($pageVars as $var) {
+                                            $varEntity = new PageVariable();
+                                            $varEntity->input_type = $var["input_type"];
+                                            if (isset($var["content"]) && $var["content"]) $varEntity->content = $var["content"];
+                                            $varEntity->description = $var["description"];
+                                            $varEntity->id_name = $var["id_name"];
+                                            $varEntity->title = $var["title"];
+                                            if (isset($var["required"]) && $var["required"]) $varEntity->required = $var["required"];
+                                            $varEntity->page_id = $insertedPage->id;
+                                            $this->pageVariableRepository->insert($varEntity->iterable());
+                                        }
+                                    }
                                 }
-                        });
+                            });
                     } else {
                         throw new ValidationException("");
                     }
                 } catch (ValidationException $validationException) {
                     $form->addError("Při načítání instalačního balíčku došlo k validační chybě. Instalační balíček je neplatný.");
                 }
-            } else {
-                $form->addError("Při dekompresi instalačního balíčku došlo k nečekané chybě.");
+            }
+        } else {
+            $form->addError("Při dekompresi instalačního balíčku došlo k nečekané chybě.");
         }
     }
 }

@@ -52,6 +52,7 @@ class DynamicEntityFactory
                 if (!($attribute instanceof DynamicAttribute || is_array($attribute))) {
                     throw new InvalidArgumentException("Zadaný atribut je špatného typu.");
                 }
+                $attribute = (array)$attribute;
                 if(!FormatUtils::validateInputName($attribute[DynamicAttribute::id_name])) {
                     throw new InvalidAttributeException("Jmenný identifikátor u každého atributu musí být bez diakritiky, bez mezer a malými písmeny. Zkontrolujte: '" . $attribute[DynamicAttribute::id_name] . "'");
                 }
