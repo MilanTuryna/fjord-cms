@@ -67,10 +67,12 @@ class UploadManager
      * @param bool $withFolder
      */
     public function deleteUploads(bool $withFolder = false) {
-        $di = new RecursiveDirectoryIterator($this->path, FilesystemIterator::SKIP_DOTS);
-        $ri = new RecursiveIteratorIterator($di, RecursiveIteratorIterator::CHILD_FIRST);
-        foreach ( $ri as $file ) if(!$file->isDir()) unlink($file);
-        if($withFolder) rmdir($this->path);
+        if(file_exists($this->path)) {
+            $di = new RecursiveDirectoryIterator($this->path, FilesystemIterator::SKIP_DOTS);
+            $ri = new RecursiveIteratorIterator($di, RecursiveIteratorIterator::CHILD_FIRST);
+            foreach ( $ri as $file ) if(!$file->isDir()) unlink($file);
+            if($withFolder) rmdir($this->path);
+        }
     }
 
     /**
