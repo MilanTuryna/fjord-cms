@@ -36,6 +36,7 @@ class TemplatePresenter extends AdminBasePresenter
      * @param DynamicEntityFactory $dynamicEntityFactory
      * @param AuthorRepository $authorRepository
      * @param PageRepository $pageRepository
+     * @param PageVariableRepository $pageVariableRepository
      * @param string $permissionNode
      */
     public function __construct(AdminAuthenticator $adminAuthenticator, private TemplateRepository $templateRepository,
@@ -61,7 +62,6 @@ class TemplatePresenter extends AdminBasePresenter
         }
         $this->template->templates = $templates;
         $this->template->authors = $authors;
-        $this->template->usedTemplate = $this->templateRepository->findByColumn(Template::used, 1)->fetch();
     }
 
     /**
