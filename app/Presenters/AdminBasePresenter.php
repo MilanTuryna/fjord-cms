@@ -35,12 +35,18 @@ class AdminBasePresenter extends BasePresenter
     public Repository\Dynamic\EntityRepository $entityRepository;
 
     /**
+     * @var Repository\Template\TemplateRepository @inject
+     */
+    public Repository\Template\TemplateRepository $_templateRepository;
+
+    /**
      * @var ActiveRow|null|Repository\Admin\Entity\Account
      */
     protected ActiveRow|Repository\Admin\Entity\Account|null $admin;
 
 
     protected ActiveRow|Repository\Settings\Entity\GlobalSettings|null $settings;
+    protected ActiveRow|Repository\Template\Entity\Template|null $usedTemplate = null;
 
     private string $permissionNode;
 
@@ -79,6 +85,7 @@ class AdminBasePresenter extends BasePresenter
             $this->flashMessage("Pro vstup do této části administrace je zapotřebí vyšší oprávnění.", FlashMessages::ERROR);
             $this->redirect(":Admin:Overview:home");
         }
+        $this->usedTemplate = $this->_templateRepository->findByColumn(Repository\Template\Entity\Template::used, 1)->fetch();
         $this->template->admin = $adminEntity;
         $this->enableFlashes();
     }
@@ -109,7 +116,8 @@ class AdminBasePresenter extends BasePresenter
     {
         $this->setIfCurrentEntity(null);
         $this->template->settings = $this->settings;
-        $this->template->dynamicEntities = $this->entityRepository->findAll()->fetchAll();
+        $this->template->usedTemplate = $this->usedTemplate;
+        $this->template->dynamicEntities = $this->usedTemplate ? $this->entityRepository->findByColumn(Repository\Dynamic\Entity\DynamicEntity::generated_by, $this->usedTemplate->dirname)->fetchAll() : [];
         $this->template->activeWysiwyg = false;
     }
 
