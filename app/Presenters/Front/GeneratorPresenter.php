@@ -9,6 +9,7 @@ use App\Model\Database\Repository\Gallery\GalleryRepository;
 use App\Model\Database\Repository\Settings\GlobalSettingsRepository;
 use App\Model\Database\Repository\Template\Entity\Page;
 use App\Model\Database\Repository\Template\Entity\PageVariable;
+use App\Model\Database\Repository\Template\Entity\Template;
 use App\Model\Database\Repository\Template\PageRepository;
 use App\Model\Database\Repository\Template\PageVariableRepository;
 use App\Model\Database\Repository\Template\TemplateRepository;
@@ -49,18 +50,20 @@ class GeneratorPresenter extends FrontBasePresenter
      * @param string $path with slashes
      * @throws BadRequestException
      */
-    public function renderUrl(string $path)
+    public function renderUrl(string $path): void
     {
         /**
          * @var $page Page
          */
-        $pages = $this->pageRepository->findAll()->where(sprintf("%s = ? = ?", Page::template_id), $this->usedTemplate->id)->fetchAll();
+        $pages = $this->pageRepository->findByColumn(Page::template_id, $this->usedTemplate->id)->fetchAll();
+        $matches = 0;
         foreach ($pages as $page) {
             $request = $this->getHttpRequest();
             $route = new Route($page->route);
             $params = $route->match($request);
             if ($params) {
-                $templateUploadManager = new TemplateUploadManager($this->templateUploadDataProvider, $this->usedTemplate->id, TemplateUploadManager::MODE_SOLID);
+                $matches++;
+                $templateUploadManager = new TemplateUploadManager($this->templateUploadDataProvider, $this->usedTemplate->dirname, TemplateUploadManager::MODE_SOLID);
                 $templateFolder = $templateUploadManager->getFolderPath();
                 if ($page->output_type === "PATH") {
                     $fileName = $templateUploadManager->getPagesFolder() . DIRECTORY_SEPARATOR . $page->output_content;
@@ -95,9 +98,15 @@ class GeneratorPresenter extends FrontBasePresenter
                 $this->template->setParameters(["fjord" => $providerData]);
                 $this->template->setFile($fileName);
                 break;
-            } else {
+            }
+        }
+        if(!$matches) {
+            $templateUploadManager = new TemplateUploadManager($this->templateUploadDataProvider, $this->usedTemplate->dirname, TemplateUploadManager::MODE_SOLID);
+            $error404file = $templateUploadManager->getFolderPath() . DIRECTORY_SEPARATOR . $this->usedTemplate->error404;
+            if(!file_exists($error404file)) {
                 $this->error("Tato stránka nebyla nalezena. V případě, že si myslíte, že se jedná o chybu, kontaktujte administrátora", 404);
             }
+            $this->template->setFile($error404file);
         }
     }
 }
