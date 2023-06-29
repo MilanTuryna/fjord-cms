@@ -119,6 +119,7 @@ class InstallTemplateForm extends RepositoryForm
                             foreach ($entity["attributes"] as $attribute) {
                                 $attributeEntity = new DynamicAttribute();
                                 $attributeEntity->id_name = $attribute["id_name"];
+                                $attributeEntity->title = $attribute["title"];
                                 $attributeEntity->data_type = $attribute["data_type"];
                                 $attributeEntity->input_type = $attribute["input_type"];
                                 if (isset($attribute["description"])) $attributeEntity->description = $attribute["description"];
