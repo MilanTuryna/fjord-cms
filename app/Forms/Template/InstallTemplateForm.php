@@ -145,6 +145,8 @@ class InstallTemplateForm extends RepositoryForm
                         $templateEntity->created = new DateTime();
                         $templateEntity->edited = new DateTime();
                         $templateEntity->author_id = $authorId;
+                        $templateEntity->dirname = $uniqueName;
+                        if(isset($parsedIndexJSON["error404"]) && $parsedIndexJSON["error404"]) $templateEntity->error404 = $parsedIndexJSON["error404"];
                         $templateEntity->title = $parsedIndexJSON["title"];
                         if (isset($parsedIndexJSON["description"])) $templateEntity->description = $parsedIndexJSON["description"];
                         $templateEntity->version = $parsedIndexJSON["version"];
