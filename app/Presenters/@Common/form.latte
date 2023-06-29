@@ -124,7 +124,6 @@
                 <div class="col-sm-10">
                     <span class="text-muted small" n:if="$input->getOption(App\Forms\FormOption::OPTION_NOTE)">{$input->getOption(App\Forms\FormOption::OPTION_NOTE)}</span>
                     <div class="form-check">
-                        {input $input->getName()}
                         <input class="form-check-input" type="checkbox" n:name="$input->getName()" value="1">
                         <label n:name="$input->getName()" n:class="$input->isRequired() ? 'required-label' : ''">
                             {$input->getCaption()}
