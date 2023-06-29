@@ -68,7 +68,9 @@ class SettingsForm extends RepositoryForm
             ->setDefaultValue($actualSettings->app_keywords ?? "")->setRequired(true);
         $form->addCheckboxList("_languages", "Jazyky webu", Countries::LANGUAGES)
             ->setOption(FormOption::OPTION_NOTE, "Zvolte všechny jazyky, ve kterých chcete překládat obsah webu.")->setRequired("Je nutné, aby alespoň jeden jazyk byl označen jako základní.");
-        $form->addSelect("default_language", "Hlavní jazyk", Countries::LANGUAGES)->setOption(FormOption::OPTION_NOTE, "Vybraný jazyk bude použit jako hlavní.")->setRequired("Hlavní jazyk musí být vybrán.");
+        $form->addSelect("default_language", "Hlavní jazyk", Countries::LANGUAGES)
+            ->setDefaultValue($actualSettings->default_language ?? "")
+            ->setOption(FormOption::OPTION_NOTE, "Vybraný jazyk bude použit jako hlavní.")->setRequired("Hlavní jazyk musí být vybrán.");
         if($actualSettings && $actualSettings->languages) {
             $form["_languages"]->setDefaultValue(explode(",", $actualSettings->languages));
         }
