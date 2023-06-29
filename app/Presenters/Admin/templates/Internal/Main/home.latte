@@ -105,7 +105,7 @@ Interní administrace
                         </td>
                     </tr>
                     {/foreach}
-                    <tr n:if="$entityCount === 0">
+                    <tr n:if="!$dynamicEntities">
                         <td colspan="8" class="text-center p-3 text-muted">
                             Žádná šablona nebyla zvolena.
                         </td>
@@ -169,7 +169,7 @@ Interní administrace
                                         </div>
                                     </div>
                                     <div class="justify-content-center">
-                                        <a href="" class="text-white non-underline">
+                                        <a n:href=":Admin:Internal:Template:view $usedTemplate->id" class="text-white non-underline">
                                             <i class="ri-settings-3-fill" style="font-size: 26px"></i>
                                         </a>
                                     </div>
@@ -179,6 +179,7 @@ Interní administrace
                         <hr>
                     </div>
                     <div class="card classic-shadow default-margin-bot" n:foreach="$templates as $template">
+                        {skipIf $template->id === $usedTemplate->id}
                         <div class="card-body">
                             <div class="d-flex justify-content-between" style="  align-items: center;
   justify-content: center;">

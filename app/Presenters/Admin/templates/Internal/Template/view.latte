@@ -1,0 +1,64 @@
+{block title}
+Šablona {$template->title}
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [
+":Admin:Overview:home" => "Administrace",
+":Admin:Internal:Main:home" => "Interní administrace",
+":Admin:Internal:Template:list" => "Seznam nainstalovaných šablon",
+":Admin:Internal:Template:view" => "Šablona " . $template->title
+]}
+{/block}
+{block content}
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <ul>
+            <li>Název šablony: <b>{$template->title}</b></li>
+            <li>Zvolená od doby: <b>{$template->edited|date:'d.m.Y H:i'}</b></li>
+            <li>Popis šablony: <b>{$template->description}</b></li>
+            <li>Aktivní: <b>{$usedTemplate && $template->id === $usedTemplate->id ? "ANO" : "NE"}</b></li>
+            <li>Verze: <b>{$template->version}</b></li>
+        </ul>
+        <div class="d-flex" style="justify-content: space-between">
+            <div>
+                <a n:href=":Admin:Internal:Template:remove $template->id" class="deleteHref text-danger">
+                    Odstranit tuto šablonu (vč. všech dat)
+                </a>
+            </div>
+            <div>
+                <a n:href=":Admin:Internal:Template:enable $template->id, !$template->used" n:class="($template->used ? 'btn-danger' : 'btn-success'), 'btn float-right'" style="width: auto">
+                    {$template->used ? "Vypnout šablonu" : "Zapnout (zaktivovat) šablonu"}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Stránky šablony</h5>
+        <table class="table table-bordered table-striped table-sm">
+            <thead>
+            <tr>
+                <th scope="col">Název stránky</th>
+                <th scope="col">Routa</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach $pages as $page}
+            <tr>
+                <td>{$page->name}</td>
+                <td>{$page->route}</td>
+                <td class="p-0"><a n:href=":Admin:Internal:Template:viewPage $template->id, $page->id" class="btn btn-primary br-0 w-100">Nastavit</a></td>
+            </tr>
+            {/foreach}
+            <tr n:if="count($pages) === 0">
+                <td colspan="20" class="text-center p-3 text-muted">
+                    Žádné stránky šablony nebyly nalezeny.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{/block}
