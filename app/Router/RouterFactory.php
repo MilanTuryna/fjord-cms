@@ -48,6 +48,8 @@ final class RouterFactory
             // todo: history backups
             ->addRoute("/admin/internal/template/view/<id>", "Internal:Template:view")
             ->addRoute("/admin/internal/template/remove/<id>", "Internal:Template:remove")
+            ->addRoute("/admin/internal/template/enable/<id>?value=<value>", "Internal:Template:enable")
+            ->addRoute("/admin/internal/template/view/<templateId>/viewPage/<pageId>", "Internal:Template:viewPage")
 
             ->addRoute("/admin/internal/smtp/new", "Internal:SMTP:new")
             ->addRoute("/admin/internal/smtp/view/<id>", "Internal:SMTP:view")
