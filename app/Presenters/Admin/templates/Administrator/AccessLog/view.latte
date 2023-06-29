@@ -27,7 +27,7 @@ Přístupový log: {$account->username}
             <tr>
                 <td><a n:href=":Admin:Administrator:Account:view, $account->id" class="blue-href">{$account->username}</a></td>
                 <td>{$log->device}</td>
-                <td>{$log->time|date:'d.m.Y H:i'}</td>
+                <td>{$log->created|date:'d.m.Y H:i'}</td>
                 <td>{$log->ip}</td>
             </tr>
             {/foreach}

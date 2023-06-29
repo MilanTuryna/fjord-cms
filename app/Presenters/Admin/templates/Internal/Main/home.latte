@@ -78,7 +78,8 @@ Interní administrace
 <div class="card classic-shadow default-margin-bot">
     <div class="card-body">
         <h5 class="default-margin-bot">Nastavení dynamických entit</h5>
-        <div class="card-text ">
+        <div class="card-text">
+            <div n:class="$usedTemplate ? 'bg-success' : 'bg-danger', 'px-2 py-1 text-white font-weight-bold'">Pro zvolenou šablonu: <b n:if="$usedTemplate">{$usedTemplate->title}</b></div>
             <div class="table-responsive">
                 <table class="table table-striped table-hover table-sm">
                     <thead>
@@ -92,7 +93,7 @@ Interní administrace
                     </tr>
                     </thead>
                     <tbody>
-                    {foreach $entityList as $entity}
+                    {foreach $dynamicEntities as $entity}
                     <tr>
                         <td>{$entity->id}</td>
                         <td><a n:href=":Admin:Internal:EAV:view $entity->id">{$entity->name}</a></td>
@@ -105,6 +106,40 @@ Interní administrace
                     </tr>
                     {/foreach}
                     <tr n:if="$entityCount === 0">
+                        <td colspan="8" class="text-center p-3 text-muted">
+                            Žádná šablona nebyla zvolena.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="bg-secondary px-2 py-1 text-white font-weight-bold" style="width: auto">Obecné:</div>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-sm">
+                    <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Název</th>
+                        <th scope="col">Popis</th>
+                        <th scope="col">Vytvořena</th>
+                        <th scope="col">Poslední editace</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach $generalEntities as $entity}
+                    <tr>
+                        <td>{$entity->id}</td>
+                        <td><a n:href=":Admin:Internal:EAV:view $entity->id">{$entity->name}</a></td>
+                        <td>{$entity->description|slice: 0, 20}{if strlen($entity->description) > 20}...{/if}</td>
+                        <td>{$entity->created|date:'d.m.Y H:i'}</td>
+                        <td>{$entity->edited|date:'d.m.Y H:i'}</td>
+                        <td>
+                            <a n:href=":Admin:Internal:EAV:view $entity->id" class="btn btn-primary br-0 w-100 btn-sm">Zobrazit</a>
+                        </td>
+                    </tr>
+                    {/foreach}
+                    <tr n:if="!$generalEntities">
                         <td colspan="8" class="text-center p-3 text-muted">
                             Žádné dynamické entity nebyly nalezeny.
                         </td>
@@ -128,7 +163,7 @@ Interní administrace
                                 <div class="d-flex justify-content-between" style="  align-items: center;
   justify-content: center;">
                                     <div>
-                                        <h6 class="mb-1">{$usedTemplate->name}</h6>
+                                        <h6 class="mb-1">{$usedTemplate->title}</h6>
                                         <div class="card-text">
                                             Aktuálně vybraná šablona
                                         </div>
@@ -148,10 +183,7 @@ Interní administrace
                             <div class="d-flex justify-content-between" style="  align-items: center;
   justify-content: center;">
                                 <div>
-                                    <h6 class="mb-1">{$template->name}</h6>
-                                    <div class="card-text">
-                                        Aktuálně vybraná šablona
-                                    </div>
+                                    <h6 class="mb-1">{$template->title}</h6>
                                 </div>
                                 <div class="justify-content-center">
                                     <a n:href=":Admin:Internal:Template:view $template->id" class="text-muted non-underline">
