@@ -105,6 +105,7 @@ class CreateJsonSchemaForm extends Form
         $firstVar["title"] = $secondVar["title"];
         $firstVar["description"] = $secondVar["description"];
         if($secondVar["error404"]) $firstVar["error404"] = $secondVar["error404"];
+        $firstVar["dependency_path"] = $secondVar["dependency_path"];
         $firstVar["author"] = [];
         if($fromJSON) {
             if($secondVar["author"]["email"]) $firstVar["author_email"] = $secondVar["author"]["email"];

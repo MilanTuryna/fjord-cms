@@ -6,6 +6,7 @@
     "email":"milan@turyna.eu",
     "website":"https://turyna.eu"
   },
+  "dependencyPath": "/dependencies",
   "error404": "/pages/individual/404.latte",
   "pages":[
     {

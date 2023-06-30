@@ -5,6 +5,7 @@
     "email": "milan@turyna.eu",
     "website": "https://turyna.eu"
   },
+  "dependencyPath": "path",
   "error404": "path",
   "pages": [
     {

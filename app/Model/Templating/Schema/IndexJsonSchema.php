@@ -31,6 +31,7 @@ class IndexJsonSchema
                 ]
             )->required(false),
             "error404" => Expect::string()->required(false),
+            "dependencyPath" => Expect::string()->required(true),
             "pages" => Expect::listOf(Expect::structure(
                 [
                     "name" => Expect::string(),

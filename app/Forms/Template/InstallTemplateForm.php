@@ -85,10 +85,11 @@ class InstallTemplateForm extends RepositoryForm
             $result = $zipArchive->open($compressedFile);
             if($result) {
                 $uniqueName = TemplateUploadManager::createUniqueName(implode("", explode(".", $zipName)));
+                $zipArchive->renameName($zipName, $uniqueName);
                 $tempUploadManager = new TemplateUploadManager($this->templateUploadDataProvider, $uniqueName, TemplateUploadManager::MODE_TEMP);
-                $tempUploadManager->add($data->installation_zip, $uniqueName . ".zip");
-                $temporaryFolderPath = $tempUploadManager->getFolderPath();
+                $temporaryFolderPath = $tempUploadManager->getLocalFolder();
                 $zipArchive->extractTo($temporaryFolderPath);
+                $tempUploadManager->add($data->installation_zip, $uniqueName . ".zip");
                 $rawIndexJSON = null;
                 foreach ($tempUploadManager->getUploads() as $file) {
                     if (str_ends_with(strtolower($file), "index.json")) {
@@ -147,13 +148,14 @@ class InstallTemplateForm extends RepositoryForm
                         $templateEntity->edited = new DateTime();
                         $templateEntity->author_id = $authorId;
                         $templateEntity->dirname = $uniqueName;
+                        $templateEntity->zip_name = $zipName;
                         if(isset($parsedIndexJSON["error404"]) && $parsedIndexJSON["error404"]) $templateEntity->error404 = $parsedIndexJSON["error404"];
                         $templateEntity->title = $parsedIndexJSON["title"];
                         if (isset($parsedIndexJSON["description"])) $templateEntity->description = $parsedIndexJSON["description"];
                         $templateEntity->version = $parsedIndexJSON["version"];
                         $templateEntity->used = 0;
                         $solidUploadManager = new TemplateUploadManager($this->templateUploadDataProvider, $uniqueName, TemplateUploadManager::MODE_SOLID);
-                        FileSystem::rename($temporaryFolderPath, $solidUploadManager->getFolderPath());
+                        FileSystem::rename($temporaryFolderPath, $solidUploadManager->getLocalFolder());
                         $tempUploadManager->deleteUploads(); // delete temporary files
 
                         $this->successTemplate($form, $templateEntity->iterable(), new FormMessage("Daná šablona byla úspěšně nainstalovaná, nyní jí můžete nastavit.",
