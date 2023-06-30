@@ -50,7 +50,7 @@ class GeneratorPresenter extends FrontBasePresenter
      * @param string $path with slashes
      * @throws BadRequestException
      */
-    public function renderUrl(string $path): void
+    public function renderUrl(string $path = "/"): void
     {
         /**
          * @var $page Page
@@ -61,13 +61,13 @@ class GeneratorPresenter extends FrontBasePresenter
             $request = $this->getHttpRequest();
             $route = new Route($page->route);
             $params = $route->match($request);
-            if ($params) {
+            if (is_array($params)) {
                 $matches++;
                 $templateUploadManager = new TemplateUploadManager($this->templateUploadDataProvider, $this->usedTemplate->dirname, TemplateUploadManager::MODE_SOLID);
-                $templateFolder = $templateUploadManager->getFolderPath();
+                $templateFolder = $templateUploadManager->getTemplateFolder($this->usedTemplate->zip_name);
                 if ($page->output_type === "PATH") {
-                    $fileName = $templateUploadManager->getPagesFolder() . DIRECTORY_SEPARATOR . $page->output_content;
-                    if (file_exists(!$fileName)) {
+                    $fileName = $templateFolder . $page->output_content;
+                    if (!file_exists($fileName)) {
                         $this->error("Soubor $fileName neexistuje");
                     }
                 } else {
@@ -102,7 +102,7 @@ class GeneratorPresenter extends FrontBasePresenter
         }
         if(!$matches) {
             $templateUploadManager = new TemplateUploadManager($this->templateUploadDataProvider, $this->usedTemplate->dirname, TemplateUploadManager::MODE_SOLID);
-            $error404file = $templateUploadManager->getFolderPath() . DIRECTORY_SEPARATOR . $this->usedTemplate->error404;
+            $error404file = $templateUploadManager->getTemplateFolder($this->usedTemplate->zip_name) . DIRECTORY_SEPARATOR . $this->usedTemplate->error404;
             if(!file_exists($error404file)) {
                 $this->error("Tato stránka nebyla nalezena. V případě, že si myslíte, že se jedná o chybu, kontaktujte administrátora", 404);
             }
