@@ -18,7 +18,7 @@ class Template extends Entity
     public string $title;
     public string $zip_name;
     public string $dirname;
-    public string $dependencyPath; // representing relative path from index.json to folder with dependencies (for css,js...)
+    public string $dependency_path; // representing relative path from index.json to folder with dependencies (for css,js...)
     public string $error404; // representing relative path from index.json to page 404 (Not Found)
     public int $author_id;
     public string $website;
