@@ -9,6 +9,10 @@ use App\Model\FileSystem\UploadManager;
 use Exception;
 use JetBrains\PhpStorm\Pure;
 
+/**
+ * Class TemplateUploadManager
+ * @package App\Model\FileSystem\Templating
+ */
 class TemplateUploadManager extends UploadManager
 {
     const ALLOWED_EXTENSIONS = ["zip"];
@@ -38,15 +42,27 @@ class TemplateUploadManager extends UploadManager
         return $originalTemplateName . Cryptography::createUnique(5);
     }
 
-    // returns path to folder with templateFolderName
-    public function getFolderPath(): string {
+    // returns folder with zip and extracted dir with zip_name (without .zip)
+    public function getLocalFolder(): string {
         return $this->path;
     }
 
+    // returns path to folder with templateFolderName
+    public function getTemplateFolder(string $zipName): string {
+        $exploded = explode(".", $zipName);
+        array_pop($exploded);
+        $folderName = implode($exploded);
+        return $this->path . DIRECTORY_SEPARATOR . $folderName;
+    }
+
     /**
+     * @param string $zipName
      * @return string
      */
-    public function getPagesFolder(): string {
-        return $this->path . DIRECTORY_SEPARATOR . "pages";
+    public function getPagesFolder(string $zipName): string {
+        $exploded = explode(".", $zipName);
+        array_pop($exploded);
+        $folderName = implode($exploded);
+        return $this->path . DIRECTORY_SEPARATOR . $folderName . DIRECTORY_SEPARATOR . "pages";
     }
 }
