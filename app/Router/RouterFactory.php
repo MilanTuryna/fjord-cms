@@ -80,7 +80,8 @@ final class RouterFactory
             ->addRoute("/admin/settings", "Settings:overview")
             ->addRoute("/admin/settings/history/<id>", "Settings:history")
         ;
-        $router->withModule("Front")->addRoute("<path .+>", "Generator:renderUrl");
+		$router->withModule("Front")->addRoute("/","Generator:url");
+        $router->withModule("Front")->addRoute("<path .+>", "Generator:url");
 		return $router;
 	}
 }
