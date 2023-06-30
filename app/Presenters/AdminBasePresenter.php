@@ -118,6 +118,7 @@ class AdminBasePresenter extends BasePresenter
         $this->template->settings = $this->settings;
         $this->template->usedTemplate = $this->usedTemplate;
         $this->template->dynamicEntities = $this->usedTemplate ? $this->entityRepository->findByColumn(Repository\Dynamic\Entity\DynamicEntity::generated_by, $this->usedTemplate->dirname)->fetchAll() : [];
+        $this->template->generalEntities = $this->entityRepository->findByColumn(Repository\Dynamic\Entity\DynamicEntity::generated_by, "")->fetchAll() ?? [];
         $this->template->activeWysiwyg = false;
     }
 

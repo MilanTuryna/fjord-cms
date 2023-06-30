@@ -99,6 +99,17 @@
                             <span class="small text-muted">Zatím tu nic není! Je potřeba prvně něco nastavit.</span>
                         {/if}
                     </div>
+                    {if $generalEntities}
+                    <hr>
+                    <strong class="small text-muted" style="font-weight: bold">Obecné data</strong>
+                    <div class="list-group classic-shadow">
+                        {foreach $generalEntities as $entityR}
+                        <a n:href=":Admin:Dynamic:Entity:list $entityR->name" n:class="$currentEntity === $entityR->name ? aktivni, 'list-group-item', 'list-group-item-action'" {if isset($title[3])}target="_blank"{/if}>
+                        {$entityR->menu_item_name ? $entityR->menu_item_name : $entityR->name}
+                        </a>
+                        {/foreach}
+                    </div>
+                    {/if}
                     <hr>
                     <div class="text-right text-muted">
                         <a href="">Nápověda systému</a>
