@@ -29,6 +29,7 @@ class FrontBasePresenter extends Presenter
 
     public function startup()
     {
+        parent::startup();
         if(!$this->usedTemplate) {
             die("Na tomto webu právě probíhá údržba. Vyčkejte než skončí, případně kontaktujte administrátora webu.");
         }
