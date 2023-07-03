@@ -4,15 +4,19 @@
 namespace App\Presenters\Front;
 
 
+use App\Forms\Front\ContactForm;
 use App\Model\Database\EAV\DynamicEntityFactory;
 use App\Model\Database\Repository\Gallery\GalleryRepository;
 use App\Model\Database\Repository\Settings\GlobalSettingsRepository;
+use App\Model\Database\Repository\SMTP\MailRepository;
+use App\Model\Database\Repository\SMTP\ServerRepository;
 use App\Model\Database\Repository\Template\Entity\Page;
 use App\Model\Database\Repository\Template\Entity\PageVariable;
 use App\Model\Database\Repository\Template\Entity\Template;
 use App\Model\Database\Repository\Template\PageRepository;
 use App\Model\Database\Repository\Template\PageVariableRepository;
 use App\Model\Database\Repository\Template\TemplateRepository;
+use App\Model\Extensions\FormMultiplier\Multiplier;
 use App\Model\FileSystem\Gallery\GalleryFacadeFactory;
 use App\Model\FileSystem\Templating\TemplateUploadDataProvider;
 use App\Model\FileSystem\Templating\TemplateUploadManager;
@@ -48,7 +52,7 @@ class GeneratorPresenter extends FrontBasePresenter
      * @param PageVariableRepository $pageVariableRepository
      */
     public function __construct(private TemplateRepository $templateRepository, private PageRepository $pageRepository, private TemplateUploadDataProvider $templateUploadDataProvider,
-                                private GalleryRepository $galleryRepository,
+                                private GalleryRepository $galleryRepository, private ServerRepository $serverRepository, private MailRepository $mailRepository,
                                 private GlobalSettingsRepository $globalSettingsRepository, private DynamicEntityFactory $dynamicEntityFactory,
                                 private GalleryFacadeFactory $galleryFacadeFactory, private PageVariableRepository $pageVariableRepository)
     {
@@ -153,5 +157,15 @@ class GeneratorPresenter extends FrontBasePresenter
             }
             $this->template->setFile($error404file);
         }
+    }
+
+    /**
+     * @return Multiplier
+     */
+    public function createComponentContactForm(): Multiplier
+    {
+        return new Multiplier(function ($serverId) {
+            return (new ContactForm($this, $this->serverRepository, $this->mailRepository, $this->globalSettingsRepository, (int)$serverId))->create();
+        });
     }
 }
