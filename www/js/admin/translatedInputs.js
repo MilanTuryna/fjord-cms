@@ -20,7 +20,17 @@ function passContent() {
     })
 }
 
+function wysiwyg() {
+    let wysiwygElements = document.getElementsByClassName("active-wysiwyg");
+    [...wysiwygElements].forEach((input) => {
+        input.value = tinyMCE.get(input.id).getContent().trim();
+        console.log(input);
+        console.log(input.value);
+    });
+}
+
 function translatedInputs(event, element) {
+    console.log("dd");
     let inputsInForm = element.querySelectorAll("[data-translate-for]");
     let arrInput = {}; // todo validation security
     inputsInForm.forEach((input) => {
@@ -36,6 +46,7 @@ function translatedInputs(event, element) {
     Object.keys(arrInput).forEach((k) => {
         element.querySelectorAll("[data-translate-id]").forEach((originalInput) => {
             if(k === originalInput.name) {
+                console.log(JSON.stringify(arrInput[k]));
                 originalInput.value = JSON.stringify(arrInput[k]);
             }
         })
