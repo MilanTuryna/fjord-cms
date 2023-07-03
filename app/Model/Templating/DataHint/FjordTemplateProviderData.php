@@ -8,6 +8,7 @@ use App\Model\Database\Repository\Settings\Entity\GlobalSettings;
 use App\Model\Database\Repository\Template\Entity\Template;
 use App\Model\FileSystem\Gallery\GalleryFacadeFactory;
 use Nette\Database\Table\ActiveRow;
+use Nette\Utils\ArrayHash;
 
 // TODO: better optimalization and use collections instead for DB
 class FjordTemplateProviderData
@@ -24,5 +25,5 @@ class FjordTemplateProviderData
     public GlobalSettings|ActiveRow|null $settings;
     public array $parameters; // parsed query parameters from URL in associative array (probably, untested, it's from Nette Router -> match())
     public Template|ActiveRow|null $templateInfo;
-    public array $variables; // variable settings for selected page, in associative array [PageVariable::id_name => PageVariable::content]
+    public array|ArrayHash $variables; // variable settings for selected page, in associative array [PageVariable::id_name => PageVariable::content]
 }

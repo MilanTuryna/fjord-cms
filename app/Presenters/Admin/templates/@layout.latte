@@ -80,6 +80,7 @@
                         ":Admin:Internal:Main:home" => [":Admin:Internal", "Interní administrace", null, null, "m"],
                         ":Admin:Gallery:Main:overview" => [":Admin:Gallery:Main", "Galerie"],
                         ":Admin:Administrator:Account:list" => [":Admin:Administrator:Account", "Správa účtů"],
+                        ":Admin:Administrator:Upload:list" => [":Admin:Administrator:Upload", "Nahrávání souborů"],
                         ":Admin:Settings:overview" => [":Admin:Settings", "Nastavení webu"]
                         ] as $menuRoute => $title}
                         <a n:href=$menuRoute n:if="isset($title[2]) ? $title[2] : true" n:class="(!isset($title[4]) ? $presenter->isLinkCurrent($title[0] ? $title[0] . ':*' : $menuRoute) : $presenter->isModuleCurrent($title[0])) ? aktivni, 'list-group-item', 'list-group-item-action'" {if isset($title[3])}target="_blank"{/if}>
@@ -129,8 +130,20 @@
     tinymce.init({
         add_form_submit_trigger: false,
         selector: '.active-wysiwyg',
-        plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+        content_style: "@import url('https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&display=swap');" +
+            "@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');",
+        font_formats:
+            "Andale Mono=andale mono,times; " +
+            "Arial=arial,helvetica,sans-serif; " +
+            "Arial Black=arial black,avant garde; " +
+            "Book Antiqua=book antiqua,palatino; " +
+            "Comic Sans MS=comic sans ms,sans-serif; " +
+            "Courier New=courier new,courier; Georgia=georgia,palatino; " +
+            "Helvetica=helvetica; Impact=impact,chicago; Symbol=symbol; Tahoma=tahoma,arial,helvetica,sans-serif; " +
+            "Terminal=terminal,monaco; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva; Webdings=webdings; Wingdings=wingdings,zapf dingbats;" +
+            "Lato=lato,sans-serif; Roboto=roboto,sans-serif;",
+        plugins: 'anchor autolink charmap codesample emoticons image code link lists media searchreplace table visualblocks wordcount',
+        toolbar: 'undo redo | blocks fontfamily  fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat | code',
     });
 </script>
 {/if}

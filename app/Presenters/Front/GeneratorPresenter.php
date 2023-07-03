@@ -27,6 +27,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
 use Nette\Routing\Route;
+use Nette\Utils\ArrayHash;
 use Nette\Utils\Finder;
 
 /**
@@ -72,19 +73,20 @@ class GeneratorPresenter extends FrontBasePresenter
      */
     #[NoReturn] public function renderLoaderJavascript(): void {
         $dynamicDependencyModule = new DynamicDependencyModule($this->usedTemplate, $this->templateUploadDataProvider);
-        $computedCSS = $dynamicDependencyModule->getParsedCSS()->getComputedCode(true);
-        $cssResponse = new CSSResponse($computedCSS);
-        $this->sendResponse($cssResponse);
+        $computedJS = $dynamicDependencyModule->getParsedJS();
+        $jsResponse = new JSResponse($computedJS);
+        $this->sendResponse($jsResponse);
     }
 
     /**
      * @throws AbortException
      */
     #[NoReturn] public function renderLoaderCss(): void {
+        error_reporting(E_ALL ^ E_DEPRECATED);
         $dynamicDependencyModule = new DynamicDependencyModule($this->usedTemplate, $this->templateUploadDataProvider);
-        $computedJS = $dynamicDependencyModule->getParsedJS();
-        $jsResponse = new JSResponse($computedJS);
-        $this->sendResponse($jsResponse);
+        $computedCSS = $dynamicDependencyModule->getParsedCSS()->getComputedCode(true);
+        $cssResponse = new CSSResponse($computedCSS);
+        $this->sendResponse($cssResponse);
     }
 
     /**
@@ -134,7 +136,9 @@ class GeneratorPresenter extends FrontBasePresenter
                 $providerData->settings = $this->globalSettingsRepository->getActualSettings();
                 $providerData->parameters = $params;
                 $providerData->templateInfo = $this->usedTemplate;
-                $providerData->variables = $varsAssociativeArray;
+                $providerData->variables = ArrayHash::from($varsAssociativeArray, true);
+
+                bdump($providerData);
 
                 $this->template->setParameters(["fjord" => $providerData]);
                 $this->template->setFile($fileName);

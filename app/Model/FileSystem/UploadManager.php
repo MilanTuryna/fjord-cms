@@ -17,9 +17,9 @@ class UploadManager
 {
     /**
      * @param string $path
-     * @param array $allowedExtension
+     * @param array|null $allowedExtension
      */
-    public function __construct(protected string $path, protected array $allowedExtension) {
+    public function __construct(protected string $path, protected ?array $allowedExtension = null) {
     }
 
     /**
@@ -55,6 +55,8 @@ class UploadManager
         return Finder::findFiles("*")->from($this->path);
     }
 
+
+
     /**
      * @param $from
      * @param $to
@@ -75,8 +77,10 @@ class UploadManager
         }
     }
 
+
     /**
-     * @param $fileName (with extension)
+     * @param $fileName
+     * @throws FileNotFoundException
      */
     public function deleteUpload($fileName): void
     {

@@ -1,0 +1,48 @@
+{block title}
+Administrátoři
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [
+":Admin:Overview:home" => "Administrace aplikace",
+"this" => "Nahrávání souborů",
+]}
+{/block}
+{block content}
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        {include TEMPLATE_COMMON . "/form.latte", form: "uploadFileForm"}
+    </div>
+</div>
+<hr>
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Nahrané soubory: {count($files)}</h5>
+        <table class="table table-bordered table-hover table-striped table-sm" style="zoom:85%">
+            <thead>
+            <tr>
+                <th scope="col">Název souboru</th>
+                <th scope="col">Velikost souborů</th>
+                <th scope="col">Čas nahrání</th>
+                <th scope="col">Otevřít</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach $files as $url => $fileInfo}
+            <tr>
+                <td>{$fileInfo->getFilename()}</td>
+                <td>{$fileInfo->getSize()} B</td>
+                <td>{$fileInfo->getCTime()|date:'d.m.Y H:i'}</td>
+                <td class="p-0">
+                    <a href="{$url}" class="btn btn-primary">OTEVŘÍT</a>
+                </td>
+                <td class="p-0">
+                    <a n:href=":Admin:Administrator:Upload:remove, str_replace('.', '----', $fileInfo->getFilename())" class="btn btn-danger">X</a>
+                </td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    </div>
+</div>
+{/block}

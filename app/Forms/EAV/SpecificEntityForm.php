@@ -64,9 +64,12 @@ class SpecificEntityForm extends RepositoryForm
                 },
                 DataType::DATE_TIME => $this::createDateTime($form, $attribute->id_name, $attribute->title)->setRequired((bool)$attribute->required)->setOption(FormOption::IS_DATE_TIME, 1)->setHtmlAttribute("type", "date")
             };
-            if($attribute->enabled_wysiwyg) $input->setOption(FormOption::ACTIVE_WYSIWYG, true);
             if($attribute->placeholder) $input->setHtmlAttribute("placeholder", $attribute->placeholder);
             if($attribute->required) $input->setRequired();
+            if($attribute->enabled_wysiwyg) {
+                $input->setRequired(false);
+                $input->setOption(FormOption::ACTIVE_WYSIWYG, true);
+            }
             if($attribute->description) $input->setOption(FormOption::OPTION_NOTE, $attribute->description);
             if($attribute->preset_value) $input->setDefaultValue($attribute->preset_value);
         }

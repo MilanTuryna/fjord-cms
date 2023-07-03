@@ -51,7 +51,7 @@ class ServerForm extends RepositoryForm
            ->setHtmlAttribute("placeholder", "vase-firma.cz")->setRequired(true);
         $form->addEmail("receiver_email", "Emailová adresa (příjemce)")->setOption(FormOption::UPPER_LINE,1)
             ->setOption(FormOption::OPTION_NOTE, "Na tento a dále i v administračním výpisu budete příjimat odeslané zprávy.")->setHtmlAttribute("placeholder", "john@example.com")->setRequired(false);
-        $form->addCheckbox("active", "Je server aktivní?");
+        $form->addCheckbox("active", "Zvolit tento server jako hlavní (základní)");
 
         $form->addSubmit("submit", "Vytvořit nový SMTP server");
        return $form;
@@ -65,6 +65,11 @@ class ServerForm extends RepositoryForm
         if(!$serverFormData->receiver_email) {
             $this->presenter->flashMessage("Z důvodu nevyplnění byl jako emailový účet příjemce přijat email odesílatele.", FlashMessages::INFO);
             $serverFormData->receiver_email = $serverFormData->server_email;
+        }
+        if($serverFormData->active) {
+            $this->serverRepository->update([
+                Repository\SMTP\Entity\Server::active => 0
+            ]);
         }
     }
 }

@@ -17,5 +17,6 @@ extensions:
 
 services:
     router: App\Router\RouterFactory::createRouter
+    adminDataProvider: App\Model\FileSystem\Admin\AdminUploadDataProvider(%adminUpload.outsidePath%, %adminUpload.localPath%)
     galleryDataProvider: App\Model\FileSystem\Gallery\GalleryDataProvider(%gallery.outsidePath%, %gallery.localPath%)
     templateUploadDataProvider: App\Model\FileSystem\Templating\TemplateUploadDataProvider(%templating.tempStorage%, %templating.solidStorage%)

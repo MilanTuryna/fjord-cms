@@ -30,6 +30,8 @@ class AdminPermissions extends PermissionManager
     const GALLERY_EDIT = "gallery_edit";
     CONST GALLERY_PHOTO = "gallery_add";
 
+    const UPLOAD = "upload";
+
     #[Pure] public function __construct()
     {
         parent::__construct(self::selectBox());
@@ -51,7 +53,9 @@ class AdminPermissions extends PermissionManager
             self::USE_WIDGETS => "Používání již vytvořených widgetů",
 
             self::GALLERY_EDIT => "Tvorba a správa galerií",
-            self::GALLERY_PHOTO => "Správa obsahu jednotlivých galerií (fotky/videa)"
+            self::GALLERY_PHOTO => "Správa obsahu jednotlivých galerií (fotky/videa)",
+
+            self::UPLOAD => "Nahrávání/upload souborů"
         ];
     }
 }

@@ -151,7 +151,7 @@
                     <a n:if="$deleteRoute" href="{$presenter->link($deleteRoute->route, $deleteRoute->args)}" class="text-danger deleteHref">Odstranit tento záznam</a>
                 </div>
                 <button n:name="submit" type="submit" n:class="'btn', ($form['submit']->getOption(App\Forms\FormOption::BUTTON_DANGER) ? 'btn-danger' : 'btn-success')"
-                        onclick="translatedInputs(event, document.getElementById('translateForm'))">{$form['submit']->getCaption()}</button>
+                        onclick="wysiwyg()">{$form['submit']->getCaption()}</button>
             </div>
         </div>
     </div>
