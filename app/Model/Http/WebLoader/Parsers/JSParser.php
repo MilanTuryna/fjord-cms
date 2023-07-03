@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Model\Http\Webloader\Parsers;
+namespace App\Model\Http\WebLoader\Parsers;
 
 
 use MatthiasMullie\Minify;

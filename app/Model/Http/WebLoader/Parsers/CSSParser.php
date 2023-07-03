@@ -1,9 +1,9 @@
 <?php
 
 
-namespace App\Model\Http\Webloader\Parsers;
+namespace App\Model\Http\WebLoader\Parsers;
 
-use App\Model\Http\Webloader\Parsers\Exceptions\SyntaxError;
+use App\Model\Http\WebLoader\Parsers\Exceptions\SyntaxError;
 use Sabberworm\CSS\CSSList\Document;
 use Sabberworm\CSS;
 use Sabberworm\CSS\Parser;
@@ -117,5 +117,10 @@ class CSSParser
     public function getRawCode(): string
     {
         return $this->rawCode;
+    }
+
+    public function __toString(): string
+    {
+        $this->getComputedCode(true);
     }
 }

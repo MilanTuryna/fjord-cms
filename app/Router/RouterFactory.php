@@ -81,7 +81,8 @@ final class RouterFactory
             ->addRoute("/admin/settings/history/<id>", "Settings:history")
         ;
 		$router->withModule("Front")->addRoute("/","Generator:url");
-        $router->withModule("Front")->addRoute("/dependencies/<path .+>", "Generator:dependencies");
+        $router->withModule("Front")->addRoute("/dependencies/js", "Generator:loaderJavascript");
+        $router->withModule("Front")->addRoute("/dependencies/css", "Generator:loaderCss");
         $router->withModule("Front")->addRoute("/_error_404", "Generator:404");
         $router->withModule("Front")->addRoute("<path .+>", "Generator:url");
 		return $router;

@@ -16,9 +16,13 @@ use App\Model\Database\Repository\Template\TemplateRepository;
 use App\Model\FileSystem\Gallery\GalleryFacadeFactory;
 use App\Model\FileSystem\Templating\TemplateUploadDataProvider;
 use App\Model\FileSystem\Templating\TemplateUploadManager;
+use App\Model\Http\Responses\CSSResponse;
+use App\Model\Http\Responses\JSResponse;
+use App\Model\Http\WebLoader\Specific\DynamicDependencyModule;
 use App\Model\Templating\DataHint\FjordTemplateProviderData;
 use App\Presenters\FrontBasePresenter;
 use App\Utils\FormatUtils;
+use JetBrains\PhpStorm\NoReturn;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
@@ -64,24 +68,23 @@ class GeneratorPresenter extends FrontBasePresenter
     }
 
     /**
-     * @throws AbortException|BadRequestException
+     * @throws AbortException
      */
-    public function renderDependencies(string $path): void {
-        // some security for hacks
-        if($path = "/") $this->redirect("404");
-        $explodedPath = explode("/", $path);
-        $fileName = $explodedPath[array_key_last($explodedPath)];
-        if(str_starts_with(".",$fileName)) $this->redirect("404");
-        $tempUploadManager = new TemplateUploadManager($this->templateUploadDataProvider, $this->usedTemplate->dirname, TemplateUploadManager::MODE_SOLID);
-        $dependencyPath = $tempUploadManager->getDependencyFolder($this->usedTemplate->dependency_path);
-        $realFilePath = realpath($path);
-        foreach (Finder::findFiles($dependencyPath . DIRECTORY_SEPARATOR . "*") as $file) {
-            if($file === $realFilePath) {
-                $fileResponse = new FileResponse($file, $fileName, FormatUtils::get_mime_type($fileName), false);
-                $this->sendResponse($fileResponse);
-            }
-        };
-        $this->render404();
+    #[NoReturn] public function renderLoaderJavascript(): void {
+        $dynamicDependencyModule = new DynamicDependencyModule($this->usedTemplate, $this->templateUploadDataProvider);
+        $computedCSS = $dynamicDependencyModule->getParsedCSS()->getComputedCode(true);
+        $cssResponse = new CSSResponse($computedCSS);
+        $this->sendResponse($cssResponse);
+    }
+
+    /**
+     * @throws AbortException
+     */
+    #[NoReturn] public function renderLoaderCss(): void {
+        $dynamicDependencyModule = new DynamicDependencyModule($this->usedTemplate, $this->templateUploadDataProvider);
+        $computedJS = $dynamicDependencyModule->getParsedJS();
+        $jsResponse = new JSResponse($computedJS);
+        $this->sendResponse($jsResponse);
     }
 
     /**
