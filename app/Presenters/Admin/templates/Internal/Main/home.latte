@@ -179,7 +179,9 @@ Interní administrace
                         <hr>
                     </div>
                     <div class="card classic-shadow default-margin-bot" n:foreach="$templates as $template">
-                        {skipIf $template->id === $usedTemplate->id}
+                        {if $usedTemplate}
+                            {skipIf $template->id === $usedTemplate->id}
+                        {/if}
                         <div class="card-body">
                             <div class="d-flex justify-content-between" style="  align-items: center;
   justify-content: center;">

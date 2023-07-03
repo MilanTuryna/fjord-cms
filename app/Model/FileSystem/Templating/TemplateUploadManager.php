@@ -47,6 +47,14 @@ class TemplateUploadManager extends UploadManager
         return $this->path;
     }
 
+    /**
+     * @param string $dependencyLocalPath
+     * @return string
+     */
+    public function getDependencyFolder(string $dependencyLocalPath): string {
+        return $this->path . DIRECTORY_SEPARATOR . $dependencyLocalPath;
+    }
+
     // returns path to folder with templateFolderName
     public function getTemplateFolder(string $zipName): string {
         $exploded = explode(".", $zipName);
