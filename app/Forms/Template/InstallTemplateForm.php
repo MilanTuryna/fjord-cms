@@ -149,6 +149,7 @@ class InstallTemplateForm extends RepositoryForm
                         $templateEntity->author_id = $authorId;
                         $templateEntity->dirname = $uniqueName;
                         $templateEntity->zip_name = $zipName;
+                        $templateEntity->dependency_path = $parsedIndexJSON["dependency_path"];
                         if(isset($parsedIndexJSON["error404"]) && $parsedIndexJSON["error404"]) $templateEntity->error404 = $parsedIndexJSON["error404"];
                         $templateEntity->title = $parsedIndexJSON["title"];
                         if (isset($parsedIndexJSON["description"])) $templateEntity->description = $parsedIndexJSON["description"];
