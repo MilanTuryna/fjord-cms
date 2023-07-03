@@ -28,7 +28,7 @@ class MainPresenter extends AdminBasePresenter
         $this->template->templateCount = count($templates);
         $emailServers = $this->template->emailServers = $this->serverRepository->findAll()->fetchAll();
         $mailCounts = [];
-        foreach ($emailServers as $emailServer) $mailCounts[$emailServer->id] = $emailServer->related("fjord_smtp_mails")->count("*");
+        foreach ($emailServers as $emailServer) $mailCounts[$emailServer->id] = $emailServer->related("fjord_smtp_mails.id")->count("*");
         $this->template->mailCounts = $mailCounts;
     }
 }

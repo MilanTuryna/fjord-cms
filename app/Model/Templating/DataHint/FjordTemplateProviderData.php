@@ -5,6 +5,7 @@ namespace App\Model\Templating\DataHint;
 
 use App\Model\Database\EAV\DynamicEntityFactory;
 use App\Model\Database\Repository\Settings\Entity\GlobalSettings;
+use App\Model\Database\Repository\SMTP\Entity\Server;
 use App\Model\Database\Repository\Template\Entity\Template;
 use App\Model\FileSystem\Gallery\GalleryFacadeFactory;
 use Nette\Database\Table\ActiveRow;
@@ -20,6 +21,7 @@ class FjordTemplateProviderData
     const VARIABLES = "variables";
 
     public string $dependencyPath; // path for useful files like js scripts, css etc.
+    public Server|ActiveRow|null $activeSmtpServer;
     public GalleryFacadeFactory $galleryFacadeFactory;
     public DynamicEntityFactory $dynamicEntityFactory;
     public GlobalSettings|ActiveRow|null $settings;

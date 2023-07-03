@@ -46,6 +46,8 @@ class GeneratorPresenter extends FrontBasePresenter
      * @param PageRepository $pageRepository
      * @param TemplateUploadDataProvider $templateUploadDataProvider
      * @param GalleryRepository $galleryRepository
+     * @param ServerRepository $serverRepository
+     * @param MailRepository $mailRepository
      * @param GlobalSettingsRepository $globalSettingsRepository
      * @param DynamicEntityFactory $dynamicEntityFactory
      * @param GalleryFacadeFactory $galleryFacadeFactory
@@ -141,6 +143,8 @@ class GeneratorPresenter extends FrontBasePresenter
                 $providerData->parameters = $params;
                 $providerData->templateInfo = $this->usedTemplate;
                 $providerData->variables = ArrayHash::from($varsAssociativeArray, true);
+                $activeSmtpServer = $this->serverRepository->findAll()->fetch();
+                $providerData->activeSmtpServer = $activeSmtpServer ?: null;
 
                 bdump($providerData);
 
