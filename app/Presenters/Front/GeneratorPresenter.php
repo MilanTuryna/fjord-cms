@@ -18,8 +18,12 @@ use App\Model\FileSystem\Templating\TemplateUploadDataProvider;
 use App\Model\FileSystem\Templating\TemplateUploadManager;
 use App\Model\Templating\DataHint\FjordTemplateProviderData;
 use App\Presenters\FrontBasePresenter;
+use App\Utils\FormatUtils;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\Responses\FileResponse;
 use Nette\Routing\Route;
+use Nette\Utils\Finder;
 
 /**
  * Class GeneratorPresenter
@@ -44,6 +48,40 @@ class GeneratorPresenter extends FrontBasePresenter
                                 private GalleryFacadeFactory $galleryFacadeFactory, private PageVariableRepository $pageVariableRepository)
     {
         parent::__construct($this->templateRepository);
+    }
+
+    /**
+     * @throws BadRequestException
+     */
+    public function render404(): void {
+        $templateUploadManager = new TemplateUploadManager($this->templateUploadDataProvider, $this->usedTemplate->dirname, TemplateUploadManager::MODE_SOLID);
+        $error404file = $templateUploadManager->getTemplateFolder($this->usedTemplate->zip_name) . DIRECTORY_SEPARATOR . $this->usedTemplate->error404;
+        if(!file_exists($error404file)) {
+            $this->error("Tato stránka nebyla nalezena. V případě, že si myslíte, že se jedná o chybu, kontaktujte administrátora", 404);
+        }
+        $this->template->setFile($error404file);
+        $this->getHttpResponse()->setCode(404);
+    }
+
+    /**
+     * @throws AbortException|BadRequestException
+     */
+    public function renderDependencies(string $path): void {
+        // some security for hacks
+        if($path = "/") $this->redirect("404");
+        $explodedPath = explode("/", $path);
+        $fileName = $explodedPath[array_key_last($explodedPath)];
+        if(str_starts_with(".",$fileName)) $this->redirect("404");
+        $tempUploadManager = new TemplateUploadManager($this->templateUploadDataProvider, $this->usedTemplate->dirname, TemplateUploadManager::MODE_SOLID);
+        $dependencyPath = $tempUploadManager->getDependencyFolder($this->usedTemplate->dependency_path);
+        $realFilePath = realpath($path);
+        foreach (Finder::findFiles($dependencyPath . DIRECTORY_SEPARATOR . "*") as $file) {
+            if($file === $realFilePath) {
+                $fileResponse = new FileResponse($file, $fileName, FormatUtils::get_mime_type($fileName), false);
+                $this->sendResponse($fileResponse);
+            }
+        };
+        $this->render404();
     }
 
     /**
@@ -88,7 +126,7 @@ class GeneratorPresenter extends FrontBasePresenter
                 }
 
                 $providerData = new FjordTemplateProviderData();
-                $providerData->dependency_path = $this->usedTemplate->dependency_path;
+                $providerData->dependencyPath = $templateUploadManager->getDependencyFolder($this->usedTemplate->dependency_path);
                 $providerData->dynamicEntityFactory = $this->dynamicEntityFactory;
                 $providerData->galleryFacadeFactory = $this->galleryFacadeFactory;
                 $providerData->settings = $this->globalSettingsRepository->getActualSettings();
