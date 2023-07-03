@@ -18,7 +18,7 @@ class FjordTemplateProviderData
     const PARAMETERS = "parameters";
     const VARIABLES = "variables";
 
-    public string $dependency_path; // path for useful files like js scripts, css etc.
+    public string $dependencyPath; // path for useful files like js scripts, css etc.
     public GalleryFacadeFactory $galleryFacadeFactory;
     public DynamicEntityFactory $dynamicEntityFactory;
     public GlobalSettings|ActiveRow|null $settings;
