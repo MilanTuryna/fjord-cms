@@ -12,6 +12,7 @@ use App\Model\Database\Repository\SMTP\Entity\Mail;
 use App\Model\Database\Repository\SMTP\Entity\Server;
 use App\Model\Database\Repository\SMTP\MailRepository;
 use App\Model\Database\Repository\SMTP\ServerRepository;
+use JetBrains\PhpStorm\Pure;
 use Nette\Application\UI\Presenter;
 use Nette\Mail\Message;
 use Nette\Mail\SmtpMailer;
@@ -31,7 +32,7 @@ class ContactForm extends Form
      * @param GlobalSettingsRepository $globalSettingsRepository
      * @param int $serverId
      */
-    public function __construct(Presenter $presenter, private ServerRepository $serverRepository, private MailRepository $mailRepository, private GlobalSettingsRepository $globalSettingsRepository, private int $serverId)
+    #[Pure] public function __construct(Presenter $presenter, private ServerRepository $serverRepository, private MailRepository $mailRepository, private GlobalSettingsRepository $globalSettingsRepository, private int $serverId)
     {
         parent::__construct($presenter);
 
@@ -72,6 +73,12 @@ class ContactForm extends Form
             encryption: 'ssl',
         );
         $mailer->send($message);
+        $mail = new Mail();
+        $mail->content = $values->content;
+        $mail->title = $values->name . ": " . $values->email;
+        $mail->server_id = $this->serverId;
+        $mail->original_sender = $values->email;
+        $this->mailRepository->insert($mail->iterable());
         $this->presenter->flashMessage("Email byl úspěšně odeslán. Odpovíme na něj co nejdříve.", FlashMessages::SUCCESS);
     }
 }
