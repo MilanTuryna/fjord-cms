@@ -6,11 +6,12 @@ namespace App\Model\Database\Repository\Dynamic;
 
 use App\Model\Database\Repository;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicAttribute;
+use JetBrains\PhpStorm\Pure;
 use Nette\Database\Explorer;
 
 class AttributeRepository extends Repository
 {
-    public function __construct(Explorer $explorer)
+    #[Pure] public function __construct(Explorer $explorer)
     {
         parent::__construct("fjord_dynamic_attributes", $explorer);
     }

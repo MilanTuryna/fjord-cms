@@ -24,6 +24,7 @@ use App\Model\Database\Repository\Dynamic\ValueRepository;
 use Exception;
 use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
+use Nette\Database\UniqueConstraintViolationException;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\DateTime;
 use Nette\Utils\FileSystem;
@@ -102,7 +103,11 @@ class EAVRepository implements IRepository
         $sql = FileSystem::read(__DIR__ . "/SQL/updateByUnique.sql");
         $result = [];
         foreach ($data as $k => $v) {
-            $result[$k] = (bool)$this->explorer->query($sql, $v, $k, $id)->getRowCount();
+            $count = $result[$k] = (bool)$this->explorer->query($sql, $v, $k, $id)->getRowCount();
+            if($count == 0) {
+                $attribute = $this->attributeRepository->findByColumn(DynamicAttribute::id_name, $k)->fetch();
+                //TODO
+            }
         }
         return $result;
     }

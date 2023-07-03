@@ -34,10 +34,10 @@ Administrátoři
                 <td>{$fileInfo->getSize()} B</td>
                 <td>{$fileInfo->getCTime()|date:'d.m.Y H:i'}</td>
                 <td class="p-0">
-                    <a href="{$url}" class="btn btn-primary">OTEVŘÍT</a>
+                    <a href="{$url}" class="btn btn-primary" target="_blank">OTEVŘÍT</a>
                 </td>
                 <td class="p-0">
-                    <a n:href=":Admin:Administrator:Upload:remove, str_replace('.', '----', $fileInfo->getFilename())" class="btn btn-danger">X</a>
+                    <a n:href=":Admin:Administrator:Upload:remove, str_replace('.', '----', $fileInfo->getFilename())"  class="btn btn-danger">X</a>
                 </td>
             </tr>
             {/foreach}
