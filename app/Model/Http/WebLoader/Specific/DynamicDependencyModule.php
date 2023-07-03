@@ -26,7 +26,7 @@ class DynamicDependencyModule extends Module
     public function __construct(Template|ActiveRow $templateRow, TemplateUploadDataProvider $templateUploadDataProvider)
     {
         $uploadManager = new TemplateUploadManager($templateUploadDataProvider, $templateRow->dirname, TemplateUploadManager::MODE_SOLID);
-        $dependencyFolder = $uploadManager->getDependencyFolder($templateRow->dependency_path);
+        $dependencyFolder = $uploadManager->getDependencyFolder($templateRow->zip_name, $templateRow->dependency_path);
         $cssMask = new FileMask($dependencyFolder, ["*.css"]);
         $jsMask = new FileMask($dependencyFolder, ["*.js"]);
         parent::__construct($cssMask, $jsMask, "DynamicDependencyModule");

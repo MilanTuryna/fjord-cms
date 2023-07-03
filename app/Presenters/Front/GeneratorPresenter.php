@@ -129,7 +129,6 @@ class GeneratorPresenter extends FrontBasePresenter
                 }
 
                 $providerData = new FjordTemplateProviderData();
-                $providerData->dependencyPath = $templateUploadManager->getDependencyFolder($this->usedTemplate->dependency_path);
                 $providerData->dynamicEntityFactory = $this->dynamicEntityFactory;
                 $providerData->galleryFacadeFactory = $this->galleryFacadeFactory;
                 $providerData->settings = $this->globalSettingsRepository->getActualSettings();
