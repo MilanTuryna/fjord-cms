@@ -16,6 +16,8 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Nette\Security\Passwords;
+use stdClass;
 
 class CreateAdminForm extends AdminForm
 {
@@ -25,11 +27,12 @@ class CreateAdminForm extends AdminForm
      * CreateAdminForm constructor.
      * @param Presenter $presenter
      * @param AccountRepository $accountRepository
+     * @param Passwords $passwords
      * @param FormRedirect $redirect
      */
-    #[Pure] public function __construct(Presenter $presenter, AccountRepository $accountRepository, FormRedirect $redirect)
+    #[Pure] public function __construct(Presenter $presenter, AccountRepository $accountRepository, private Passwords $passwords, FormRedirect $redirect)
     {
-        parent::__construct($presenter, $accountRepository);
+        parent::__construct($presenter, $accountRepository, $this->passwords);
 
         $this->formRedirect = $redirect;
     }
@@ -43,13 +46,13 @@ class CreateAdminForm extends AdminForm
 
     /**
      * @param Form $form
-     * @param AdminFormData $data
+     * @param stdClass $data
      * @throws AbortException
      * @throws InvalidLinkException
      */
-    public function success(Form $form, AdminFormData $data) {
-        $data->permissions = Utils::arrayToUnparsedList($data->permissions_array);
-        $this->successTemplate($form, $data->iterable(true), new FormMessage("Administrátorský účet byl úspěšně vytvořen.", "Admniistrátorský účet nemohl být z nějakého důvodu vytvořen"),
+    public function success(Form $form, stdClass &$data): void {
+        parent::success($form, $data);
+        $this->successTemplate($form, (array)$data, new FormMessage("Administrátorský účet byl úspěšně vytvořen.", "Admniistrátorský účet nemohl být z nějakého důvodu vytvořen."),
             $this->formRedirect);
     }
 }

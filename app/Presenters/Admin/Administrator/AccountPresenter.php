@@ -51,8 +51,8 @@ class AccountPresenter extends AdminBasePresenter
      * @return Form
      */
     public function createComponentCreateAdminForm(): Form {
-        return (new CreateAdminForm($this, $this->accountRepository,
-            new FormRedirect(":Admin:Application:Administrator:view", [FormRedirect::LAST_INSERT_ID])))->create();
+        return (new CreateAdminForm($this, $this->accountRepository, $this->adminAuthenticator->getPasswords(),
+            new FormRedirect(":Admin:Administrator:Account:view", [FormRedirect::LAST_INSERT_ID])))->create();
     }
 
     /**
@@ -60,7 +60,7 @@ class AccountPresenter extends AdminBasePresenter
      */
     public function createComponentEditAdminForm(): Multiplier {
         return new Multiplier(function ($adminId) {
-            return (new EditAdminForm($this, $this->accountRepository, (int)$adminId))->create();
+            return (new EditAdminForm($this, $this->accountRepository,  $this->adminAuthenticator->getPasswords(), (int)$adminId))->create();
         });
     }
 }

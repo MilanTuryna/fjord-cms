@@ -16,6 +16,7 @@ use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;
+use Nette\Security\Passwords;
 
 /**
  * Class EditAdminForm
@@ -29,11 +30,12 @@ class EditAdminForm extends AdminForm
      * EditAdminForm constructor.
      * @param Presenter $presenter
      * @param AccountRepository $accountRepository
+     * @param Passwords $passwords
      * @param int $admin_id
      */
-    #[Pure] public function __construct(Presenter $presenter, AccountRepository $accountRepository, int $admin_id)
+    #[Pure] public function __construct(Presenter $presenter, AccountRepository $accountRepository, Passwords $passwords, int $admin_id)
     {
-        parent::__construct($presenter, $accountRepository);
+        parent::__construct($presenter, $accountRepository, $passwords);
 
         $this->admin_id = $admin_id;
     }
@@ -61,12 +63,12 @@ class EditAdminForm extends AdminForm
 
     /**
      * @param Form $form
-     * @param AdminFormData $data
+     * @param \stdClass $data
      * @throws AbortException
      * @throws InvalidLinkException
      */
-    public function success(\Nette\Application\UI\Form $form, AdminFormData $data) {
-        $data->permissions = Utils::arrayToUnparsedList($data->permissions_array);
-        $this->successTemplate($form, $data->iterable(true), new FormMessage("Informace o daném administrátorovi byly úspěšně změněny.", "Informace o daném administrátorovi nemohli být z neznámého důvodu změněny."), null, $this->admin_id);
+    public function success(\Nette\Application\UI\Form $form, \stdClass &$data): void {
+        parent::success($form, $data);
+        $this->successTemplate($form, (array)$data, new FormMessage("Informace o daném administrátorovi byly úspěšně změněny.", "Informace o daném administrátorovi nemohli být z neznámého důvodu změněny."), null, $this->admin_id);
     }
 }
