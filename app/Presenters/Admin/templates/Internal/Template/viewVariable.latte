@@ -1,0 +1,21 @@
+{block title}
+Editovat proměnnou {$variable->id_name}
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [
+":Admin:Overview:home" => "Administrace",
+":Admin:Internal:Main:home" => "Interní administrace",
+":Admin:Internal:Template:list" => "Seznam nainstalovaných šablon",
+":Admin:Internal:Template:view, {$template->id}" => "Šablona " . $template->title,
+"" => "Nastavení stránky " . $page->name . " (" . $page->route . ")",
+"this" => "Editovat proměnnou {$variable->id_name}"
+]}
+{/block}
+{block content}
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Editovat proměnnou {$variable->id_name}</h5>
+        {include TEMPLATE_COMMON . "/form.latte", form: "editPageVariableForm-{$template->id}-{$page->id}-{$variable->id}"}
+    </div>
+</div>
+{/block}

@@ -10,6 +10,8 @@ use App\Forms\FormRedirect;
 use App\Forms\Template\CreateJsonSchemaForm;
 use App\Forms\Template\InstallTemplateForm;
 use App\Forms\Template\Page\EditTemplatePageVariablesForm;
+use App\Forms\Template\Page\Variable\CreatePageVariableForm;
+use App\Forms\Template\Page\Variable\EditPageVariableForm;
 use App\Model\Admin\Permissions\Specific\AdminPermissions;
 use App\Model\Database\EAV\DynamicEntityFactory;
 use App\Model\Database\Repository\Template\AuthorRepository;
@@ -90,7 +92,27 @@ class TemplatePresenter extends AdminBasePresenter
         $this->template->pages = $this->pageRepository->findByColumn(Page::template_id, $templateRow->id);
     }
 
-    public function renderViewPage(int $templateId, int $pageId): void {
+    public function renderViewVariable(int $templateId, int $pageId, int $variableId) {
+        $this->template->page = $this->pageRepository->findById($pageId);
+        $this->template->template = $this->_templateRepository->findById($templateId);
+        $this->template->variable = $this->pageVariableRepository->findById($variableId);
+    }
+
+    public function renderNewVariable(int $templateId, int $pageId) {
+        $this->template->page = $this->pageRepository->findById($pageId);
+        $this->template->template = $this->_templateRepository->findById($templateId);
+    }
+
+    /**
+     * @throws AbortException
+     */
+    #[NoReturn] public function actionRemoveVariable(int $templateId, int $pageId, int $variableId): void {
+        $this->prepareActionRemove($this->pageVariableRepository, $variableId,
+            new FormMessage("Daná proměnná byla úspěšně odstraněna.", "Daná proměnná nemohla být z neznámého důvodu odstraněna."),
+            new FormRedirect("viewPage", [$templateId, $pageId]));
+    }
+
+    public function renderViewPage( $templateId, int $pageId): void {
         $this->template->page = $this->pageRepository->findById($pageId);
         $this->template->template = $this->_templateRepository->findById($templateId);
         $this->template->pageVariables = $this->pageVariableRepository->findByColumn(PageVariable::page_id, $pageId)->fetchAll();
@@ -111,6 +133,30 @@ class TemplatePresenter extends AdminBasePresenter
         return (new Multiplier(function ($pageId) {
             return (new EditTemplatePageVariablesForm($this, $this->pageVariableRepository, (int)$pageId, new FormRedirect("this")))->create();
         }));
+    }
+
+    /**
+     * @return Multiplier
+     */
+    public function createComponentCreatePageVariableForm(): Multiplier {
+        return new Multiplier(function ($templateId) {
+            return new Multiplier(function ($pageId) use($templateId) {
+                return (new CreatePageVariableForm($this, $this->pageVariableRepository, (int)$pageId, new FormRedirect("viewPage", [$templateId, $pageId])))->create();
+            });
+        });
+    }
+
+    /**
+     * @return Multiplier
+     */
+    public function createComponentEditPageVariableForm(): Multiplier {
+        return new Multiplier(function ($templateId) {
+            return new Multiplier(function ($pageId) use($templateId) {
+                return new Multiplier(function ($variableId) use($pageId, $templateId) {
+                    return (new EditPageVariableForm($this, $this->pageVariableRepository, (int)$pageId, new FormRedirect("this"), $variableId, new FormRedirect("removeVariable", [$templateId, $pageId, $variableId])))->create();
+                });
+            });
+        });
     }
 
     /**

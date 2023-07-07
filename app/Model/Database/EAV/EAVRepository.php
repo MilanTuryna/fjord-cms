@@ -106,7 +106,19 @@ class EAVRepository implements IRepository
             $count = $result[$k] = (bool)$this->explorer->query($sql, $v, $k, $id)->getRowCount();
             if($count == 0) {
                 $attribute = $this->attributeRepository->findByColumn(DynamicAttribute::id_name, $k)->fetch();
-                //TODO
+                $row = $this->idRepository->findByColumn(DynamicId::row_unique, $id)->fetch();
+                $existingValue = $this->valueRepository->findAll()->where(DynamicValue::attribute_id . "= ? AND " . DynamicValue::row_id . " = ?", $attribute->id, $row->id)->fetch();
+                if(!$existingValue) {
+                    try {
+                        $this->valueRepository->insert([
+                            DynamicValue::value => $v,
+                            DynamicValue::entity_id => $this->entity->id,
+                            DynamicValue::row_id => $row->id,
+                            DynamicValue::attribute_id => $attribute->id,
+                        ]);
+                    } catch (Exception $exception) {
+                    }
+                }
             }
         }
         return $result;
@@ -133,7 +145,7 @@ class EAVRepository implements IRepository
                 $result[$row->row_unique][$row->attribute] = $translatedValue;
             } elseif($dateTime) {
                 try {
-                    $result[$row->row_unique][$row->attribute] = DateTime::from($row->value);
+                    $result[$row->row_unique][$row->attribute] = $row->value ? DateTime::from($row->value)  : null;
                 } catch (Exception $e) {
                     continue;
                 }

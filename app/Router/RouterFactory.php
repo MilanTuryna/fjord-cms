@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace App\Router;
 
 use App\Model\Database\Repository\Template\Entity\Page;
+use App\Model\Database\Repository\Template\Entity\Template;
 use App\Model\Database\Repository\Template\PageRepository;
 use App\Model\Database\Repository\Template\TemplateRepository;
 use App\Presenters\Admin\Internal\TemplatePresenter;
+use Latte\Compiler\Nodes\Php\Expression\FilterCallNode;
 use Nette;
 use Nette\Application\Routers\RouteList;
+use Nette\Routing\Route;
 
 /**
  * Class RouterFactory
@@ -22,7 +25,7 @@ final class RouterFactory
 	public function __construct(private TemplateRepository $templateRepository, private PageRepository $pageRepository) {
     }
 
-	public static function createRouter(): RouteList
+	public function createRouter(): RouteList
 	{
 		$router = new RouteList;
 
@@ -50,6 +53,9 @@ final class RouterFactory
             ->addRoute("/admin/internal/template/remove/<id>", "Internal:Template:remove")
             ->addRoute("/admin/internal/template/enable/<id>?value=<value>", "Internal:Template:enable")
             ->addRoute("/admin/internal/template/view/<templateId>/viewPage/<pageId>", "Internal:Template:viewPage")
+            ->addRoute("/admin/internal/template/view/<templateId>/viewPage/<pageId>/variables/new", "Internal:Template:newVariable")
+            ->addRoute("/admin/internal/template/view/<templateId>/viewPage/<pageId>/variables/view/<variableId>", "Internal:Template:viewVariable")
+            ->addRoute("/admin/internal/template/view/<templateId>/viewPage/<pageId>/variables/remove/<variableId>", "Internal:Template:removeVariable")
 
             ->addRoute("/admin/internal/smtp/new", "Internal:SMTP:new")
             ->addRoute("/admin/internal/smtp/view/<id>", "Internal:SMTP:view")
@@ -83,11 +89,22 @@ final class RouterFactory
             ->addRoute("/admin/settings", "Settings:overview")
             ->addRoute("/admin/settings/history/<id>", "Settings:history")
         ;
-		$router->withModule("Front")->addRoute("/","Generator:url");
         $router->withModule("Front")->addRoute("/dependencies/js", "Generator:loaderJavascript");
         $router->withModule("Front")->addRoute("/dependencies/css", "Generator:loaderCss");
         $router->withModule("Front")->addRoute("/_error_404", "Generator:404");
-        $router->withModule("Front")->addRoute("<path .+>", "Generator:url");
+        $template = $this->templateRepository->findAll()->where(Template::used . " = ?", 1)->fetch();
+        /**
+         * @var $pages Page[]
+         */
+        $pages = $this->pageRepository->findByColumn(Page::template_id, $template->id)->fetchAll();
+        foreach ($pages as $page) {
+            $router->withModule("Front")->addRoute($page->route, [
+                "presenter" => "Generator",
+                "action" => "url",
+                "pageRoute" => $page->route,
+                "pageId" => $page->id,
+            ]);
+        }
 		return $router;
 	}
 }

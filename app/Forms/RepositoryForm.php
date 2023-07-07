@@ -81,7 +81,9 @@ class RepositoryForm extends \App\Forms\Form
             if($deletePrivateVars) {
                 foreach ($entity as $k => $i) if($k[0] === "_") unset($entity[$k]);
             }
-            foreach ($dataExceptions as $dataException) unset($entity->{$dataException});
+            foreach ($dataExceptions as $dataException) {
+                unset($entity[$dataException]);
+            }
             $updatedRow = $rowId ? $this->repository->updateById($rowId, $entity) : $this->repository->insert($entity);
             if($updatedRow) {
                 $this->presenter->flashMessage($message->success, FlashMessages::SUCCESS);

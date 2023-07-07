@@ -1,0 +1,21 @@
+{block title}
+Vytvořit novou proměnnou
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [
+":Admin:Overview:home" => "Administrace",
+":Admin:Internal:Main:home" => "Interní administrace",
+":Admin:Internal:Template:list" => "Seznam nainstalovaných šablon",
+":Admin:Internal:Template:view, {$template->id}" => "Šablona " . $template->title,
+"" => "Nastavení stránky " . $page->name . " (" . $page->route . ")",
+"this" => "Vytvořit novou proměnnou"
+]}
+{/block}
+{block content}
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Vytvořit novou proměnnou pro stránku {$page->route}</h5>
+        {include TEMPLATE_COMMON . "/form.latte", form: "createPageVariableForm-{$template->id}-{$page->id}"}
+    </div>
+</div>
+{/block}

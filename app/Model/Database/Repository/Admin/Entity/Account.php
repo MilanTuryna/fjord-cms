@@ -66,6 +66,6 @@ class Account extends Entity
      */
     public function isFullPermission(): bool
     {
-        return $this->permissions == "*";
+        return trim($this->permissions) == "*";
     }
 }

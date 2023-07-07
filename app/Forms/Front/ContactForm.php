@@ -16,6 +16,8 @@ use JetBrains\PhpStorm\Pure;
 use Nette\Application\UI\Presenter;
 use Nette\Mail\Message;
 use Nette\Mail\SmtpMailer;
+use Nette\Utils\Html;
+use Tracy\Debugger;
 
 /**
  * Class ContactForm
@@ -56,6 +58,7 @@ class ContactForm extends Form
     /**
      * @param \Nette\Application\UI\Form $form
      * @param ContactFormData $values
+     * @throws \Exception
      */
     public function success(\Nette\Application\UI\Form $form, ContactFormData $values): void {
         /**
@@ -63,22 +66,28 @@ class ContactForm extends Form
          */
         $settings = $this->globalSettingsRepository->getActualSettings();
         $server = $this->serverRepository->findById($this->serverId);
-        $message = new Message();
-        $message->setFrom(sprintf("%s <%s>", $server->name, $server->server_email))->addTo($server->receiver_email)->setSubject("Nová zpráva: " . $settings->app_name)
-            ->setHtmlBody("Tato zpráva přišla od <b>" . $values->name . "</b>\n\n" . $values->content);
-        $mailer = new SmtpMailer(
-            host: $server->server_host,
-            username: $server->server_email,
-            password: $server->server_password,
-            encryption: 'ssl',
-        );
-        $mailer->send($message);
-        $mail = new Mail();
-        $mail->content = $values->content;
-        $mail->title = $values->name . ": " . $values->email;
-        $mail->server_id = $this->serverId;
-        $mail->original_sender = $values->email;
-        $this->mailRepository->insert($mail->iterable());
-        $this->presenter->flashMessage("Email byl úspěšně odeslán. Odpovíme na něj co nejdříve.", FlashMessages::SUCCESS);
+        bdump($this->serverId);
+        try {
+            $message = new Message();
+            $message->setFrom(sprintf("%s <%s>", $server->name, $server->server_email))->addTo($server->receiver_email)->setSubject("Nová zpráva: " . $settings->app_name)
+                ->setHtmlBody("Tato zpráva přišla od <b>" . $values->name . " (" . $values->email . ")</b>:<br><br>" . Html::htmlToText($values->content));
+            $mailer = new SmtpMailer(
+                host: $server->server_host,
+                username: $server->server_email,
+                password: $server->server_password,
+                encryption: 'ssl',
+            );
+            $mailer->send($message);
+            $mail = new Mail();
+            $mail->content = $values->content;
+            $mail->title = $values->name . ": " . $values->email;
+            $mail->server_id = $this->serverId;
+            $mail->original_sender = $values->email;
+            $this->mailRepository->insert($mail->iterable());
+            $this->presenter->flashMessage("Email byl úspěšně odeslán. Odpovíme na něj co nejdříve.", FlashMessages::SUCCESS);
+        } catch (\Exception $exception) {
+            throw $exception;
+            $this->presenter->flashMessage("Z neznámého důvodu se nepodařilo email odeslat. Zkuste to ručně.", FlashMessages::ERROR);
+        }
     }
 }

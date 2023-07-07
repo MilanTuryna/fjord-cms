@@ -13,6 +13,7 @@ use App\Model\Database\Repository\Admin\Entity\Account;
 use JetBrains\PhpStorm\Pure;
 use Nette\Application\UI\Presenter;
 use Nette\Security\Passwords;
+use Nette\Utils\DateTime;
 use stdClass;
 
 /**
@@ -54,6 +55,7 @@ abstract class AdminForm extends RepositoryForm
      * @param stdClass $data
      */
     public function success(\Nette\Application\UI\Form $form, stdClass &$data): void {
+        $data->created = new DateTime();
         $data->permissions = Utils::arrayToUnparsedList($data->permissions_array);
         $data->password = $this->passwords->hash($data->password);
         unset($data->permissions_array);

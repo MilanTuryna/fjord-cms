@@ -30,7 +30,7 @@ class PageVariable extends Entity
     public string $description;
     public string $content;
     public string $input_type; // use self::INPUT_TYPES
-    public string $required;
+    public bool $required;
     public string $page_id;
     public int $id;
 }

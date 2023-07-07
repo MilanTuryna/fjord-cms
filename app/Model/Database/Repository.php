@@ -77,7 +77,7 @@ abstract class Repository implements IRepository
      * @param bool $includesDeleted
      * @return Selection
      */
-    public function findByColumn(string $column, string $value, ?array $select = null, bool $includesDeleted = false): Selection
+    public function findByColumn(string $column, mixed $value, ?array $select = null, bool $includesDeleted = false): Selection
     {
         //if(!$select) $select = $this->getAllowedValues();
         $table = $this->explorer->table($this->table);

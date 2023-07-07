@@ -21,4 +21,41 @@
         {/if}
     </div>
 </div>
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">(PRO VÝVOJAŘE): Seznam proměnných</h5>
+        <table class="table table-bordered table-striped table-sm">
+            <thead>
+            <tr>
+                <th scope="col">Identif.</th>
+                <th scope="col">Název</th>
+                <th scope="col">Povinné</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach $pageVariables as $row}
+            <tr>
+                <td>
+                    {$row->id_name}
+                </td>
+                <td>
+                    {$row->title}
+                </td>
+                <td>
+                    {$row->required ? "ANO" : "NE"}
+                </td>
+                <td class="p-0"><a n:href=":Admin:Internal:Template:viewVariable $template->id, $page->id, $row->id" class="btn btn-primary br-0 w-100">Zobrazit</a></td>
+            </tr>
+            {/foreach}
+            <tr n:if="count($pageVariables) === 0">
+                <td colspan="8" class="text-center p-3 text-muted">
+                    Žádné proměnné stránky nebyly nalezeny.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <a n:href=":Admin:Internal:Template:newVariable $template->id, $page->id" class="btn btn-light w-100 border">Vytvořit novou proměnnou stránky</a>
+    </div>
+</div>
 {/block}
