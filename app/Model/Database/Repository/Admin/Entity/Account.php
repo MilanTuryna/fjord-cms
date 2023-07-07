@@ -20,6 +20,8 @@ class Account extends Entity
     private PermissionManager $permissionManager;
     private array $permissionMap = [];
 
+    private bool $fullPermission = false;
+
     /**
      * Account constructor.
      * @param string $username
@@ -41,9 +43,11 @@ class Account extends Entity
         $allNodes = $this->permissionManager->getAllNodes();
         $adminPermissionsList = Utils::listToArray($this->permissions);
         $result = [];
-        foreach ($allNodes as $node) $result[$node] = $this->isFullPermission() || Utils::checkPermission($adminPermissionsList, $node);
+        if(in_array(AdminPermissions::ADMIN_FULL, $adminPermissionsList)) $this->fullPermission = true;
+        foreach ($allNodes as $node) $result[$node] = $this->fullPermission || Utils::checkPermission($adminPermissionsList, $node);
         $result[Utils::SPECIAL_WITHOUT_PERMISSION] = true;
         $this->permissionMap = $result;
+        bdump($this->permissionMap);
     }
 
     /**
@@ -66,6 +70,6 @@ class Account extends Entity
      */
     public function isFullPermission(): bool
     {
-        return trim($this->permissions) == "*";
+        return $this->fullPermission;
     }
 }

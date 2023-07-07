@@ -18,11 +18,10 @@ class AdminPermissions extends PermissionManager
 
     const DEVELOPER_SETTINGS = "developer_settings"; // templates, widgets, name of website...
 
-    const DYNAMIC_ENTITY_ADMIN = "dyn";
+    const DYNAMIC_ENTITY_ADMIN = "dynamic_entity_admin";
     const DYNAMIC_ENTITY_EDIT = "dynamic_entity_edit";
 
     const GALLERY_EDIT = "gallery_edit";
-    CONST GALLERY_PHOTO = "gallery_add";
 
     const UPLOAD = "upload";
 

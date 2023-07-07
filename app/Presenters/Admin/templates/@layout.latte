@@ -74,14 +74,15 @@
                         </div>
                     </div>
                     <div class="list-group classic-shadow">
+                        {var $permClass = "App\Model\Admin\Permissions\Specific\AdminPermissions"}
                         {*Route => [Presenter (false if only pagea), Title, Condition, blank, useModule]*}
                         {foreach [
                         ":Admin:Overview:home" => [false, "Základní přehled"],
-                        ":Admin:Internal:Main:home" => [":Admin:Internal", "Interní administrace", null, null, "m"],
-                        ":Admin:Gallery:Main:overview" => [":Admin:Gallery:Main", "Galerie"],
-                        ":Admin:Administrator:Account:list" => [":Admin:Administrator:Account", "Správa účtů"],
-                        ":Admin:Administrator:Upload:list" => [":Admin:Administrator:Upload", "Nahrávání souborů"],
-                        ":Admin:Settings:overview" => [":Admin:Settings", "Nastavení webu"]
+                        ":Admin:Internal:Main:home" => [":Admin:Internal", "Interní administrace", $admin->getPermissionMap()[$permClass::DEVELOPER_SETTINGS], null, "m"],
+                        ":Admin:Gallery:Main:overview" => [":Admin:Gallery:Main", "Galerie", $admin->getPermissionMap()[$permClass::GALLERY_EDIT]],
+                        ":Admin:Administrator:Account:list" => [":Admin:Administrator:Account", "Správa účtů", $admin->isFullPermission()],
+                        ":Admin:Administrator:Upload:list" => [":Admin:Administrator:Upload", "Nahrávání souborů", $admin->getPermissionMap()[$permClass::UPLOAD]],
+                        ":Admin:Settings:overview" => [":Admin:Settings", "Nastavení webu", $admin->isFullPermission()]
                         ] as $menuRoute => $title}
                         <a n:href=$menuRoute n:if="isset($title[2]) ? $title[2] : true" n:class="(!isset($title[4]) ? $presenter->isLinkCurrent($title[0] ? $title[0] . ':*' : $menuRoute) : $presenter->isModuleCurrent($title[0])) ? aktivni, 'list-group-item', 'list-group-item-action'" {if isset($title[3])}target="_blank"{/if}>
                         {$title[1]}
@@ -89,27 +90,29 @@
                         {/foreach}
                     </div>
                     <br>
-                    <strong class="small text-muted" style="font-weight: bold">Správa webového obsahu</strong>
-                    <div class="list-group classic-shadow">
-                        {foreach $dynamicEntities as $entityR}
-                        <a n:href=":Admin:Dynamic:Entity:list $entityR->name" n:class="$currentEntity === $entityR->name ? aktivni, 'list-group-item', 'list-group-item-action'" {if isset($title[3])}target="_blank"{/if}>
-                        {$entityR->menu_item_name ? $entityR->menu_item_name : $entityR->name}
-                        </a>
-                        {/foreach}
-                        {if !$dynamicEntities}
-                            <span class="small text-muted">Zatím tu nic není! Je potřeba prvně něco nastavit.</span>
+                    {if $admin->getPermissionMap()[App\Model\Admin\Permissions\Specific\AdminPermissions::DYNAMIC_ENTITY_ADMIN]}
+                        <strong class="small text-muted" style="font-weight: bold">Správa webového obsahu</strong>
+                        <div class="list-group classic-shadow">
+                            {foreach $dynamicEntities as $entityR}
+                            <a n:href=":Admin:Dynamic:Entity:list $entityR->name" n:class="$currentEntity === $entityR->name ? aktivni, 'list-group-item', 'list-group-item-action'" {if isset($title[3])}target="_blank"{/if}>
+                            {$entityR->menu_item_name ? $entityR->menu_item_name : $entityR->name}
+                            </a>
+                            {/foreach}
+                            {if !$dynamicEntities}
+                                <span class="small text-muted">Zatím tu nic není! Je potřeba prvně něco nastavit.</span>
+                            {/if}
+                        </div>
+                        {if $generalEntities}
+                        <hr>
+                        <strong class="small text-muted" style="font-weight: bold">Obecné data</strong>
+                        <div class="list-group classic-shadow">
+                            {foreach $generalEntities as $entityR}
+                            <a n:href=":Admin:Dynamic:Entity:list $entityR->name" n:class="$currentEntity === $entityR->name ? aktivni, 'list-group-item', 'list-group-item-action'" {if isset($title[3])}target="_blank"{/if}>
+                            {$entityR->menu_item_name ? $entityR->menu_item_name : $entityR->name}
+                            </a>
+                            {/foreach}
+                        </div>
                         {/if}
-                    </div>
-                    {if $generalEntities}
-                    <hr>
-                    <strong class="small text-muted" style="font-weight: bold">Obecné data</strong>
-                    <div class="list-group classic-shadow">
-                        {foreach $generalEntities as $entityR}
-                        <a n:href=":Admin:Dynamic:Entity:list $entityR->name" n:class="$currentEntity === $entityR->name ? aktivni, 'list-group-item', 'list-group-item-action'" {if isset($title[3])}target="_blank"{/if}>
-                        {$entityR->menu_item_name ? $entityR->menu_item_name : $entityR->name}
-                        </a>
-                        {/foreach}
-                    </div>
                     {/if}
                     <hr>
                     <div class="text-right text-muted">

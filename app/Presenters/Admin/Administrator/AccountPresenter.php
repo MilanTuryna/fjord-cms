@@ -33,7 +33,17 @@ class AccountPresenter extends AdminBasePresenter
         parent::__construct($adminAuthenticator, $permissionNode);
     }
 
+    /**
+     * @throws AbortException
+     */
     public function renderList() {
+        $adminEntity = new Account($this->admin->username,
+            $this->admin->first_name, $this->admin->surname, $this->admin->email,
+            $this->admin->password, $this->admin->permissions, $this->admin->created,$this->admin->id);
+        if(!$adminEntity->isFullPermission()) {
+            $this->flashMessage("K tomuto obsahu nemáš přístup!",FlashMessages::ERROR);
+            $this->redirect(":Admin:Overview:home");
+        }
         $this->template->administrators = $this->accountRepository->findAll()->fetchPairs("id");
         $this->template->accessLogs = $this->accessLogRepository->findAll()->order(AccessLog::created . " DESC")->limit(12);
         $this->template->accounts = $this->accountRepository->findAll()->fetchAll();
