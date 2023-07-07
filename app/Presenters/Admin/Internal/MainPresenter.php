@@ -4,19 +4,16 @@
 namespace App\Presenters\Admin\Internal;
 
 
-use App\Model\Admin\Permissions\Utils;
-use App\Model\Database\Entity;
+use App\Model\Admin\Permissions\Specific\AdminPermissions;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicEntity;
-use App\Model\Database\Repository\Dynamic\EntityRepository;
 use App\Model\Database\Repository\SMTP\ServerRepository;
-use App\Model\Database\Repository\Template\Entity\Template;
 use App\Model\Database\Repository\Template\TemplateRepository;
 use App\Model\Security\Auth\AdminAuthenticator;
 use App\Presenters\AdminBasePresenter;
 
 class MainPresenter extends AdminBasePresenter
 {
-    public function __construct(AdminAuthenticator $adminAuthenticator, private ServerRepository $serverRepository, private TemplateRepository $templateRepository, string $permissionNode = Utils::SPECIAL_WITHOUT_PERMISSION)
+    public function __construct(AdminAuthenticator $adminAuthenticator, private ServerRepository $serverRepository, private TemplateRepository $templateRepository, string $permissionNode = AdminPermissions::DEVELOPER_SETTINGS)
     {
         parent::__construct($adminAuthenticator, $permissionNode);
     }

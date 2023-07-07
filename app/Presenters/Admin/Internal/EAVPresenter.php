@@ -8,6 +8,7 @@ use App\Forms\Dynamic\CreateEntityForm;
 use App\Forms\Dynamic\EditEntityForm;
 use App\Forms\FormMessage;
 use App\Forms\FormRedirect;
+use App\Model\Admin\Permissions\Specific\AdminPermissions;
 use App\Model\Admin\Permissions\Utils;
 use App\Model\Database\EAV\DynamicEntityFactory;
 use App\Model\Database\Repository\Dynamic\AttributeRepository;
@@ -37,7 +38,8 @@ class EAVPresenter extends AdminBasePresenter
      * @param ValueRepository $valueRepository
      * @param string $permissionNode
      */
-    public function __construct(AdminAuthenticator $adminAuthenticator, public EntityRepository $entityRepository, public DynamicEntityFactory $dynamicEntityFactory, public AttributeRepository $attributeRepository, public ValueRepository $valueRepository, string $permissionNode = Utils::SPECIAL_WITHOUT_PERMISSION)
+    public function __construct(AdminAuthenticator $adminAuthenticator, public EntityRepository $entityRepository, public DynamicEntityFactory $dynamicEntityFactory, public AttributeRepository $attributeRepository, public ValueRepository $valueRepository,
+                                string $permissionNode = AdminPermissions::DYNAMIC_ENTITY_ADMIN)
     {
         parent::__construct($adminAuthenticator, $permissionNode);
     }

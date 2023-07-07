@@ -49,7 +49,7 @@ class AccountPresenter extends AdminBasePresenter
         $adminEntity = new Account($this->admin->username,
             $this->admin->first_name, $this->admin->surname, $this->admin->email,
             $this->admin->password, $this->admin->permissions, $this->admin->created,$this->admin->id);
-        if(!$adminEntity->isFullPermission()) {
+        if(!$adminEntity->isFullPermission() && $id !== $this->admin->id) {
             $this->flashMessage("K tomuto obsahu nemáš přístup!",FlashMessages::ERROR);
             $this->redirect(":Admin:Overview:home");
         }
@@ -75,7 +75,7 @@ class AccountPresenter extends AdminBasePresenter
      */
     public function renderView(int $id) {
         $adminEntity = new Account($this->admin->username, $this->admin->first_name, $this->admin->surname, $this->admin->email, $this->admin->password, $this->admin->permissions, $this->admin->created,$this->admin->id);
-        if(!$adminEntity->isFullPermission()) {
+        if(!$adminEntity->isFullPermission() && $id !== $adminEntity->id) {
             $this->flashMessage("K tomuto obsahu nemáš přístup!",FlashMessages::ERROR);
             $this->redirect(":Admin:Overview:home");
         }

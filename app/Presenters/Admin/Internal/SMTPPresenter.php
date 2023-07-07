@@ -32,7 +32,7 @@ class SMTPPresenter extends AdminBasePresenter
      * @param MailRepository $mailRepository
      * @param string $permissionNode
      */
-    public function __construct(AdminAuthenticator $adminAuthenticator, private ServerRepository $serverRepository, private MailRepository $mailRepository, string $permissionNode = AdminPermissions::ADMIN_FULL)
+    public function __construct(AdminAuthenticator $adminAuthenticator, private ServerRepository $serverRepository, private MailRepository $mailRepository, string $permissionNode = AdminPermissions::DEVELOPER_SETTINGS)
     {
         parent::__construct($adminAuthenticator, $permissionNode);
     }
