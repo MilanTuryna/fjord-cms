@@ -57,7 +57,6 @@ abstract class AdminForm extends RepositoryForm
     public function success(\Nette\Application\UI\Form $form, stdClass &$data): void {
         $data->created = new DateTime();
         $data->permissions = Utils::arrayToUnparsedList($data->permissions_array);
-        $data->password = $this->passwords->hash($data->password);
         unset($data->permissions_array);
     }
 }

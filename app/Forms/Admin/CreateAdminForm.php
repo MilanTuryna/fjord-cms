@@ -52,6 +52,7 @@ class CreateAdminForm extends AdminForm
      */
     public function success(Form $form, stdClass &$data): void {
         parent::success($form, $data);
+        $data->password = $this->passwords->hash($data->password);
         $this->successTemplate($form, (array)$data, new FormMessage("Administrátorský účet byl úspěšně vytvořen.", "Admniistrátorský účet nemohl být z nějakého důvodu vytvořen."),
             $this->formRedirect);
     }
