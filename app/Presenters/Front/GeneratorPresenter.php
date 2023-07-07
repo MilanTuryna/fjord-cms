@@ -4,6 +4,7 @@
 namespace App\Presenters\Front;
 
 
+use App\Forms\FormRedirect;
 use App\Forms\Front\ContactForm;
 use App\Model\Database\EAV\DynamicEntityFactory;
 use App\Model\Database\Repository\Gallery\GalleryRepository;
@@ -159,7 +160,9 @@ class GeneratorPresenter extends FrontBasePresenter
     public function createComponentContactForm(): Multiplier
     {
         return new Multiplier(function ($serverId) {
-            return (new ContactForm($this, $this->serverRepository, $this->mailRepository, $this->globalSettingsRepository, (int)$serverId))->create();
+            return new Multiplier(function ($anchor = "") use($serverId) {
+                return (new ContactForm($this, $this->serverRepository, $this->mailRepository, $this->globalSettingsRepository, new FormRedirect("this"), (int)$serverId, $anchor))->create();
+            });
         });
     }
 }

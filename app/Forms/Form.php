@@ -9,6 +9,8 @@ use Nette\Application\UI\Presenter;
 
 abstract class Form
 {
+    protected ?string $errorAnchor = null;
+
     public function __construct(protected Presenter $presenter) {
     }
 
@@ -36,13 +38,17 @@ abstract class Form
 
     /**
      * @param $class
+     * @param string|null $errorAnchor
      * @return \Nette\Application\UI\Form
      */
-    public static function staticCreate($class): \Nette\Application\UI\Form {
+    public static function staticCreate($class, ?string $errorAnchor): \Nette\Application\UI\Form {
         $form = new \Nette\Application\UI\Form();
         $form->onSuccess[] = [$class, 'success'];
-        $form->onError[] = function() use ($form, $class) {
-            foreach($form->getErrors() as $error) $class->presenter->flashMessage($error, FlashMessages::ERROR);
+        $form->onError[] = function() use ($form, $class, $errorAnchor) {
+            foreach($form->getErrors() as $error) {
+                $class->presenter->flashMessage($error, FlashMessages::ERROR);
+                if($errorAnchor) $class->presenter->redirect("this#".$errorAnchor);
+            }
         };
         return $form;
     }
@@ -51,6 +57,6 @@ abstract class Form
      * @return \Nette\Application\UI\Form
      */
     public function create(): \Nette\Application\UI\Form {
-        return self::staticCreate($this);
+        return self::staticCreate($this, $this->errorAnchor);
     }
 }
