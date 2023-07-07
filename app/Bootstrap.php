@@ -17,6 +17,7 @@ class Bootstrap
         define('TEMPLATE_COMMON', __DIR__ . '\Presenters\@Common');
 
 		$configurator->enableTracy($appDir . '/log');
+		$configurator->setDebugMode(true);
 
 		$configurator->setTempDirectory($appDir . '/temp');
 
