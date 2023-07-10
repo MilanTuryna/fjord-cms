@@ -50,6 +50,7 @@ class GalleryForm extends RepositoryForm
         $form = parent::create();
         $form->addText("name", "Název galerie")->setRequired(true);
         $form->addText("description", "Popis")->setRequired(false);
+        $form->addText("miniature_url", "URL adresa k miniatuře")->setOption(FormOption::OPTION_NOTE, "Můžete použít souvislý odkaz z této galerie.")->setRequired(false);
         $form->addMultiUpload("_global_upload", "Hromadné nahrání obrázků")->setRequired(false);
         $form->addSubmit("submit", "Vytvořit galerii");
 

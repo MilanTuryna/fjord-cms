@@ -28,7 +28,7 @@ class Bootstrap
 		$configurator->addConfig($appDir . '/config/common.neon');
 		$configurator->addConfig($appDir . '/config/services.neon');
 		$configurator->addConfig($appDir . '/config/local.neon');
-
+        error_reporting( E_ALL & ~E_DEPRECATED &  ~E_USER_DEPRECATED);
 		return $configurator;
 	}
 }

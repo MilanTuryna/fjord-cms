@@ -31,10 +31,11 @@ class GalleryFacade
     /**
      * @throws ReflectionException
      */
-    private function generateGalleryItemFile(ActiveRow $item, string $fileUrl): GalleryItemFile {
+    private function generateGalleryItemFile(ActiveRow $item, string $fileUrl, string $filePath): GalleryItemFile {
         $galleryItemFile = new GalleryItemFile();
         $galleryItemFile->createFrom((object)$item->toArray(), false, true);
         $galleryItemFile->file_url = $fileUrl;
+        $galleryItemFile->file_path = $filePath;
         return $galleryItemFile;
     }
 
@@ -56,7 +57,8 @@ class GalleryFacade
          */
         foreach ($items as $item) {
             if($this->galleryUploadManager->isFileExist($item->compressed_file)) {
-                $result[] = $this->generateGalleryItemFile($item, $this->galleryDataProvider->getUrlToImage($gallery->id, $item->compressed_file));
+                $result[] = $this->generateGalleryItemFile($item, $this->galleryDataProvider->getUrlToImage($gallery->id, $item->compressed_file),
+                    $this->galleryUploadManager->getFilePath($item->compressed_file));
             } else {
                 $this->itemsRepository->deleteById($item->id);
             }
@@ -72,7 +74,8 @@ class GalleryFacade
         if(!$this->galleryUploadManager->isFileExist($item->compressed_file)) {
             throw new ImageNotExistException();
         }
-        return $this->generateGalleryItemFile($item,  $this->galleryDataProvider->getUrlToImage($this->galleryId, $item->compressed_file));
+        return $this->generateGalleryItemFile($item,  $this->galleryDataProvider->getUrlToImage($this->galleryId, $item->compressed_file),
+            $this->galleryUploadManager->getFilePath($item->compressed_file));
     }
 
     /**

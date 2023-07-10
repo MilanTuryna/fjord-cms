@@ -20,6 +20,7 @@ class ArrayUtils
     }
 
     /**
+     * used in template
      * @param array $array
      * @param mixed $key
      * @return array
@@ -32,6 +33,7 @@ class ArrayUtils
     }
 
     /**
+     * used in template
      * @param array $array
      * @param mixed $key
      * @return array

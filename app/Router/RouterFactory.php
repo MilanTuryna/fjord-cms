@@ -29,6 +29,8 @@ final class RouterFactory
 	{
 		$router = new RouteList;
 
+		$router->addRoute("/thumbnails/<path .+>", "Palette:Palette:image");
+
 		$router->withModule("Admin")
             ->addRoute('/admin', 'Overview:home')
             ->addRoute("/admin/login", "Auth:login")

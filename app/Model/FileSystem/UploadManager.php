@@ -47,6 +47,15 @@ class UploadManager
     }
 
     /**
+     * Return absolute path of file
+     * @param string $fileName
+     * @return string
+     */
+    public function getFilePath(string $fileName): string {
+        return $this->path . DIRECTORY_SEPARATOR . $fileName;
+    }
+
+    /**
      * @return Finder
      */
     public function getUploads(): Finder

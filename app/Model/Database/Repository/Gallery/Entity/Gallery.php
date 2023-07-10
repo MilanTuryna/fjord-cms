@@ -12,12 +12,13 @@ use App\Model\Database\Entity;
  */
 class Gallery extends Entity
 {
-    const name = "name", private = "private", description = "description", uri = "uri", edited = "edited", created = "created", admin_id = "admin_id", id = "id";
+    const name = "name", private = "private", miniature_url = "miniature_url", description = "description", uri = "uri", edited = "edited", created = "created", admin_id = "admin_id", id = "id";
 
     public string $name;
     public string $description;
     public string $uri;
     public string $edited;
+    public string $miniature_url;
     public bool $private;
     public string $created;
     public int $admin_id;
