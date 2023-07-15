@@ -4,6 +4,9 @@
 namespace App\Utils;
 
 
+use App\Model\Database\Repository\Gallery\Entity\Gallery;
+use Nette\Database\Table\ActiveRow;
+
 class ArrayUtils
 {
     /**
@@ -27,6 +30,11 @@ class ArrayUtils
      */
     public static function descOrder(array $array, mixed $key): array {
         usort($array, function ($f, $s) use ($key) {
+            if(!($f instanceof ActiveRow && $s instanceof ActiveRow)) {
+                if(array_key_exists($key,$s) && !array_key_exists($key, $f)) $f[$key] = 0;
+                if(array_key_exists($key, $f) && !array_key_exists($key, $s)) $s[$key] = 0;
+            }
+
             return $s[$key] <=> $f[$key];
         });
         return $array;
