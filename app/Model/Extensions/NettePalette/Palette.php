@@ -328,7 +328,6 @@ class Palette
         }
         catch(Throwable $exception)
         {
-            throw $exception;
             // Handle server generating image response exception
             if($this->handleExceptions)
             {
