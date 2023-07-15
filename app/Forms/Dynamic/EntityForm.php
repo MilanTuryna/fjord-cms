@@ -45,7 +45,10 @@ class EntityForm extends Form
             $container->addSelect(AttributeData::generate_value, "Vygenerované hodnoty",
                 AttributeData::GENERATED_VALUES)->setRequired(false)->setOption(FormOption::MULTIPLIER_PARENT, "attributes")->setPrompt("Vyber generovanou hodnotu");
             $container->addTextarea(AttributeData::preset_value, "Přednastavení hodnoty")->setOption(FormOption::OPTION_NOTE, "V případě využití přednastavené hodnoty v kombinaci s datovým typem překladu, využijte prosím JSON dle struktrury uvedené v dokumentaci FjordCMS.")->setOption(FormOption::MULTIPLIER_PARENT, "attributes")->setRequired(false);
-            $container->addCheckbox(AttributeData::required, "Je atribut povinný?")->setOption(FormOption::OPTION_NOTE, "V případě povolení WYSIWYG editoru nedoporučujeme nastavovat tuto hodnotu na ANO.")->setOption(FormOption::MULTIPLIER_PARENT, "attributes")->setRequired(false);
+            $container->addCheckbox(AttributeData::required, "Je atribut povinný?")
+                ->setOption(FormOption::OPTION_NOTE, "V případě povolení WYSIWYG editoru nedoporučujeme nastavovat tuto hodnotu na ANO.")
+                ->setOption(FormOption::MULTIPLIER_PARENT, "attributes")->setRequired(false);
+            $container->addCheckbox(AttributeData::hide_in_list, "Skrýt v hlavním výpisu")->setRequired(false)->setOption(FormOption::MULTIPLIER_PARENT, "attributes");
             $attrMultiplier->addRemoveButton("Odebrat atribut")->addClass('btn btn-danger');
         }, $minCopies, $maxAttributes);
         $attrMultiplier->addCreateButton("Přidat krok")->addClass('btn btn-dark w-100');

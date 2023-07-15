@@ -70,6 +70,7 @@ class EditEntityForm extends EntityForm
                 }
                 $attribute[DynamicAttribute::enabled_wysiwyg] = isset($attribute[DynamicAttribute::enabled_wysiwyg]);
                 $attribute[DynamicAttribute::required] = isset($attribute[DynamicAttribute::required]);
+                $attribute[DynamicAttribute::hide_in_list] = isset($attribute[DynamicAttribute::hide_in_list]);
                 if(str_starts_with($attr_id, EntityFormData::ROW_KEY_CHAR)) {
                     $action = $this->attributeRepository->updateById((int)ltrim($attr_id, EntityFormData::ROW_KEY_CHAR), $attribute);
                 } else {

@@ -17,13 +17,14 @@ class DynamicAttribute extends Entity
        description = "description",
         enabled_wysiwyg = "enabled_wysiwyg",
         generate_value = "generate_value",
-        allowed_translation = "allowed_translation", required = "required";
+        allowed_translation = "allowed_translation", hide_in_list = "hide_in_list", required = "required";
 
     public string $id_name;
     public string $title;
     public string $description;
     public bool $allowed_translation;
     public string $input_type;
+    public bool $hide_in_list;
     public string $data_type;
     public string $placeholder;
     public string $generate_value; // ENUM (GeneratedValues)
