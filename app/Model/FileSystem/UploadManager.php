@@ -25,13 +25,15 @@ class UploadManager
     /**
      * @param FileUpload $upload
      * @param string $fileName
-     * @return void
-     * @throws Exception
+     * @return string
+     * @throws UploadNotValidException
      */
-    public function add(FileUpload $upload, string $fileName): void
+    public function add(FileUpload $upload, string $fileName): string
     {
         if($upload->hasFile() && $upload->isOk()) {
+            $path = $this->path . DIRECTORY_SEPARATOR . $fileName;
             $upload->move($this->path . DIRECTORY_SEPARATOR . $fileName);
+            return $path;
         } else {
             throw new UploadNotValidException();
         }
