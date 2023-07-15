@@ -89,7 +89,6 @@ class ContactForm extends Form
             $mail->original_sender = $values->email;
             $this->mailRepository->insert($mail->iterable());
             $this->presenter->flashMessage("Email byl úspěšně odeslán. Odpovíme na něj co nejdříve.", FlashMessages::SUCCESS);
-            $redirect = $this->formRedirect->route . $this->anchor ? "#" . $this->anchor : "";
             $this->presenter->redirect($this->formRedirect->route . ($this->anchor ? "#" . $this->anchor : ""), $this->formRedirect->args);
         } catch (\Exception $exception) {
             throw $exception;

@@ -11,5 +11,5 @@ class ContactFormData extends Entity
     public string $name;
     public string $email;
     public string $content;
-    public bool $accept;
+    public bool $accept = false;
 }
