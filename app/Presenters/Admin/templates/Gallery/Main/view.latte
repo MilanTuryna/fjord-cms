@@ -6,6 +6,9 @@ Vytvořit novou galerii
 ":Admin:Gallery:Main:overview" => "Seznam galerií",
 ":Admin:Gallery:Main:new" => $gallery->name]}
 {/block}
+{block head}
+<script src="https://cdn.tailwindcss.com"></script>
+{/block}
 {block content}
 <div class="card classic-shadow default-margin-bot">
     <div class="card-body">
@@ -28,24 +31,31 @@ Vytvořit novou galerii
         <h5 class="title">Nahrané obrázky:</h5>
         <hr>
         <div n:if="$items">
-            <div class="row mx-1" style="row-gap: 10px">
                 {var $addedGalleryItems = null}
                 {foreach $flashes as $flash}
                     {if $flash instanceof App\Model\UI\FlashMessages\AddedGalleryItems}
                         {var $addedGalleryItems = $flash}
                     {/if}
                 {/foreach}
-                <div class="col-sm-3 px-2" style="margin-bottom: 35px;" n:foreach="$items as $item">
-                    <div n:class="($addedGalleryItems && in_array($item->compressed_file, $addedGalleryItems->addedItems) ? 'alert-success' : 'bg-light'), 'border h-100'">
-                        <div class="px-3 pt-3">
-                            <a n:href=":Admin:Gallery:Main:viewImage $gallery->id, $item->id" title="{$item->original_file}">
-                                <img src="//{$item->file_url}" class="pb-1" style="width: 100%" alt="{$item->original_file}">
-                                <span class="text-muted small non-underline">{$item->compressed_file}, <span>{App\Utils\FormatUtils::formatBytes($item->size_bytes)}</span></span>
-                            </a>
-                        </div>
-                    </div>
-                    <a n:href=":Admin:Gallery:Main:removeImage $gallery->id, $item->id" style="zoom:90%;" class="btn btn-sm btn-danger delete-href br-0 w-100">Odstranit</a>
+            <div class="gap-2 flex flex-wrap">
+                {foreach $items as $item}
+                <div n:class="($addedGalleryItems && in_array($item->compressed_file, $addedGalleryItems->addedItems) ? 'alert-success' : ($item->isVideo() ? 'bg-teal-500' : 'bg-light'))">
+                    <a n:href=":Admin:Gallery:Main:viewImage $gallery->id, $item->id" class="px-2 py-2 block border lg:w-auto border-zinc-600 hover:bg-[rgba(255,255,255,0.1)] hover:no-underline" style="transition: 0.3s; display: block!important;">
+                        {var $calculatedWidth = $item->resolution_x * (180/$item->resolution_y)}
+                        {if !$item->isVideo()}
+                            <div class="flex justify-center">
+                                <img src="{$item->file_path|palette:'Resize;'.$calculatedWidth.';150;crop'}" class="[zoom:30%] sm:[zoom:40%] md:[zoom:50%] lg:[zoom:75%] xl:[zoom:100%]">
+                            </div>
+                        {else}
+                            <div>
+                                <img src="{$item->video_frame_path|palette:'Resize;'.$calculatedWidth.';150;crop'}" class="[zoom:30%] sm:[zoom:40%] md:[zoom:50%] lg:[zoom:75%] xl:[zoom:100%]">
+                            </div>
+                        {/if}
+                    </a>
+                    <a n:href=":Admin:Gallery:Main:removeImage $gallery->id, $item->id" style="zoom:90%; display: block!important;" class="btn btn-sm btn-danger w-100 br-0 d-block hover:no-underline deleteHref">Odstranit</a>
                 </div>
+
+                {/foreach}
             </div>
             <hr>
             <a n:href=":Admin:Gallery:Main:removeImages $gallery->id" class="text-danger delete-href small float-right">Vymazat všechny fotky</a>
@@ -53,4 +63,6 @@ Vytvořit novou galerii
         <span class="text-muted" n:if="!$items">Žádné obrázky nebyly nalezeny.</span>
     </div>
 </div>
+{/block}
+{block endScripts}
 {/block}

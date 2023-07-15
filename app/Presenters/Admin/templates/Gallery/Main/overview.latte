@@ -9,11 +9,11 @@ Seznam galerií
 {/block}
 {block content}
 <div class="row row-cols-1 row-cols-md-3 g-4 pl-2">
-    <div class="col-6 pb-4 px-2" n:foreach="$galleries as $gallery">
+    <div class="col-3 pb-4 px-2" n:foreach="$galleries as $gallery">
         <a n:href=":Admin:Gallery:Main:view $gallery->id" class="non-underline text-black">
             <div class="card h-100 classic-shadow">
                 {ifset $lastItems[$gallery->id][0]}
-                <img src="//{$lastItems[$gallery->id][0]->file_url}" style="max-height: 250px; object-fit: cover" class="card-img-top" alt="Obrázek v {$gallery->name}">
+                <img src="{$lastItems[$gallery->id][0]->file_url}" style="max-height: 250px; object-fit: cover" class="card-img-top" alt="Obrázek v {$gallery->name}">
                 {else}
                 <div style="height:250px; background-color: lightgray" class="text-muted">
                     <div class="d-flex justify-content-center align-items-center h-100">

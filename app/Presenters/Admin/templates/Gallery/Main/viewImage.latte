@@ -25,12 +25,19 @@ Vytvořit novou galerii
                 <li>Nahrál: <a n:href=":Admin:Administrator:Account:view $item->admin_id">{$administrators[$item->admin_id]->username}</a></li>
             </ul>
         </div>
-        <a n:href=":Admin:Gallery:Main:removeImage $gallery->id, $item->id" class="btn btn-danger btn-sm float-right">Odstranit obrázek</a>
+        <a n:href=":Admin:Gallery:Main:removeImage $gallery->id, $item->id" class="btn btn-danger btn-sm float-right deleteHref">Odstranit obrázek</a>
     </div>
 </div>
 <div class="card classic-shadow default-margin-bot">
     <div class="card-body">
-        <img src="//{$item->file_url}" style="width: 100%">
+        {if $item->isVideo()}
+            <video controls width="100%">
+                {var $extension = App\Model\FileSystem\FileUtils::getExtension($item->compressed_file)}
+                <source src="{$item->file_url}" type="video/{$extension|noescape}">
+            </video>
+        {else}
+        <img src="{$item->file_url}" style="width: 100%">
+        {/if}
     </div>
 </div>
 {/block}

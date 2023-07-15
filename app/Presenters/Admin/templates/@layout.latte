@@ -80,6 +80,7 @@
                         ":Admin:Overview:home" => [false, "Základní přehled"],
                         ":Admin:Internal:Main:home" => [":Admin:Internal", "Interní administrace", $admin->getPermissionMap()[$permClass::DEVELOPER_SETTINGS], null, "m"],
                         ":Admin:Gallery:Main:overview" => [":Admin:Gallery:Main", "Galerie", $admin->getPermissionMap()[$permClass::GALLERY_EDIT]],
+                        ":Admin:Product:Main:list" => [":Admin:Product:Main", "Nabídky", $admin->getPermissionMap()[$permClass::PRODUCTS]],
                         ":Admin:Administrator:Account:list" => [":Admin:Administrator:Account", "Správa účtů", $admin->isFullPermission()],
                         ":Admin:Administrator:Upload:list" => [":Admin:Administrator:Upload", "Nahrávání souborů", $admin->getPermissionMap()[$permClass::UPLOAD]],
                         ":Admin:Settings:overview" => [":Admin:Settings", "Nastavení webu", $admin->isFullPermission()]

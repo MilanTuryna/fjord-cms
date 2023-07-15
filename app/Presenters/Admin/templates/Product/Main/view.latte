@@ -1,0 +1,16 @@
+{block title}
+Úprava nabídky {$product->title}
+{/block}
+{block breadcrumb}
+{include f_breadcrumb, [":Admin:Auth:login" => "Administrace aplikace",
+":Admin:Product:Main:list" => "Seznam produktů",
+":Admin:Gallery:Main:new" => "Úprava nabídky " . $product->title]}
+{/block}
+{block content}
+<div class="card classic-shadow default-margin-bot">
+    <div class="card-body">
+        <h5 class="title">Úprava nabídky: {$product->title}</h5>
+        {include TEMPLATE_COMMON . "/form.latte", form: "editProductForm-{$product->id}"}
+    </div>
+</div>
+{/block}
