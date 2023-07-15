@@ -31,11 +31,12 @@ class GalleryFacade
     /**
      * @throws ReflectionException
      */
-    private function generateGalleryItemFile(ActiveRow $item, string $fileUrl, string $filePath): GalleryItemFile {
+    private function generateGalleryItemFile(ActiveRow $item, string $fileUrl, string $filePath, ?string $video_frame_path = null): GalleryItemFile {
         $galleryItemFile = new GalleryItemFile();
         $galleryItemFile->createFrom((object)$item->toArray(), false, true);
         $galleryItemFile->file_url = $fileUrl;
         $galleryItemFile->file_path = $filePath;
+        $galleryItemFile->video_frame_path = $video_frame_path;
         return $galleryItemFile;
     }
 
@@ -58,7 +59,9 @@ class GalleryFacade
         foreach ($items as $item) {
             if($this->galleryUploadManager->isFileExist($item->compressed_file)) {
                 $result[] = $this->generateGalleryItemFile($item, $this->galleryDataProvider->getUrlToImage($gallery->id, $item->compressed_file),
-                    $this->galleryUploadManager->getFilePath($item->compressed_file));
+                    $this->galleryUploadManager->getFilePath($item->compressed_file), $this->galleryUploadManager::isVideo($item->compressed_file) ?
+                        $this->galleryUploadManager->getVideoFrame($item->compressed_file)
+                        : null);
             } else {
                 $this->itemsRepository->deleteById($item->id);
             }
@@ -75,7 +78,9 @@ class GalleryFacade
             throw new ImageNotExistException();
         }
         return $this->generateGalleryItemFile($item,  $this->galleryDataProvider->getUrlToImage($this->galleryId, $item->compressed_file),
-            $this->galleryUploadManager->getFilePath($item->compressed_file));
+            $this->galleryUploadManager->getFilePath($item->compressed_file), $this->galleryUploadManager::isVideo($item->compressed_file) ?
+                $this->galleryUploadManager->getVideoFrame($item->compressed_file)
+                : null);
     }
 
     /**

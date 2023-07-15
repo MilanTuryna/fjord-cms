@@ -10,6 +10,7 @@ use App\Forms\Gallery\Data\GalleryFormData;
 use App\Model\Database\Repository\Gallery\Entity\Gallery;
 use App\Model\Database\Repository\Gallery\GalleryRepository;
 use App\Model\Database\Repository\Gallery\ItemsRepository;
+use App\Model\DI\FFMpegProvider;
 use App\Model\FileSystem\Gallery\GalleryDataProvider;
 use App\Model\FileSystem\Gallery\GalleryUploadManager;
 use Exception;
@@ -34,10 +35,11 @@ class CreateGalleryForm extends GalleryForm
      * @param GalleryDataProvider $galleryDataProvider
      * @param int $admin_id
      * @param FormRedirect $formRedirect
+     * @param FFMpegProvider $FFMpegProvider
      */
-    public function __construct(protected Presenter $presenter, private GalleryRepository $galleryRepository, private ItemsRepository $itemsRepository, private GalleryDataProvider $galleryDataProvider, private int $admin_id, private FormRedirect $formRedirect)
+    public function __construct(protected Presenter $presenter, private GalleryRepository $galleryRepository, private ItemsRepository $itemsRepository, private GalleryDataProvider $galleryDataProvider, private int $admin_id, private FormRedirect $formRedirect, private FFMpegProvider $FFMpegProvider)
     {
-        parent::__construct($this->presenter, $this->galleryRepository, $this->itemsRepository, $this->admin_id);
+        parent::__construct($this->presenter, $this->galleryRepository, $this->itemsRepository, $this->admin_id, $this->FFMpegProvider);
     }
 
     /**
