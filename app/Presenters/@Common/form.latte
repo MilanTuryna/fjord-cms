@@ -79,7 +79,7 @@
                                 <textarea n:name="$input->getName()" n:class="$input->getOption(App\Forms\FormOption::ACTIVE_WYSIWYG) ? 'active-wysiwyg' : '', 'form-control'">
                                 </textarea>
                         {elseif $input instanceof Nette\Forms\Controls\SelectBox}
-                            <select n:name="$input->getName()" n:class="($input->getOption(App\Forms\FormOption::ACTIVE_WYSIWYG) ? 'active_wysiwyg' : ''), 'form-control'"></select>
+                            <select n:name="$input->getName()" n:class="'form-control'"></select>
                         {else}
                             {input $input->getName(), class: $input->getOption(App\Forms\FormOption::ACTIVE_WYSIWYG) ? 'active_wysiwyg form-control' : 'form-control'}
                         {/if}
@@ -150,7 +150,7 @@
                     {var $deleteRoute = $form['submit']->getOption(App\Forms\FormOption::DELETE_LINK)}
                     <a n:if="$deleteRoute" href="{$presenter->link($deleteRoute->route, $deleteRoute->args)}" class="text-danger deleteHref">Odstranit tento záznam</a>
                 </div>
-                <button n:name="submit" type="submit" n:class="'btn', ($form['submit']->getOption(App\Forms\FormOption::BUTTON_DANGER) ? 'btn-danger' : 'btn-success')"
+                <button n:name="submit" type="submit" n:class="'btn', ($form['submit']->getOption(App\Forms\FormOption::BUTTON_DANGER) ? 'btn-danger' : 'btn-success')" style="background-color: #218838"
                         onclick="wysiwyg()">{$form['submit']->getCaption()}</button>
             </div>
         </div>
