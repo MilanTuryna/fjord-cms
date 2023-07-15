@@ -6,8 +6,10 @@ namespace App\Presenters\Front;
 
 use App\Forms\FormRedirect;
 use App\Forms\Front\ContactForm;
+use App\Forms\Front\ProductForm;
 use App\Model\Database\EAV\DynamicEntityFactory;
 use App\Model\Database\Repository\Gallery\GalleryRepository;
+use App\Model\Database\Repository\Product\ProductRepository;
 use App\Model\Database\Repository\Settings\GlobalSettingsRepository;
 use App\Model\Database\Repository\SMTP\MailRepository;
 use App\Model\Database\Repository\SMTP\ServerRepository;
@@ -53,11 +55,12 @@ class GeneratorPresenter extends FrontBasePresenter
      * @param DynamicEntityFactory $dynamicEntityFactory
      * @param GalleryFacadeFactory $galleryFacadeFactory
      * @param PageVariableRepository $pageVariableRepository
+     * @param ProductRepository $productRepository
      */
     public function __construct(private TemplateRepository $templateRepository, private PageRepository $pageRepository, private TemplateUploadDataProvider $templateUploadDataProvider,
                                 private GalleryRepository $galleryRepository, private ServerRepository $serverRepository, private MailRepository $mailRepository,
                                 private GlobalSettingsRepository $globalSettingsRepository, private DynamicEntityFactory $dynamicEntityFactory,
-                                private GalleryFacadeFactory $galleryFacadeFactory, private PageVariableRepository $pageVariableRepository)
+                                private GalleryFacadeFactory $galleryFacadeFactory, private PageVariableRepository $pageVariableRepository, private ProductRepository $productRepository)
     {
         parent::__construct($this->templateRepository);
     }
@@ -137,6 +140,7 @@ class GeneratorPresenter extends FrontBasePresenter
         }
 
         $providerData = new FjordTemplateProviderData();
+        $providerData->productRepository = $this->productRepository;
         $providerData->path404 = $this->usedTemplate->error404;
         $providerData->dynamicEntityFactory = $this->dynamicEntityFactory;
         $providerData->galleryFacadeFactory = $this->galleryFacadeFactory;
@@ -152,6 +156,15 @@ class GeneratorPresenter extends FrontBasePresenter
 
         $this->template->setParameters(["fjord" => $providerData]);
         $this->template->setFile($fileName);
+    }
+
+    /**
+     * @return Multiplier
+     */
+    public function createComponentProductForm(): Multiplier {
+        return new Multiplier(function ($product) {
+            return (new ProductForm($this, $this->serverRepository, $this->mailRepository, $this->productRepository, $this->globalSettingsRepository, $product))->create();
+        });
     }
 
     /**
