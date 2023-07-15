@@ -10,6 +10,7 @@ use App\Model\Database\Repository\Dynamic\Entity\DynamicId;
 use App\Model\Database\Repository\Dynamic\Entity\DynamicValue;
 use App\Model\Database\Repository\Gallery\Entity\Gallery;
 use App\Model\Database\Repository\Gallery\Entity\GalleryItem;
+use App\Model\Database\Repository\Product\Entity\Product;
 use App\Model\Database\Repository\Settings\Entity\GlobalSettings;
 use App\Model\Database\Repository\SMTP\Entity\Mail;
 use App\Model\Database\Repository\SMTP\Entity\Server;
@@ -33,6 +34,7 @@ abstract class DataStructure
     const ENTITIES = [
         "fjord_admin_accesslog" => AccessLog::class,
         "fjord_admin_account" => Account::class,
+        "fjord_product" => Product::class,
         "fjord_dynamic_attributes" => DynamicAttribute::class,
         "fjord_dynamic_entities" => DynamicEntity::class,
         "fjord_dynamic_ids" => DynamicId::class,
