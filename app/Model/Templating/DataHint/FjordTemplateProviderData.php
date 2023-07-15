@@ -4,6 +4,7 @@
 namespace App\Model\Templating\DataHint;
 
 use App\Model\Database\EAV\DynamicEntityFactory;
+use App\Model\Database\Repository\Product\ProductRepository;
 use App\Model\Database\Repository\Settings\Entity\GlobalSettings;
 use App\Model\Database\Repository\SMTP\Entity\Server;
 use App\Model\Database\Repository\Template\Entity\Template;
@@ -22,6 +23,7 @@ class FjordTemplateProviderData
 
     public string $dependencyPath; // path for useful files like js scripts, css etc.
     public string $path404;
+    public ProductRepository $productRepository;
     public Server|ActiveRow|null $activeSmtpServer;
     public GalleryFacadeFactory $galleryFacadeFactory;
     public DynamicEntityFactory $dynamicEntityFactory;
