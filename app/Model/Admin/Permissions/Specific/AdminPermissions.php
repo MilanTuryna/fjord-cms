@@ -21,6 +21,8 @@ class AdminPermissions extends PermissionManager
     const DYNAMIC_ENTITY_ADMIN = "dynamic_entity_admin";
     const DYNAMIC_ENTITY_EDIT = "dynamic_entity_edit";
 
+    const PRODUCTS = "products";
+
     const GALLERY_EDIT = "gallery_edit";
 
     const UPLOAD = "upload";
@@ -43,6 +45,8 @@ class AdminPermissions extends PermissionManager
             self::DYNAMIC_ENTITY_EDIT => "Správa a používání existujicích vlastních entit",
 
             self::GALLERY_EDIT => "Tvorba a správa galerií",
+
+            self::PRODUCTS => "Tvorba a správa produktů (používat v kombinaci s galeriemi)",
 
             self::UPLOAD => "Nahrávání/upload souborů"
         ];
