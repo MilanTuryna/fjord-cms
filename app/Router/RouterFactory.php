@@ -77,6 +77,11 @@ final class RouterFactory
             ->addRoute("/admin/gallery/remove/<galleryId>", "Gallery:Main:remove")
             ->addRoute("/admin/gallery/remove-images/<galleryId>", "Gallery:Main:removeImages")
 
+            ->addRoute("/admin/products", "Product:Main:list")
+            ->addRoute("/admin/products/new", "Product:Main:new")
+            ->addRoute("/admin/products/remove/<id>", "Product:Main:remove")
+            ->addRoute("/admin/products/view/<id>", "Product:Main:view")
+
             ->addRoute("/admin/upload/list", "Administrator:Upload:list")
             ->addRoute("/admin/upload/remove-file/<fileName>", "Administrator:Upload:remove")
 
@@ -98,7 +103,7 @@ final class RouterFactory
         /**
          * @var $pages Page[]
          */
-        $pages = $this->pageRepository->findByColumn(Page::template_id, $template->id)->fetchAll();
+        $pages = $this->pageRepository->findByColumn(Page::template_id, $template->id)->order("priority DESC")->fetchAll();
         foreach ($pages as $page) {
             $router->withModule("Front")->addRoute($page->route, [
                 "presenter" => "Generator",
