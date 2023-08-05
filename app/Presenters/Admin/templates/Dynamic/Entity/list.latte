@@ -15,42 +15,43 @@
 <div class="card classic-shadow default-margin-bot">
     <div class="card-body">
         <h5 class="title">Seznam záznamů ({$entityName}) <small>(celkem: {count($rows)})</small></h5>
-        <table class="table table-bordered table-responsive table-striped table-sm">
-            <thead>
-            <tr>
-                <th scope="col" n:foreach="$attributes as $attribute" n:if="!$attribute->hide_in_list">{$attribute->title}</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr n:foreach="$rows as $row">
-                    <td n:foreach="$attributes as $attribute">
+        <div class="table-responsive">
+            <table class="table table-border table-striped table-sm table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col" n:foreach="$attributes as $attribute" n:if="!$attribute->hide_in_list">{$attribute->title}</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr n:foreach="$rows as $row">
+                    <td n:foreach="$attributes as $attribute" n:if="!$attribute->hide_in_list">
                         {if $attribute->hide_in_list}{skipIf true}{/if}
                         {ifset $row[$attribute->id_name]}
-                            {if $row[$attribute->id_name] instanceof App\Model\Database\EAV\Translations\TranslatedValue}
-                                 <span title="Překlad ({App\Model\Constants\Countries::LANGUAGES[$settings->default_language]})">
+                        {if $row[$attribute->id_name] instanceof App\Model\Database\EAV\Translations\TranslatedValue}
+                        <span title="Překlad ({App\Model\Constants\Countries::LANGUAGES[$settings->default_language]})">
                                      {$row[$attribute->id_name]->getLanguage($settings->default_language)|stripHtml|slice:0,20}
                                      {if strlen($row[$attribute->id_name]->getLanguage($settings->default_language)) > 20}...{/if}
                                  </span>
-                            {elseif $row[$attribute->id_name] instanceof Nette\Utils\DateTime}
-                                {$row[$attribute->id_name]|date:'d.m.Y H:i'}
-                            {elseif in_array($attribute->generate_value, [App\Forms\Dynamic\Data\GeneratedValues::EDITED_ADMIN, App\Forms\Dynamic\Data\GeneratedValues::CREATED_ADMIN])}
-                                <a n:href=":Admin:Administrator:Account:view $row[$attribute->id_name]">{$administrators[$row[$attribute->id_name]]->username}</a>
-                            {else}
-                                {$row[$attribute->id_name]|stripHtml|slice:0,20}
-
-                            {/if}
+                        {elseif $row[$attribute->id_name] instanceof Nette\Utils\DateTime}
+                        {$row[$attribute->id_name]|date:'d.m.Y H:i'}
+                        {elseif in_array($attribute->generate_value, [App\Forms\Dynamic\Data\GeneratedValues::EDITED_ADMIN, App\Forms\Dynamic\Data\GeneratedValues::CREATED_ADMIN])}
+                        <a n:href=":Admin:Administrator:Account:view $row[$attribute->id_name]">{$administrators[$row[$attribute->id_name]]->username}</a>
+                        {else}
+                        {$row[$attribute->id_name]|stripHtml|slice:0,25}{if strlen($row[$attribute->id_name]) > 25}...{/if}
+                        {/if}
                         {/ifset}
                     </td>
                     <td class="p-0"><a n:href=":Admin:Dynamic:Entity:view, $entityName, $row['row_unique']" class="btn btn-primary br-0 w-100">Zobrazit</a></td>
-            </tr>
-            <tr n:if="count($rows) === 0">
-                <td colspan="144" class="text-center p-3 text-muted">
-                    Žádné záznamy nebyly nalezeny.
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                </tr>
+                <tr n:if="count($rows) === 0">
+                    <td colspan="144" class="text-center p-3 text-muted">
+                        Žádné záznamy nebyly nalezeny.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <a class="btn btn-success w-100 text-white" n:href=":Admin:Dynamic:Entity:new $entityName">Přidat nový záznam</a>
