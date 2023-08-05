@@ -15,7 +15,6 @@ use App\Model\Database\Repository\SMTP\MailRepository;
 use App\Model\Database\Repository\SMTP\ServerRepository;
 use App\Model\Database\Repository\Template\Entity\Page;
 use App\Model\Database\Repository\Template\Entity\PageVariable;
-use App\Model\Database\Repository\Template\Entity\Template;
 use App\Model\Database\Repository\Template\PageRepository;
 use App\Model\Database\Repository\Template\PageVariableRepository;
 use App\Model\Database\Repository\Template\TemplateRepository;
@@ -27,15 +26,11 @@ use App\Model\Http\Responses\JSResponse;
 use App\Model\Http\WebLoader\Specific\DynamicDependencyModule;
 use App\Model\Templating\DataHint\FjordTemplateProviderData;
 use App\Presenters\FrontBasePresenter;
-use App\Utils\FormatUtils;
 use JetBrains\PhpStorm\NoReturn;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Multiplier;
-use Nette\Routing\Route;
 use Nette\Utils\ArrayHash;
-use Nette\Utils\Finder;
 
 /**
  * Class GeneratorPresenter
@@ -153,6 +148,8 @@ class GeneratorPresenter extends FrontBasePresenter
         $providerData->variables = ArrayHash::from($varsAssociativeArray, true);
         $activeSmtpServer = $this->serverRepository->findAll()->fetch();
         $providerData->activeSmtpServer = $activeSmtpServer ?: null;
+
+        $this->template->__server = $_SERVER;
 
         $this->template->setParameters(["fjord" => $providerData]);
         $this->template->setFile($fileName);
