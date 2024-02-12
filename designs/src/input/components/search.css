@@ -1,0 +1,30 @@
+/* Search input without button */
+.search-input {
+    /* layout */
+    @apply block;
+    @apply p-1.5;
+    @apply ps-8;
+
+    /* background */
+    @apply bg-gray-50;
+    @apply dark:bg-gray-700;
+
+    /* text */
+    @apply text-sm;
+    @apply text-gray-900;
+    @apply dark:text-white;
+
+    /* border */
+    @apply border;
+    @apply border-gray-300;
+    @apply rounded-lg;
+
+    @apply focus:border-blue-500;
+
+    @apply dark:border-gray-600;
+    @apply dark:focus:border-blue-500;
+
+    /* rings */
+    @apply focus:ring-blue-500;
+    @apply dark:focus:ring-blue-500;
+}

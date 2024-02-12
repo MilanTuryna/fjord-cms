@@ -1,0 +1,44 @@
+/**
+Use like (if active, don't href tag)
+<div class="breadcrumb">
+    <div>
+        <a href=""></a href="">
+    </div>
+</div>
+ */
+
+/* separator */
+.breadcrumb div:not(:last-child):after {
+    content: "/";
+
+    @apply ml-2;
+    @apply text-gray-400;
+}
+
+/* breadcrumb main element */
+.breadcrumb {
+    background: #e9ecef;
+
+    @apply py-2;
+    @apply px-4;
+
+    @apply flex;
+    @apply gap-2;
+
+    @apply rounded-t-[0.25rem];
+    @apply border-b;
+}
+
+/* active page */
+.breadcrumb a {
+    @apply no-underline;
+    @apply text-gray-500;
+}
+
+/* back link */
+.breadcrumb a[href]
+{
+    @apply text-black;
+    @apply underline;
+    @apply hover:no-underline;
+}

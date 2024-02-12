@@ -1,0 +1,27 @@
+.card {
+    @apply border;
+    @apply rounded-xl;
+
+    /* shadow for card */
+    -webkit-box-shadow: 2px 6px 21px -10px rgba(0,0,0,0.57);
+    -moz-box-shadow: 2px 6px 21px -10px rgba(0,0,0,0.57);
+    box-shadow: 2px 6px 21px -10px rgba(0,0,0,0.57);
+}
+
+.card .card-body {
+    @apply p-4;
+}
+
+.card .card-footer {
+    /* colors */
+    @apply bg-neutral-100;
+    @apply text-gray-500;
+
+    /* border */
+    @apply border-t;
+    @apply rounded-b-xl;
+
+    /* layout */
+    @apply px-4;
+    @apply py-1.5;
+}
