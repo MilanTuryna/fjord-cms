@@ -17,24 +17,21 @@ Logické celky zabývajicí se správným nastavením nového projektu.
 - Název projektu
 - Typ webové prezentace
 - Zaměření (obor) projektu
-- Viditelnost webové prezentace
-  - [Privátní, Neveřejný, Veřejný]
 - Popis projektu
 - Důvod použití FjordCMS
 - Autor projektu
   - Email
   - Jméno autora
 
-### 2. Nastavení šablony a webové prezentace
+### 2. Individualizace administračního panelu
 - Nastavení rozhraní administračního panelu:
   - Primární barva
   - Sekundární barva
   - ... (do budoucna Tmavý/Světlý režim)
-- Výběr šablony:
-  - Výběr z online katalogu šablon
-  - Výběr vlastní knihovny (Nahrát)
-  - Systém bez webové prezentace (bude dostupna pouze administrace, vhodné např. pro správy a systémy)
-- Kontrola šablony a jeho kódu + modulů a jeho kódu (zda bude funkční s verzí)
+
+### 3. Výběr šablony
+- Výběr z online katalogu šablon (TODO)
+- Výběr vlastní knihovny (Nahrát)
 
 ### 3. Instalace modulů
 - Výpis základních modulů od FjordCMS 
