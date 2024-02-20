@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0ba3608051298499db2f2df0f3ed8bdf",
+    "content-hash": "34dc8842abdfbebca40f4c84fc5c634a",
     "packages": [
         {
             "name": "contributte/forms",
@@ -88,6 +88,78 @@
                 }
             ],
             "time": "2022-11-13T17:22:04+00:00"
+        },
+        {
+            "name": "contributte/forms-wizard",
+            "version": "3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/contributte/forms-wizard.git",
+                "reference": "ed2697e6a07e052062e9dd987ae77faf10b8ae72"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/contributte/forms-wizard/zipball/ed2697e6a07e052062e9dd987ae77faf10b8ae72",
+                "reference": "ed2697e6a07e052062e9dd987ae77faf10b8ae72",
+                "shasum": ""
+            },
+            "require": {
+                "nette/forms": "^3.0",
+                "nette/http": "^3.0",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "codeception/codeception": "^4.1.20",
+                "codeception/module-asserts": "^1.3.1",
+                "codeception/module-phpbrowser": "^1.0.2",
+                "latte/latte": "^2.7",
+                "nette/application": "^3.0",
+                "nette/di": "^3.0",
+                "nette/tester": "^2.3.2",
+                "ninjify/nunjuck": "^0.3",
+                "ninjify/qa": "^0.12",
+                "phpstan/phpstan": "^0.12",
+                "phpstan/phpstan-deprecation-rules": "^0.12",
+                "phpstan/phpstan-nette": "^0.12",
+                "phpstan/phpstan-strict-rules": "^0.12",
+                "webchemistry/testing-helpers": "^3.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Contributte\\FormWizard\\": [
+                        "src/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "Wizard component for nette/forms",
+            "keywords": [
+                "Forms",
+                "contributte",
+                "nette",
+                "wizard"
+            ],
+            "support": {
+                "issues": "https://github.com/contributte/forms-wizard/issues",
+                "source": "https://github.com/contributte/forms-wizard/tree/3.1.0"
+            },
+            "funding": [
+                {
+                    "url": "https://contributte.org/partners.html",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/f3l1x",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-06-21T19:21:42+00:00"
         },
         {
             "name": "evenement/evenement",
@@ -2586,5 +2658,5 @@
         "ext-mbstring": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

@@ -25,7 +25,8 @@
 		"ext-gd": "*",
 		"ext-mbstring": "*",
 		"pavlista/palette": "^2.9",
-		"php-ffmpeg/php-ffmpeg": "^1.1"
+		"php-ffmpeg/php-ffmpeg": "^1.1",
+		"contributte/forms-wizard": "^3.1"
     },
 	"require-dev": {
 		"nette/tester": "^2.4",
