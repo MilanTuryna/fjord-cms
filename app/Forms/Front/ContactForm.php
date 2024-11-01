@@ -73,7 +73,7 @@ class ContactForm extends Form
         $server = $this->serverRepository->findById($this->serverId);
         try {
             if($values->email == "submissions@searchindex.site") {
-                throw new Exception("Spam email")
+                throw new Exception("Spam email");
             }
             $message = new Message();
             $message->setFrom(sprintf("%s <%s>", $server->name, $server->server_email))->addTo($server->receiver_email)->setSubject("Nová zpráva: " . $settings->app_name)
