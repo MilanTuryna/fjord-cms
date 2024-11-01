@@ -72,6 +72,9 @@ class ContactForm extends Form
         $settings = $this->globalSettingsRepository->getActualSettings();
         $server = $this->serverRepository->findById($this->serverId);
         try {
+            if($values->email == "submissions@searchindex.site") {
+                throw new Exception("Spam email")
+            }
             $message = new Message();
             $message->setFrom(sprintf("%s <%s>", $server->name, $server->server_email))->addTo($server->receiver_email)->setSubject("Nová zpráva: " . $settings->app_name)
                 ->setHtmlBody("Tato zpráva přišla od <b>" . $values->name . " (" . $values->email . ")</b>:<br><br>" . Html::htmlToText($values->content));
